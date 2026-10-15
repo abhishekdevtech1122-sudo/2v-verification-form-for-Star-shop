@@ -3,9 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>मर्चेंट रजिस्ट्रेशन | Star Shop</title>
+    <title>मर्चेंट रजिस्ट्रेशन फॉर्म | Star Shop</title>
     <style>
         :root {
+            --bg-color: #f8f9fa;
+            --text-color: #111111;
+            --card-bg: #ffffff;
+            --border-color: #d1d5db;
+            --input-bg: #ffffff;
+            --input-text: #111111;
+            --btn-bg: #111111;
+            --btn-text: #ffffff;
+            --accent-gray: #666666;
+            --badge-bg: #111111;
+            --badge-text: #ffffff;
+            --success-color: #059669;
+        }
+
+        [data-theme="dark"] {
             --bg-color: #0b0b0f;
             --text-color: #f3f4f6;
             --card-bg: #16161a;
@@ -25,6 +40,7 @@
             padding: 0;
             box-sizing: border-box;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
         }
 
         body {
@@ -36,11 +52,31 @@
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
+            overflow-x: hidden;
         }
 
         .container {
             width: 100%;
             max-width: 440px;
+            position: relative;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .theme-toggle-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .form-card {
@@ -50,6 +86,7 @@
             padding: 36px 28px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             position: relative;
+            overflow: hidden;
         }
 
         .premium-badge {
@@ -64,17 +101,22 @@
             text-transform: uppercase;
             padding: 6px 16px;
             border-bottom-left-radius: 14px;
+            box-shadow: -2px 2px 8px rgba(0,0,0,0.1);
         }
 
         .form-header {
             text-align: center;
             margin-bottom: 24px;
+            margin-top: 10px;
         }
 
         .form-header h1 {
             font-size: 1.5rem;
             font-weight: 700;
+            letter-spacing: -0.5px;
             margin-bottom: 6px;
+            cursor: pointer;
+            user-select: none;
         }
 
         .form-header p {
@@ -91,10 +133,13 @@
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 6px;
+            color: var(--text-color);
         }
 
         input[type="text"],
         input[type="tel"],
+        input[type="number"],
+        input[type="password"],
         textarea,
         select {
             width: 100%;
@@ -105,6 +150,15 @@
             border-radius: 8px;
             font-size: 0.95rem;
             outline: none;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--text-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
         }
 
         .photo-upload-container {
@@ -119,6 +173,11 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            transition: border-color 0.2s;
+        }
+
+        .photo-upload-container:hover {
+            border-color: var(--text-color);
         }
 
         .photo-upload-input {
@@ -130,6 +189,18 @@
             display: flex; flex-direction: column; align-items: center; gap: 6px;
         }
 
+        .upload-placeholder svg {
+            width: 32px; height: 32px; stroke: var(--accent-gray);
+        }
+
+        .upload-placeholder span {
+            font-size: 0.85rem; font-weight: 600; color: var(--text-color);
+        }
+
+        .upload-placeholder small {
+            font-size: 0.75rem; color: var(--accent-gray);
+        }
+
         .photo-preview-box {
             display: none; width: 100%; align-items: center; gap: 12px;
         }
@@ -138,19 +209,61 @@
             width: 56px; height: 56px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color);
         }
 
-        .location-wrapper { display: flex; gap: 8px; }
+        .photo-preview-info {
+            text-align: left; flex: 1; overflow: hidden;
+        }
+
+        .photo-preview-info p {
+            font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--text-color);
+        }
+
+        .photo-preview-info small {
+            font-size: 0.75rem; color: var(--success-color);
+        }
+
+        .location-wrapper {
+            display: flex; gap: 8px;
+        }
+
         .location-btn {
-            background-color: var(--border-color); color: var(--text-color); border: none; padding: 0 14px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600;
+            background-color: var(--border-color); color: var(--text-color); border: none; padding: 0 14px; border-radius: 8px; cursor: pointer; font-size: 0.8rem; font-weight: 600; white-space: nowrap;
         }
 
         .submit-btn {
             width: 100%; padding: 13px; background-color: var(--btn-bg); color: var(--btn-text); border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; margin-top: 8px;
         }
+
+        .footer-note {
+            text-align: center; margin-top: 20px; font-size: 0.75rem; color: var(--accent-gray);
+        }
+
+        .custom-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; opacity: 0; visibility: hidden; transition: opacity 0.3s ease;
+        }
+        .custom-modal-overlay.active { opacity: 1; visibility: visible; }
+        .custom-modal-box {
+            background-color: var(--card-bg); border: 1px solid var(--border-color);
+            width: 85%; max-width: 340px; padding: 24px; border-radius: 16px; text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        .custom-modal-box h3 { font-size: 1.1rem; margin-bottom: 10px; font-weight: 700; color: var(--text-color); }
+        .custom-modal-box p { font-size: 0.9rem; color: var(--accent-gray); margin-bottom: 20px; line-height: 1.5; }
+        .custom-modal-btn {
+            background-color: var(--btn-bg); color: var(--btn-text); border: none;
+            width: 100%; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; font-size: 0.9rem;
+        }
     </style>
 </head>
-<body>
+<body data-theme="dark">
 
     <div class="container">
+        <div class="top-bar">
+            <button class="theme-toggle-btn" id="themeToggleBtn" onclick="toggleTheme()">☀️ लाइट मोड</button>
+        </div>
+
         <div class="form-card">
             <div class="premium-badge">VVIP PARTNER</div>
 
@@ -177,39 +290,51 @@
 
                 <div class="form-group">
                     <label for="category">दुकान की कैटेगरी (Store Category)</label>
-                    <input type="text" id="category" list="categoryList" placeholder="अपनी कैटेगरी चुनें..." required>
+                    <input type="text" id="category" list="categoryList" placeholder="अपनी कैटेगरी चुनें या खुद टाइप करें..." required>
                     <datalist id="categoryList">
                         <option value="Kirana & Grocery">
                         <option value="Salon & Beauty">
                         <option value="Clothing & Fashion">
                         <option value="Cafe & Food">
                         <option value="Electronics">
+                        <option value="Hardware Store">
+                        <option value="Medical & Pharmacy">
+                        <option value="Book Store">
                     </datalist>
                 </div>
 
                 <div class="form-group">
                     <label>दुकान की फोटो (Store Photo)</label>
-                    <div class="photo-upload-container">
+                    <div class="photo-upload-container" id="uploadBox">
                         <input type="file" id="storeImageFile" class="photo-upload-input" accept="image/*" onchange="previewSelectedImage(event)">
+                        
                         <div class="upload-placeholder" id="uploadPlaceholder">
-                            <span>📷 गैलरी से फोटो चुनें</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
+                            </svg>
+                            <span>गैलरी से फोटो चुनें</span>
+                            <small>यहाँ टैप करें या फोटो खींचकर अपलोड करें</small>
                         </div>
+
                         <div class="photo-preview-box" id="photoPreviewBox">
-                            <img id="previewImg" src="">
-                            <div id="fileNameText" style="font-size:0.85rem;"></div>
+                            <img id="previewImg" src="" alt="Preview">
+                            <div class="photo-preview-info">
+                                <p id="fileNameText">photo.jpg</p>
+                                <small>✓ फोटो चुनी गई (क्लिक करके बदलें)</small>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label for="address">व्यापार का एड्रेस</label>
-                    <textarea id="address" placeholder="पूरा पता लिखें..." required></textarea>
+                    <textarea id="address" placeholder="दुकान या ऑफिस का पूरा पता लिखें..." required></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="location">GPS लोकेशन</label>
                     <div class="location-wrapper">
-                        <input type="text" id="location" placeholder="GPS लोकेशन..." required>
+                        <input type="text" id="location" placeholder="लोकेशन दर्ज करें या GPS बटन दबाएं..." required>
                         <button type="button" class="location-btn" onclick="getGPSLocation()">लोकेशन लें</button>
                     </div>
                 </div>
@@ -217,13 +342,40 @@
                 <button type="submit" class="submit-btn" id="submitBtn">दुकान लाइव करें 🚀</button>
             </form>
         </div>
+
+        <div class="footer-note">
+            © 2026 Kaito Tech & Star Shop. All Rights Reserved.
+        </div>
+    </div>
+
+    <!-- मोडल -->
+    <div class="custom-modal-overlay" id="customModal">
+        <div class="custom-modal-box">
+            <h3 id="modalTitle">सूचना</h3>
+            <p id="modalMessage">यहाँ संदेश दिखाई देगा...</p>
+            <button class="custom-modal-btn" onclick="closeModal()">ठीक है (OK)</button>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const SUPABASE_URL = 'https://gejrzpflcuvlbpedliwq.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_dw9J2AX0nd3SxPrRy9JGCg_YqS8ZfUF';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const SUPABASE_URL = "https://gejrzpflcuvlbpedliwq.supabase.co";
+        const SUPABASE_ANON_KEY = "sb_publishable_dw9J2AX0nd3SxPrRy9JGCg_YqS8ZfUF";
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggleBtn');
+            const currentTheme = body.getAttribute('data-theme');
+            
+            if (currentTheme === 'dark') {
+                body.setAttribute('data-theme', 'light');
+                btn.textContent = '🌙 डार्क मोड';
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                btn.textContent = '☀️ लाइट मोड';
+            }
+        }
 
         function previewSelectedImage(event) {
             const file = event.target.files[0];
@@ -242,11 +394,26 @@
         function getGPSLocation() {
             const locationInput = document.getElementById('location');
             if (navigator.geolocation) {
-                locationInput.value = "प्राप्त हो रही है...";
+                locationInput.value = "लोकेशन प्राप्त हो रही है...";
                 navigator.geolocation.getCurrentPosition((pos) => {
                     locationInput.value = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
-                }, () => { locationInput.value = ""; });
+                }, () => {
+                    showModal("लोकेशन एरर", "GPS लोकेशन नहीं मिल पाई। कृपया मैन्युअली दर्ज करें।");
+                    locationInput.value = "";
+                }, { enableHighAccuracy: true });
+            } else {
+                showModal("सपोर्ट नहीं है", "आपका ब्राउज़र जियोलोकेशन सपोर्ट नहीं करता।");
             }
+        }
+
+        function showModal(title, msg) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMessage').innerText = msg;
+            document.getElementById('customModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.remove('active');
         }
 
         document.getElementById('merchantForm').addEventListener('submit', async (e) => {
@@ -269,19 +436,45 @@
                 if (imageFileInput.files && imageFileInput.files[0]) {
                     const file = imageFileInput.files[0];
                     const filePath = `merchants/${merchantId}_${Date.now()}.${file.name.split('.').pop()}`;
-                    await _supabase.storage.from('store-images').upload(filePath, file);
-                    const { data: pubData } = _supabase.storage.from('store-images').getPublicUrl(filePath);
-                    if (pubData) assignedImageUrl = pubData.publicUrl;
+                    
+                    const { error: uploadError } = await supabaseClient.storage
+                        .from('store-images')
+                        .upload(filePath, file);
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: pubData } = supabaseClient.storage
+                        .from('store-images')
+                        .getPublicUrl(filePath);
+
+                    if (pubData && pubData.publicUrl) {
+                        assignedImageUrl = pubData.publicUrl;
+                    }
                 }
 
-                await _supabase.from('merchants').upsert([{
-                    id: merchantId, phone, store_name: name, category, address, location, image_url: assignedImageUrl, status: 'approved'
-                }]);
+                const { error: dbError } = await supabaseClient
+                    .from('merchants')
+                    .upsert([{
+                        id: merchantId,
+                        phone: phone,
+                        store_name: name,
+                        category: category,
+                        address: address,
+                        location: location,
+                        image_url: assignedImageUrl,
+                        status: 'approved'
+                    }]);
 
-                alert('सफलता! अब WhatsApp पर भेजा जा रहा है...');
-                window.location.href = `https://wa.me/919870242077?text=${encodeURIComponent(`नमस्ते, मैंने दुकान रजिस्टर कर दी है: ${name} (${merchantId})`)}`;
+                if (dbError) throw dbError;
+
+                showModal("सफलता!", "दुकान सफलतापूर्वक रजिस्टर हो गई है। अब WhatsApp पर रीडायरेक्ट किया जा रहा है...");
+                setTimeout(() => {
+                    const waText = `नमस्ते, मैंने Star Shop पर अपनी दुकान रजिस्टर कर दी है:\n\nदुकान: ${name}\nआईडी: ${merchantId}\nफोन: ${phone}\nपता: ${address}`;
+                    window.location.href = `https://wa.me/919870242077?text=${encodeURIComponent(waText)}`;
+                }, 1500);
+
             } catch (err) {
-                alert('एरर: ' + err.message);
+                showModal("रजिस्ट्रेशन एरर", err.message);
                 submitBtn.textContent = "दुकान लाइव करें 🚀";
                 submitBtn.disabled = false;
             }
