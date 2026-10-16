@@ -479,6 +479,25 @@
                 submitBtn.disabled = false;
             }
         });
+        <script>
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const params = new URLSearchParams(window.location.search);
+
+    if(params.get('name')) {
+      document.querySelector('input[name="shop_name"]').value = params.get('name');
+    }
+    if(params.get('category')) {
+      document.querySelector('input[name="category"]').value = params.get('category');
+    }
+    if(params.get('address')) {
+      document.querySelector('input[name="address"]').value = params.get('address');
+    }
+    if(params.get('coords')) {
+      document.querySelector('input[name="coords"]').value = params.get('coords');
+    }
+  });
+</script>
+    
     </script>
 </body>
 </html>
