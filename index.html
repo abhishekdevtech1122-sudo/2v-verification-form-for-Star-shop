@@ -480,24 +480,31 @@
             }
         });
         <script>
-  window.addEventListener('DOMContentLoaded', (event) => {
-    const params = new URLSearchParams(window.location.search);
+        // URL पैरामीटर्स से ऑटो-फिल करने का अचूक लॉजिक
+        window.addEventListener('DOMContentLoaded', (event) => {
+            const params = new URLSearchParams(window.location.search);
 
-    if(params.get('name')) {
-      document.querySelector('input[name="shop_name"]').value = params.get('name');
-    }
-    if(params.get('category')) {
-      document.querySelector('input[name="category"]').value = params.get('category');
-    }
-    if(params.get('address')) {
-      document.querySelector('input[name="address"]').value = params.get('address');
-    }
-    if(params.get('coords')) {
-      document.querySelector('input[name="coords"]').value = params.get('coords');
-    }
-  });
-</script>
-    
+            if(params.get('id')) {
+                const el = document.getElementById('merchantId');
+                if(el) el.value = params.get('id');
+            }
+            if(params.get('name')) {
+                const el = document.getElementById('name');
+                if(el) el.value = params.get('name');
+            }
+            if(params.get('category')) {
+                const el = document.getElementById('category');
+                if(el) el.value = params.get('category');
+            }
+            if(params.get('address')) {
+                const el = document.getElementById('address');
+                if(el) el.value = params.get('address');
+            }
+            if(params.get('coords')) {
+                const el = document.getElementById('location');
+                if(el) el.value = params.get('coords');
+            }
+        });
     </script>
 </body>
 </html>
