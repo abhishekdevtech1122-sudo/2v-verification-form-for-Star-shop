@@ -18,6 +18,8 @@
             --badge-bg: #111111;
             --badge-text: #ffffff;
             --success-color: #059669;
+            --danger-color: #ef4444;
+            --warn-color: #f59e0b;
         }
 
         [data-theme="dark"] {
@@ -33,6 +35,8 @@
             --badge-bg: #d4af37;
             --badge-text: #0b0b0f;
             --success-color: #10b981;
+            --danger-color: #f87171;
+            --warn-color: #fbbf24;
         }
 
         * {
@@ -51,13 +55,13 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 20px;
+            padding: 14px;
             overflow-x: hidden;
         }
 
         .container {
             width: 100%;
-            max-width: 440px;
+            max-width: 460px;
             position: relative;
         }
 
@@ -65,27 +69,37 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            gap: 8px;
         }
 
         .theme-toggle-btn {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            padding: 8px 14px;
+            padding: 8px 12px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 12px;
-            font-weight: 600;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .counter-badge {
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
         }
 
         .form-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 32px 24px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 24px 18px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
             position: relative;
             overflow: hidden;
         }
@@ -100,35 +114,34 @@
             font-weight: 800;
             letter-spacing: 1px;
             text-transform: uppercase;
-            padding: 6px 16px;
-            border-bottom-left-radius: 14px;
+            padding: 6px 14px;
+            border-bottom-left-radius: 12px;
         }
 
         .form-header {
             text-align: center;
-            margin-bottom: 20px;
-            margin-top: 8px;
+            margin-bottom: 14px;
+            margin-top: 4px;
         }
 
         .form-header h1 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 4px;
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 2px;
         }
 
         .form-header p {
-            font-size: 0.85rem;
+            font-size: 0.78rem;
             color: var(--accent-gray);
         }
 
-        /* मास्टर पेस्ट बॉक्स डिजाइन */
+        /* मास्टर कमांड एंड पेस्ट बॉक्स */
         .master-paste-card {
             background: var(--input-bg);
             border: 2px dashed var(--badge-bg);
-            padding: 14px;
+            padding: 12px;
             border-radius: 12px;
-            margin-bottom: 22px;
+            margin-bottom: 16px;
         }
 
         .master-header {
@@ -136,22 +149,31 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
         .master-header span {
             color: var(--badge-bg);
             font-weight: 800;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+        }
+
+        .toggles-wrapper {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .rapid-mode-toggle {
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 0.75rem;
+            gap: 4px;
+            font-size: 0.7rem;
             color: var(--accent-gray);
             cursor: pointer;
             user-select: none;
+            font-weight: 600;
         }
 
         .rapid-mode-toggle input {
@@ -159,36 +181,171 @@
             accent-color: var(--badge-bg);
         }
 
-        .paste-status {
-            font-size: 0.75rem;
-            color: var(--success-color);
-            margin-top: 6px;
-            font-weight: 600;
+        .paste-actions-bar {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .clipboard-paste-btn {
+            background-color: var(--badge-bg);
+            color: var(--badge-text);
+            border: none;
+            padding: 9px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .top-launch-btn {
+            background-color: var(--success-color);
+            color: #ffffff;
+            border: none;
+            padding: 9px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        /* डुप्लीकेट और जियो-फेंस वार्निंग पट्टी */
+        .radar-alert-bar {
             display: none;
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--warn-color);
+            color: var(--warn-color);
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        /* सेफ्टी ब्रेक बार */
+        .safety-brake-bar {
+            display: none;
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger-color);
+            padding: 8px 10px;
+            border-radius: 8px;
+            margin-top: 8px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .safety-brake-bar span {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--danger-color);
+        }
+
+        .abort-btn {
+            background: var(--danger-color);
+            color: #fff;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.74rem;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        /* लाइव वेरिफिकेशन + जेन्युइन स्कोर समरी पट्टी */
+        .live-verify-strip {
+            display: none;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid var(--success-color);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            line-height: 1.45;
+        }
+
+        .verify-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding-bottom: 4px;
+        }
+
+        .genuine-score-pill {
+            background: var(--success-color);
+            color: #fff;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.68rem;
+            font-weight: 800;
+        }
+
+        .live-verify-strip strong {
+            color: var(--badge-bg);
+        }
+
+        /* बैच क्यू बार */
+        .batch-queue-bar {
+            display: none;
+            background: var(--card-bg);
+            border: 1px solid var(--badge-bg);
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-top: 8px;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .batch-queue-bar span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--badge-bg);
         }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 13px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
         }
 
         label {
             display: block;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 6px;
             color: var(--text-color);
+        }
+
+        .mini-clear-btn {
+            background: none;
+            border: none;
+            color: var(--accent-gray);
+            font-size: 0.7rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .mini-clear-btn:hover {
+            color: var(--danger-color);
         }
 
         input[type="text"],
         input[type="tel"],
         textarea {
             width: 100%;
-            padding: 12px 14px;
+            padding: 10px 12px;
             background-color: var(--input-bg);
             border: 1px solid var(--border-color);
             color: var(--input-text);
             border-radius: 8px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             outline: none;
         }
 
@@ -198,70 +355,73 @@
 
         textarea {
             resize: vertical;
-            min-height: 70px;
+            min-height: 60px;
         }
 
         #masterPasteBox {
-            min-height: 65px;
-            font-size: 0.85rem;
+            min-height: 55px;
+            font-size: 0.78rem;
         }
 
-        .photo-upload-container {
-            border: 2px dashed var(--border-color);
-            background-color: var(--input-bg);
-            border-radius: 12px;
-            padding: 14px;
-            text-align: center;
-            cursor: pointer;
-            position: relative;
+        /* स्मार्ट ऑटो-बैनर प्रिव्यू और शफल बॉक्स */
+        .smart-banner-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 9px;
+        }
+
+        .smart-banner-card img {
+            width: 72px;
+            height: 52px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--badge-bg);
+            flex-shrink: 0;
+        }
+
+        .banner-controls {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            gap: 5px;
         }
 
-        .photo-upload-input {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer;
+        .banner-controls small {
+            font-size: 0.7rem;
+            color: var(--accent-gray);
         }
 
-        .upload-placeholder {
-            display: flex; flex-direction: column; align-items: center; gap: 4px;
+        .banner-btn-group {
+            display: flex;
+            gap: 6px;
         }
 
-        .upload-placeholder svg {
-            width: 28px; height: 28px; stroke: var(--accent-gray);
+        .shuffle-btn {
+            background: var(--badge-bg);
+            color: var(--badge-text);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            cursor: pointer;
         }
 
-        .upload-placeholder span {
-            font-size: 0.85rem; font-weight: 600; color: var(--text-color);
+        .custom-upload-label {
+            background: var(--border-color);
+            color: var(--text-color);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin: 0;
         }
 
-        .upload-placeholder small {
-            font-size: 0.72rem; color: var(--accent-gray);
-        }
-
-        .photo-preview-box {
-            display: none; width: 100%; align-items: center; gap: 12px;
-        }
-
-        .photo-preview-box img {
-            width: 50px; height: 50px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border-color);
-        }
-
-        .photo-preview-info {
-            text-align: left; flex: 1; overflow: hidden;
-        }
-
-        .photo-preview-info p {
-            font-size: 0.85rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-        }
-
-        .photo-preview-info small {
-            font-size: 0.75rem; color: var(--success-color);
-        }
-
-        /* एक्शन बटन रैपर (Phone Zero Bypass और GPS के लिए) */
         .action-input-wrapper {
             display: flex;
             gap: 8px;
@@ -271,16 +431,12 @@
             background-color: var(--border-color);
             color: var(--text-color);
             border: 1px solid var(--border-color);
-            padding: 0 12px;
+            padding: 0 11px;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.78rem;
+            font-size: 0.74rem;
             font-weight: 700;
             white-space: nowrap;
-        }
-
-        .quick-action-btn:active {
-            transform: scale(0.97);
         }
 
         .zero-bypass-btn {
@@ -290,15 +446,90 @@
         }
 
         .submit-btn {
-            width: 100%; padding: 14px; background-color: var(--btn-bg); color: var(--btn-text); border: none; border-radius: 8px; font-size: 1rem; font-weight: 700; cursor: pointer; margin-top: 6px;
+            width: 100%;
+            padding: 13px;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: none;
+            border-radius: 8px;
+            font-size: 0.96rem;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 4px;
         }
 
         .submit-btn:disabled {
-            opacity: 0.6; cursor: not-allowed;
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* ⏪ लाइव सेशन हिस्ट्री लॉग (1-Tap Re-Edit के साथ) */
+        .recent-log-card {
+            margin-top: 16px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 14px;
+            display: none;
+        }
+
+        .recent-log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--badge-bg);
+        }
+
+        .recent-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 6px;
+            font-size: 0.74rem;
+        }
+
+        .recent-item-info {
+            overflow: hidden;
+            padding-right: 8px;
+        }
+
+        .recent-item-info strong {
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-color);
+        }
+
+        .recent-item-info span {
+            color: var(--accent-gray);
+            font-size: 0.68rem;
+        }
+
+        .re-edit-btn {
+            background: var(--border-color);
+            color: var(--text-color);
+            border: none;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
         }
 
         .footer-note {
-            text-align: center; margin-top: 18px; font-size: 0.75rem; color: var(--accent-gray);
+            text-align: center;
+            margin-top: 14px;
+            font-size: 0.72rem;
+            color: var(--accent-gray);
         }
 
         .custom-modal-overlay {
@@ -324,105 +555,158 @@
 
     <div class="container">
         <div class="top-bar">
-            <button class="theme-toggle-btn" type="button" onclick="clearFullForm()">🔄 फॉर्म खाली करें</button>
-            <button class="theme-toggle-btn" type="button" id="themeToggleBtn" onclick="toggleTheme()">☀️ लाइट मोड</button>
+            <button class="theme-toggle-btn" type="button" onclick="clearFullForm()">🔄 सब साफ करें</button>
+            <div class="counter-badge" id="sessionCounter">🎯 टारगेट: 0 / 30</div>
+            <button class="theme-toggle-btn" type="button" id="themeToggleBtn" onclick="toggleTheme()">☀️ लाइट</button>
         </div>
 
         <div class="form-card">
-            <div class="premium-badge">VVIP PARTNER</div>
+            <div class="premium-badge">GENUINE v4.0</div>
 
             <div class="form-header">
                 <h1>मर्चेंट रजिस्ट्रेशन</h1>
-                <p>Star Shop Partner Program</p>
+                <p>Anti-Duplicate & Genuine Verification Engine</p>
             </div>
 
-            <!-- ⚡ स्मार्ट मास्टर ऑटो-फिल इंजन -->
+            <!-- ⚡ मास्टर कमांड सेंटर -->
             <div class="master-paste-card">
                 <div class="master-header">
-                    <span>⚡ स्मार्ट ऑटो-फिल बॉक्स</span>
-                    <label class="rapid-mode-toggle" title="ऑन रहने पर WhatsApp रीडायरेक्ट नहीं होगा, फॉर्म तुरंत अगली दुकान के लिए रीसेट हो जाएगा">
-                        <input type="checkbox" id="rapidModeToggle" checked> रैपिड बल्क मोड
-                    </label>
+                    <span>⚡ स्मार्ट ऑटो-फिल रडार</span>
+                    <div class="toggles-wrapper">
+                        <label class="rapid-mode-toggle" title="ऑन रहने पर Google Maps की असली रेटिंग और टाइमिंग भी पते के साथ जुड़ जाएगी">
+                            <input type="checkbox" id="trustBadgeToggle" checked> ⭐ रेटिंग जोड़ें
+                        </label>
+                        <label class="rapid-mode-toggle" title="ऑन रहने पर WhatsApp रीडायरेक्ट नहीं होगा">
+                            <input type="checkbox" id="rapidModeToggle" checked> रैपिड
+                        </label>
+                        <label class="rapid-mode-toggle" title="पेस्ट के बाद 3 सेकंड का टाइमर चलेगा">
+                            <input type="checkbox" id="safeTimerToggle"> ⏱️ 3s ऑटो
+                        </label>
+                    </div>
                 </div>
-                <textarea id="masterPasteBox" placeholder="यहाँ टर्मक्स या लिस्ट का कच्चा डेटा सीधा पेस्ट (Paste) करें... पेस्ट करते ही फॉर्म अपने आप भर जाएगा!" oninput="parseAndFillData()"></textarea>
-                <div id="pasteStatus" class="paste-status">✓ डेटा सेट हो गया! (नंबर न होने पर 0000000000 ऑटो-सेट है)</div>
+
+                <div class="paste-actions-bar">
+                    <button type="button" class="clipboard-paste-btn" onclick="pasteFromClipboard()">📋 1. क्लिपबोर्ड पेस्ट</button>
+                    <button type="button" class="top-launch-btn" onclick="triggerFormSubmit()">🚀 2. चेक & लाइव करें</button>
+                </div>
+
+                <textarea id="masterPasteBox" placeholder="यहाँ 1 दुकान या एक साथ कई दुकानों का कच्चा डेटा (बीच में === डालकर) पेस्ट करें..." oninput="handlePasteInput()"></textarea>
+
+                <!-- 🛡️ एंटी-डुप्लीकेट और जियो-फेंस वार्निंग पट्टी -->
+                <div class="radar-alert-bar" id="radarAlertBar"></div>
+
+                <!-- 🛑 3-सेकंड सेफ्टी ब्रेक बार -->
+                <div class="safety-brake-bar" id="safetyBrakeBar">
+                    <span id="countdownText">⏱️ 3 सेकंड में लाइव हो रहा है...</span>
+                    <button type="button" class="abort-btn" onclick="abortAutoSubmit()">🛑 रोकें (Edit)</button>
+                </div>
+
+                <!-- 👁️ इंस्टेंट वेरिफिकेशन + जेन्युइन स्कोर पट्टी -->
+                <div class="live-verify-strip" id="liveVerifyStrip"></div>
+
+                <!-- 📦 मल्टी-शॉप बैच क्यू बार -->
+                <div class="batch-queue-bar" id="batchQueueBar">
+                    <span id="queueCountText">📦 कतार में: 0 दुकानें बाकी</span>
+                    <button type="button" class="abort-btn" style="background:var(--badge-bg); color:var(--badge-text);" onclick="loadNextFromQueue()">अगली दुकान लाएं ⏭️</button>
+                </div>
             </div>
 
             <form id="merchantForm">
                 <div class="form-group">
-                    <label for="merchantId">मर्चेंट यूनिक आईडी (Store Username/ID)</label>
-                    <input type="text" id="merchantId" placeholder="जैसे: BG-001 या new_look_salon" required>
+                    <div class="label-row">
+                        <label for="name">दुकान का नाम (Store Name)</label>
+                        <button type="button" class="mini-clear-btn" onclick="clearField('name')">✖ साफ करें</button>
+                    </div>
+                    <input type="text" id="name" placeholder="दुकान का नाम" oninput="syncIdAndVerify()" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="name">दुकान का नाम (Store Name)</label>
-                    <input type="text" id="name" placeholder="अपनी दुकान का नाम दर्ज करें" required>
-                </div>
-
-                <!-- 📞 फोन नंबर + वन-टैप जीरो बायपास सेक्शन -->
-                <div class="form-group">
-                    <label for="phone">फोन नंबर (नंबर न हो तो '0000 बायपास' दबाएं या खाली छोड़ें)</label>
+                    <div class="label-row">
+                        <label for="phone">फोन नंबर (आखिरी 10 अंक ऑटो-पिक)</label>
+                        <button type="button" class="mini-clear-btn" onclick="clearField('phone')">✖ साफ करें</button>
+                    </div>
                     <div class="action-input-wrapper">
-                        <input type="tel" id="phone" placeholder="10 अंकों का नंबर (खाली = 0000000000)" pattern="[0-9]{10}">
+                        <input type="tel" id="phone" placeholder="10 अंकों का नंबर" pattern="[0-9]{10}" oninput="syncIdAndVerify()">
                         <button type="button" class="quick-action-btn zero-bypass-btn" onclick="fillZeroPhone()">⚡ 0000 बायपास</button>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="category">दुकान की कैटेगरी (Store Category)</label>
-                    <input type="text" id="category" list="categoryList" placeholder="अपनी कैटेगरी चुनें या खुद टाइप करें..." required>
+                    <div class="label-row">
+                        <label for="category">दुकान की कैटेगरी (Store Category)</label>
+                        <button type="button" class="mini-clear-btn" onclick="clearField('category')">✖ साफ करें</button>
+                    </div>
+                    <input type="text" id="category" list="categoryList" placeholder="कैटेगरी चुनें या टाइप करें..." onchange="assignUniqueCategoryBanner()" required>
                     <datalist id="categoryList">
-                        <option value="Kirana & Grocery">
+                        <option value="Beauty Parlour">
+                        <option value="Nail Salon">
                         <option value="Salon & Beauty">
-                        <option value="Parlour">
-                        <option value="Salon">
+                        <option value="Makeover & Academy">
+                        <option value="Spa & Massage">
+                        <option value="Kirana & Grocery">
                         <option value="Clothing & Fashion">
                         <option value="Cafe & Food">
                         <option value="Electronics">
-                        <option value="Hardware Store">
                         <option value="Medical & Pharmacy">
-                        <option value="Book Store">
                     </datalist>
                 </div>
 
+                <!-- 🖼️ स्मार्ट यूनिक बैनर जनरेटर -->
                 <div class="form-group">
-                    <label>दुकान की फोटो (Store Photo - Optional)</label>
-                    <div class="photo-upload-container" id="uploadBox">
-                        <input type="file" id="storeImageFile" class="photo-upload-input" accept="image/*" onchange="previewSelectedImage(event)">
-                        
-                        <div class="upload-placeholder" id="uploadPlaceholder">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
-                            </svg>
-                            <span>गैलरी से फोटो चुनें (वैकल्पिक)</span>
-                            <small>न चुनने पर डिफ़ॉल्ट प्रीमियम फोटो लगेगी</small>
-                        </div>
-
-                        <div class="photo-preview-box" id="photoPreviewBox">
-                            <img id="previewImg" src="" alt="Preview">
-                            <div class="photo-preview-info">
-                                <p id="fileNameText">photo.jpg</p>
-                                <small>✓ फोटो चुनी गई</small>
+                    <label>दुकान का बैनर (40+ यूनिक कैटेगरी फोटोज़ ऑटो-रोटेशन)</label>
+                    <div class="smart-banner-card">
+                        <img id="liveBannerPreview" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&auto=format&fit=crop&q=80" alt="Shop Banner">
+                        <div class="banner-controls">
+                            <small id="bannerStatusText">✓ यूनिक कैटेगरी फोटो सेट है</small>
+                            <div class="banner-btn-group">
+                                <button type="button" class="shuffle-btn" onclick="shuffleCategoryBanner()">🎲 दूसरी फोटो लगाएं</button>
+                                <label class="custom-upload-label">
+                                    📁 खुद की फोटो
+                                    <input type="file" id="storeImageFile" accept="image/*" style="display:none;" onchange="previewSelectedImage(event)">
+                                </label>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="address">व्यापार का एड्रेस</label>
-                    <textarea id="address" placeholder="दुकान या ऑफिस का पूरा पता लिखें..." required></textarea>
+                    <div class="label-row">
+                        <label for="address">व्यापार का एड्रेस (+ रेटिंग/टाइमिंग)</label>
+                        <button type="button" class="mini-clear-btn" onclick="clearField('address')">✖ साफ करें</button>
+                    </div>
+                    <textarea id="address" placeholder="दुकान या ऑफिस का पूरा पता..." oninput="updateVerifyStrip()" required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="location">GPS लोकेशन (Coordinates)</label>
+                    <div class="label-row">
+                        <label for="location">GPS लोकेशन (Delhi-NCR Geo-Verified)</label>
+                        <button type="button" class="mini-clear-btn" onclick="clearField('location')">✖ साफ करें</button>
+                    </div>
                     <div class="action-input-wrapper">
-                        <input type="text" id="location" placeholder="जैसे: 28.7451, 77.0601" required>
+                        <input type="text" id="location" placeholder="जैसे: 28.7241, 77.0638" oninput="updateVerifyStrip()" required>
                         <button type="button" class="quick-action-btn" onclick="getGPSLocation()">📍 GPS लें</button>
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <div class="label-row">
+                        <label for="merchantId">मर्चेंट यूनिक आईडी (Auto-Generated)</label>
+                        <button type="button" class="mini-clear-btn" onclick="clearField('merchantId')">✖ साफ करें</button>
+                    </div>
+                    <input type="text" id="merchantId" placeholder="जैसे: shikha_pal_6720" required>
+                </div>
+
                 <button type="submit" class="submit-btn" id="submitBtn">दुकान लाइव करें 🚀</button>
             </form>
+        </div>
+
+        <!-- ⏪ हाल ही में चढ़ाई गई दुकानों की लिस्ट (गलती सुधारने के लिए 1-Tap Re-Edit) -->
+        <div class="recent-log-card" id="recentLogCard">
+            <div class="recent-log-header">
+                <span>⏪ अभी लाइव की गई दुकानें (1-Tap सुधारें)</span>
+                <span id="recentCountLabel">0</span>
+            </div>
+            <div id="recentItemsContainer"></div>
         </div>
 
         <div class="footer-note">
@@ -445,125 +729,536 @@
         const SUPABASE_ANON_KEY = "sb_publishable_dw9J2AX0nd3SxPrRy9JGCg_YqS8ZfUF";
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+        // 🖼️ 40+ प्रीमियम कैटेगरी फोटो पूल
+        const CATEGORY_IMAGE_POOLS = {
+            parlour: [
+                "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1487412947147-5cebf100ffc2?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1595476108010-b4d1f102b1b1?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?w=600&auto=format&fit=crop&q=80"
+            ],
+            nail: [
+                "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1632345031435-8727f6897d53?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1522337660859-02fbefca4702?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1610992015732-2449b76344bc?w=600&auto=format&fit=crop&q=80"
+            ],
+            salon: [
+                "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?w=600&auto=format&fit=crop&q=80"
+            ],
+            spa: [
+                "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1519823551278-64ac92734fb1?w=600&auto=format&fit=crop&q=80"
+            ],
+            grocery: [
+                "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=600&auto=format&fit=crop&q=80"
+            ],
+            food: [
+                "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=600&auto=format&fit=crop&q=80"
+            ],
+            fashion: [
+                "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=600&auto=format&fit=crop&q=80"
+            ],
+            general: [
+                "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=600&auto=format&fit=crop&q=80",
+                "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=600&auto=format&fit=crop&q=80"
+            ]
+        };
+
+        let onboardCount = parseInt(localStorage.getItem('star_onboard_count') || '0', 10);
+        let recentOnboardedHistory = JSON.parse(localStorage.getItem('star_recent_shops') || '[]');
+        let currentBannerIndex = 0;
+        let selectedBannerUrl = CATEGORY_IMAGE_POOLS.parlour[0];
+        let customFileUploaded = false;
+        let countdownInterval = null;
+        let batchShopQueue = [];
+
+        updateCounterUI();
+        renderRecentHistory();
+
+        // 🔊 ऑडियो बीप जनरेटर (बिना किसी बाहरी फाइल के)
+        function playFeedbackTone(freq = 880, duration = 90) {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = freq;
+                gain.gain.value = 0.06;
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                setTimeout(() => { osc.stop(); ctx.close(); }, duration);
+            } catch (e) {}
+        }
+
+        function updateCounterUI() {
+            document.getElementById('sessionCounter').textContent = `🎯 टारगेट: ${onboardCount} / 30`;
+        }
+
         function toggleTheme() {
             const body = document.body;
             const btn = document.getElementById('themeToggleBtn');
             if (body.getAttribute('data-theme') === 'dark') {
                 body.setAttribute('data-theme', 'light');
-                btn.textContent = '🌙 डार्क मोड';
+                btn.textContent = '🌙 डार्क';
             } else {
                 body.setAttribute('data-theme', 'dark');
-                btn.textContent = '☀️ लाइट मोड';
+                btn.textContent = '☀️ लाइट';
             }
         }
 
-        // ⚡ वन-टैप जीरो बायपास फंक्शन
-        function fillZeroPhone() {
-            const phoneEl = document.getElementById('phone');
-            phoneEl.value = "0000000000";
+        function clearField(fieldId) {
+            abortAutoSubmit();
+            const el = document.getElementById(fieldId);
+            el.value = "";
+            el.focus();
+            updateVerifyStrip();
         }
 
-        // 🧹 फॉर्म को पूरी तरह रीसेट करने का फंक्शन
+        function fillZeroPhone() {
+            abortAutoSubmit();
+            document.getElementById('phone').value = "0000000000";
+            syncIdAndVerify();
+        }
+
+        function triggerFormSubmit() {
+            abortAutoSubmit();
+            document.getElementById('submitBtn').click();
+        }
+
         function clearFullForm() {
+            abortAutoSubmit();
             document.getElementById('merchantForm').reset();
             document.getElementById('masterPasteBox').value = "";
-            document.getElementById('pasteStatus').style.display = 'none';
-            document.getElementById('uploadPlaceholder').style.display = 'flex';
-            document.getElementById('photoPreviewBox').style.display = 'none';
+            document.getElementById('liveVerifyStrip').style.display = 'none';
+            document.getElementById('radarAlertBar').style.display = 'none';
+            customFileUploaded = false;
+            assignUniqueCategoryBanner();
             document.getElementById('masterPasteBox').focus();
         }
 
-        // ⚡ शातिर पार्सर: पेस्ट करते ही सही खानों में डेटा भरेगा और नंबर न होने पर 0000000000 सेट करेगा
-        function parseAndFillData() {
-            const rawText = document.getElementById('masterPasteBox').value;
-            const statusEl = document.getElementById('pasteStatus');
-            
-            if (!rawText.trim()) {
-                statusEl.style.display = 'none';
-                return;
+        function getPoolForCategory(category) {
+            const cat = (category || '').toLowerCase();
+            if (cat.includes('nail')) return CATEGORY_IMAGE_POOLS.nail;
+            if (cat.includes('parlour') || cat.includes('makeover') || cat.includes('beauty') || cat.includes('academy')) return CATEGORY_IMAGE_POOLS.parlour;
+            if (cat.includes('salon') || cat.includes('hair')) return CATEGORY_IMAGE_POOLS.salon;
+            if (cat.includes('spa') || cat.includes('massage')) return CATEGORY_IMAGE_POOLS.spa;
+            if (cat.includes('kirana') || cat.includes('grocery') || cat.includes('mart')) return CATEGORY_IMAGE_POOLS.grocery;
+            if (cat.includes('cafe') || cat.includes('food') || cat.includes('restaurant')) return CATEGORY_IMAGE_POOLS.food;
+            if (cat.includes('cloth') || cat.includes('fashion') || cat.includes('boutique')) return CATEGORY_IMAGE_POOLS.fashion;
+            return CATEGORY_IMAGE_POOLS.general;
+        }
+
+        function assignUniqueCategoryBanner() {
+            if (customFileUploaded) return;
+            const category = document.getElementById('category').value;
+            const shopName = document.getElementById('name').value || 'shop_' + onboardCount;
+            const pool = getPoolForCategory(category);
+
+            let hash = onboardCount;
+            for (let i = 0; i < shopName.length; i++) {
+                hash = (hash * 31 + shopName.charCodeAt(i)) % 10000;
             }
+            currentBannerIndex = hash % pool.length;
+            selectedBannerUrl = pool[currentBannerIndex];
+            document.getElementById('liveBannerPreview').src = selectedBannerUrl;
+            document.getElementById('bannerStatusText').textContent = `✓ कैटेगरी फोटो #${currentBannerIndex + 1}/${pool.length} ऑटो-सेट`;
+        }
 
-            const lines = rawText.split('\n');
-            let filledAny = false;
-            let phoneFoundInPaste = false;
+        function shuffleCategoryBanner() {
+            abortAutoSubmit();
+            customFileUploaded = false;
+            document.getElementById('storeImageFile').value = "";
+            const category = document.getElementById('category').value;
+            const pool = getPoolForCategory(category);
+            currentBannerIndex = (currentBannerIndex + 1) % pool.length;
+            selectedBannerUrl = pool[currentBannerIndex];
+            document.getElementById('liveBannerPreview').src = selectedBannerUrl;
+            document.getElementById('bannerStatusText').textContent = `🎲 फोटो बदली गई (#${currentBannerIndex + 1}/${pool.length})`;
+        }
 
-            lines.forEach(line => {
-                if (!line.includes(':')) return;
-                
-                const parts = line.split(':');
-                const rawKey = parts[0].replace(/[^\w\s\u0900-\u097F]/g, '').trim().toLowerCase();
-                const val = parts.slice(1).join(':').trim();
-
-                if (!val) return;
-
-                if (rawKey.includes('id') || rawKey.includes('merchant') || rawKey.includes('आईडी')) {
-                    document.getElementById('merchantId').value = val;
-                    filledAny = true;
-                } 
-                else if (rawKey.includes('name') || rawKey.includes('shop') || rawKey.includes('दुकान') || rawKey.includes('नाम')) {
-                    document.getElementById('name').value = val;
-                    filledAny = true;
-                } 
-                else if (rawKey.includes('phone') || rawKey.includes('mobile') || rawKey.includes('फोन')) {
-                    const digits = val.replace(/\D/g, '');
-                    document.getElementById('phone').value = digits.length >= 10 ? digits.slice(0, 10) : '0000000000';
-                    phoneFoundInPaste = true;
-                    filledAny = true;
-                } 
-                else if (rawKey.includes('category') || rawKey.includes('कैटेगरी')) {
-                    document.getElementById('category').value = val;
-                    filledAny = true;
-                } 
-                else if (rawKey.includes('address') || rawKey.includes('पता') || rawKey.includes('एड्रेस')) {
-                    document.getElementById('address').value = val;
-                    filledAny = true;
-                } 
-                else if (rawKey.includes('coord') || rawKey.includes('location') || rawKey.includes('gps') || rawKey.includes('लोकेशन')) {
-                    document.getElementById('location').value = val;
-                    filledAny = true;
+        async function pasteFromClipboard() {
+            try {
+                const text = await navigator.clipboard.readText();
+                if (text) {
+                    document.getElementById('masterPasteBox').value = text;
+                    handlePasteInput();
                 }
-            });
-
-            // Auto-ID Fallback: अगर पेस्ट में ID नहीं थी, तो नाम से खुद बनाएगा
-            const idEl = document.getElementById('merchantId');
-            const nameEl = document.getElementById('name');
-            if (!idEl.value.trim() && nameEl.value.trim()) {
-                const cleanSlug = nameEl.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '');
-                const randomDigits = Math.floor(100 + Math.random() * 900);
-                idEl.value = `${cleanSlug || 'shop'}_${randomDigits}`;
-            }
-
-            // Auto-Zero Fallback: अगर पेस्ट किए गए डेटा में फोन नंबर की लाइन ही नहीं थी, तो सीधा 0000000000 भर देगा
-            const phoneEl = document.getElementById('phone');
-            if (!phoneFoundInPaste && !phoneEl.value.trim()) {
-                phoneEl.value = "0000000000";
-            }
-
-            if (filledAny) {
-                statusEl.style.display = 'block';
+            } catch (err) {
+                showModal("क्लिपबोर्ड अनुमति", "ब्राउज़र ने डायरेक्ट पेस्ट रोका है। बॉक्स में उंगली दबाकर (Long Press) पेस्ट करें।");
             }
         }
 
+        function toTitleCase(str) {
+            return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+        }
+
+        function handlePasteInput() {
+            abortAutoSubmit();
+            const rawText = document.getElementById('masterPasteBox').value.trim();
+            if (!rawText) {
+                document.getElementById('liveVerifyStrip').style.display = 'none';
+                document.getElementById('radarAlertBar').style.display = 'none';
+                return;
+            }
+
+            const blocks = rawText.split(/(?:={3,}|\n\s*\n\s*\n)/).map(b => b.trim()).filter(b => b.length > 15);
+            if (blocks.length > 1) {
+                batchShopQueue = blocks.slice(1);
+                updateQueueUI();
+                parseSingleShopBlock(blocks[0]);
+            } else {
+                parseSingleShopBlock(rawText);
+            }
+        }
+
+        function updateQueueUI() {
+            const qBar = document.getElementById('batchQueueBar');
+            if (batchShopQueue.length > 0) {
+                qBar.style.display = 'flex';
+                document.getElementById('queueCountText').textContent = `📦 कतार में: ${batchShopQueue.length} दुकानें बाकी हैं`;
+            } else {
+                qBar.style.display = 'none';
+            }
+        }
+
+        function loadNextFromQueue() {
+            if (batchShopQueue.length === 0) return;
+            const nextBlock = batchShopQueue.shift();
+            updateQueueUI();
+            document.getElementById('masterPasteBox').value = nextBlock;
+            parseSingleShopBlock(nextBlock);
+        }
+
+        // 🧠 शातिर पार्सर + ट्रस्ट बैज एक्सट्रैक्टर
+        function parseSingleShopBlock(rawText) {
+            let extractedName = "";
+            let extractedPhone = "";
+            let extractedCategory = "";
+            let extractedAddress = "";
+            let extractedLocation = "";
+            let extractedId = "";
+            let extractedRatingBadge = "";
+            let extractedHours = "";
+
+            // 1. GPS Coordinates Regex
+            const coordRegex = /([0-9]{1,2}\.[0-9]{3,8})\s*°?\s*[NSns]?\s*[,/\s]+\s*([0-9]{1,3}\.[0-9]{3,8})\s*°?\s*[EEWw]?/;
+            const coordMatch = rawText.match(coordRegex);
+            if (coordMatch) {
+                extractedLocation = `${coordMatch[1]}, ${coordMatch[2]}`;
+            }
+
+            // 2. Phone Number Regex (आखिरी 10 अंक)
+            const phoneRegex = /(?:\+91[\-\s]?|0)?([6-9]\d{4}[\-\s]?\d{5}|\d{10})/;
+            const phoneMatch = rawText.match(phoneRegex);
+            if (phoneMatch) {
+                const cleanDigits = phoneMatch[0].replace(/\D/g, '');
+                extractedPhone = cleanDigits.slice(-10);
+            }
+
+            // 3. Full Postal Address Regex
+            const postalMatch = rawText.match(/Full Postal Address\s*:\s*([\s\S]*?\b\d{6}\b)/i);
+            if (postalMatch) {
+                extractedAddress = postalMatch[1].replace(/\n+/g, ' ').replace(/\s+/g, ' ').trim();
+            }
+
+            // 4. Rating, Reviews & Category Regex (जैसे: 4.8* (119) · Beauty Parlour)
+            const ratingCatMatch = rawText.match(/(\d\.\d)[\*\+]?\s*\((\d+)\)\s*[·•\-]\s*([^\n\r]+)/);
+            if (ratingCatMatch) {
+                extractedRatingBadge = `⭐ ${ratingCatMatch[1]} (${ratingCatMatch[2]} Reviews)`;
+                extractedCategory = ratingCatMatch[3].trim();
+            }
+
+            // 5. Opening Hours Regex (जैसे: Opens 10 am)
+            const hoursMatch = rawText.match(/Opens\s+([0-9]{1,2}(?::[0-9]{2})?\s*(?:am|pm))/i);
+            if (hoursMatch) {
+                extractedHours = `Opens ${hoursMatch[1].toUpperCase()}`;
+            }
+
+            const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+            const noisePatterns = /^(s9|so|ask maps|x|closed|opens|coordinates|contact|exact decimal|mobile number|ask a question|yahan|yaria|shalu al)/i;
+            const categoryKeywords = /(parlour|salon|makeover|academy|spa|nail|artist|kirana|grocery|store|cafe|electronics|pharmacy|medical|boutique|studio)/i;
+            const addressKeywords = /(gali|road|nagar|vihar|sector|begum\s*pur|delhi|house\s*no|near|landmark|bazar|pocket|block|\b1100\d{2}\b)/i;
+
+            let addressChunks = [];
+
+            lines.forEach(line => {
+                if (line.includes(':')) {
+                    const parts = line.split(':');
+                    const rawKey = parts[0].replace(/[^\w\s\u0900-\u097F]/g, '').trim().toLowerCase();
+                    const val = parts.slice(1).join(':').trim();
+
+                    if (val) {
+                        if (rawKey === 'id' || rawKey.includes('merchant') || rawKey.includes('आईडी')) {
+                            extractedId = val; return;
+                        } else if (rawKey.includes('name') || rawKey.includes('shop') || rawKey.includes('दुकान') || rawKey.includes('नाम')) {
+                            extractedName = val; return;
+                        } else if (rawKey.includes('phone') || rawKey.includes('mobile') || rawKey.includes('फोन') || rawKey.includes('मोबाइल')) {
+                            const d = val.replace(/\D/g, '');
+                            if (d.length >= 10) extractedPhone = d.slice(-10);
+                            return;
+                        } else if (rawKey.includes('category') || rawKey.includes('कैटेगरी')) {
+                            extractedCategory = val; return;
+                        } else if (rawKey.includes('address') || rawKey.includes('पता') || rawKey.includes('एड्रेस')) {
+                            if (!extractedAddress) extractedAddress = val; return;
+                        } else if (rawKey.includes('coord') || rawKey.includes('location') || rawKey.includes('gps') || rawKey.includes('लोकेशन') || rawKey.includes('कोऑर्डिनेट्स')) {
+                            const cMatch = val.match(coordRegex);
+                            extractedLocation = cMatch ? `${cMatch[1]}, ${cMatch[2]}` : val;
+                            return;
+                        }
+                    }
+                }
+
+                if (noisePatterns.test(line)) return;
+                if (coordRegex.test(line) || phoneRegex.test(line)) return;
+                if (/\d\.\d[\*\+]?\s*\(\d+\)/.test(line)) return;
+                if (line.length <= 2) return;
+
+                if (!postalMatch && addressKeywords.test(line)) {
+                    addressChunks.push(line.replace(/^[•·\-]\s*/, ''));
+                    return;
+                }
+
+                if (!extractedCategory && line.length < 30 && categoryKeywords.test(line) && !extractedName) {
+                    if (line === line.toUpperCase() && line.length > 6) {
+                        extractedName = toTitleCase(line);
+                    } else {
+                        extractedCategory = line;
+                    }
+                    return;
+                }
+
+                if (!extractedName && !line.includes('...')) {
+                    if (line === line.toUpperCase() && line.length > 4) {
+                        extractedName = toTitleCase(line);
+                    } else if (line.length > 4 && !addressKeywords.test(line)) {
+                        extractedName = line;
+                    }
+                }
+            });
+
+            if (!extractedAddress && addressChunks.length > 0) {
+                extractedAddress = addressChunks.join(', ');
+            }
+
+            // ⭐ अगर ट्रस्ट बैज टॉगल ऑन है, तो पते के आगे रेटिंग और टाइमिंग साफ-सुथरे तरीके से जोड़ दें
+            if (document.getElementById('trustBadgeToggle').checked && extractedAddress) {
+                let trustMeta = [extractedRatingBadge, extractedHours].filter(Boolean).join(' • ');
+                if (trustMeta && !extractedAddress.includes('⭐')) {
+                    extractedAddress = `${extractedAddress} (${trustMeta})`;
+                }
+            }
+
+            if (!extractedCategory && extractedName) {
+                if (/nail/i.test(extractedName)) extractedCategory = "Nail Salon";
+                else if (/makeover|parlour|beauty/i.test(extractedName)) extractedCategory = "Beauty Parlour";
+                else if (/salon|hair/i.test(extractedName)) extractedCategory = "Salon & Beauty";
+                else if (/spa/i.test(extractedName)) extractedCategory = "Spa & Massage";
+                else extractedCategory = "Salon & Beauty";
+            }
+
+            document.getElementById('name').value = extractedName || "";
+            document.getElementById('category').value = extractedCategory || "Salon & Beauty";
+            document.getElementById('address').value = extractedAddress || "";
+            document.getElementById('location').value = extractedLocation || "";
+            document.getElementById('phone').value = extractedPhone || "0000000000";
+
+            if (extractedId) {
+                document.getElementById('merchantId').value = extractedId;
+            } else {
+                generateSmartId();
+            }
+
+            assignUniqueCategoryBanner();
+            updateVerifyStrip();
+            playFeedbackTone(660, 70);
+
+            // 🛡️ एंटी-डुप्लीकेट चेक फायर करें
+            checkDuplicateInDatabase(extractedName, extractedPhone);
+        }
+
+        // 🛡️ एंटी-डुप्लीकेट रडार (लोकल हिस्ट्री + Supabase डेटाबेस में जांच)
+        async function checkDuplicateInDatabase(shopName, phone) {
+            const alertBar = document.getElementById('radarAlertBar');
+            alertBar.style.display = 'none';
+
+            if (!shopName && (!phone || phone === "0000000000")) return;
+
+            // 1. पहले आज की लोकल हिस्ट्री में चेक करें
+            const localMatch = recentOnboardedHistory.find(item => 
+                (phone && phone !== "0000000000" && item.phone === phone) ||
+                (shopName && item.store_name.toLowerCase() === shopName.toLowerCase())
+            );
+
+            if (localMatch) {
+                alertBar.style.display = 'block';
+                alertBar.innerHTML = `⚠️ <strong>डुप्लीकेट अलर्ट:</strong> यह दुकान (<strong>${localMatch.store_name}</strong>) आज ही चढ़ाई जा चुकी है! इसकी पुरानी ID (<code>${localMatch.id}</code>) ऑटो-सेट कर दी गई है ताकि डबल एंट्री न हो।`;
+                document.getElementById('merchantId').value = localMatch.id;
+                abortAutoSubmit();
+                return;
+            }
+
+            // 2. Supabase में चेक करें
+            try {
+                let query = supabaseClient.from('merchants').select('id, store_name, phone').limit(1);
+                if (phone && phone !== "0000000000") {
+                    query = query.or(`phone.eq.${phone},store_name.ilike.${shopName}`);
+                } else if (shopName) {
+                    query = query.ilike('store_name', shopName);
+                }
+
+                const { data } = await query;
+                if (data && data.length > 0) {
+                    const existing = data[0];
+                    alertBar.style.display = 'block';
+                    alertBar.innerHTML = `⚠️ <strong>डेटाबेस में पहले से मौजूद:</strong> "${existing.store_name}" पहले से लाइव है! डबल एंट्री रोकने के लिए पुरानी ID (<code>${existing.id}</code>) लॉक कर दी गई है।`;
+                    document.getElementById('merchantId').value = existing.id;
+                    abortAutoSubmit();
+                    return;
+                }
+            } catch (e) {}
+
+            // अगर डुप्लीकेट नहीं है और 3s ऑटो-फायर ऑन है, तो काउंटडाउन शुरू करें
+            const isComplete = document.getElementById('name').value && document.getElementById('address').value && isLocationValidDelhiNCR(document.getElementById('location').value);
+            if (isComplete && document.getElementById('safeTimerToggle').checked) {
+                startSafeCountdown();
+            }
+        }
+
+        // 📍 जियो-फेंस चेकर (जांचता है कि कोऑर्डिनेट्स भारत/दिल्ली-एनसीआर के आसपास हैं या नहीं)
+        function isLocationValidDelhiNCR(locStr) {
+            if (!locStr) return false;
+            const parts = locStr.split(',').map(s => parseFloat(s.trim()));
+            if (parts.length !== 2 || isNaN(parts[0]) || isNaN(parts[1])) return false;
+            const [lat, lng] = parts;
+            // दिल्ली-एनसीआर की रेंज लगभग Lat 28.0-29.2, Lng 76.5-77.8 होती है
+            return (lat >= 27.5 && lat <= 29.5 && lng >= 76.5 && lng <= 78.0);
+        }
+
+        function generateSmartId() {
+            const nameVal = document.getElementById('name').value.trim();
+            const phoneVal = document.getElementById('phone').value.trim();
+            if (!nameVal) return;
+            const cleanSlug = nameVal.toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').slice(0, 18);
+            const suffix = (phoneVal && phoneVal !== "0000000000") ? phoneVal.slice(-4) : Math.floor(100 + Math.random() * 900);
+            document.getElementById('merchantId').value = `${cleanSlug}_${suffix}`;
+        }
+
+        function syncIdAndVerify() {
+            abortAutoSubmit();
+            generateSmartId();
+            assignUniqueCategoryBanner();
+            updateVerifyStrip();
+        }
+
+        // 👁️ इंस्टेंट वेरिफिकेशन पट्टी + जेन्युइन स्कोर
+        function updateVerifyStrip() {
+            const strip = document.getElementById('liveVerifyStrip');
+            const n = document.getElementById('name').value.trim();
+            const p = document.getElementById('phone').value.trim();
+            const c = document.getElementById('category').value.trim();
+            const a = document.getElementById('address').value.trim();
+            const l = document.getElementById('location').value.trim();
+
+            if (!n && !p && !l) {
+                strip.style.display = 'none';
+                return;
+            }
+
+            let score = 0;
+            if (n.length > 3) score += 25;
+            if (p.length === 10 && p !== "0000000000") score += 25;
+            else if (p === "0000000000") score += 10;
+            if (a.length > 15) score += 25;
+            const geoValid = isLocationValidDelhiNCR(l);
+            if (geoValid) score += 25;
+
+            const geoStatus = geoValid 
+                ? `<span style="color:var(--success-color)">✓ दिल्ली-NCR वेरीफाइड (${l})</span>` 
+                : `<span style="color:var(--danger-color)">⚠️ GPS रेंज चेक करें (${l || 'खाली'})</span>`;
+
+            strip.style.display = 'block';
+            strip.innerHTML = `
+                <div class="verify-header-row">
+                    <span><strong>दुकान:</strong> ${n || '<span style="color:#f87171">नाम खाली है!</span>'}</span>
+                    <span class="genuine-score-pill">Genuine: ${score}%</span>
+                </div>
+                <div><strong>नंबर:</strong> ${p || '0000000000'} | <strong>कैटेगरी:</strong> ${c || '-'}</div>
+                <div><strong>लोकेशन:</strong> ${geoStatus}</div>
+            `;
+        }
+
+        function startSafeCountdown() {
+            abortAutoSubmit();
+            let timeLeft = 3;
+            const brakeBar = document.getElementById('safetyBrakeBar');
+            const countText = document.getElementById('countdownText');
+            brakeBar.style.display = 'flex';
+            countText.textContent = `⏱️ ${timeLeft} सेकंड में लाइव हो रहा है (गलत हो तो रोकें)...`;
+
+            countdownInterval = setInterval(() => {
+                timeLeft--;
+                if (timeLeft > 0) {
+                    countText.textContent = `⏱️ ${timeLeft} सेकंड में लाइव हो रहा है (गलत हो तो रोकें)...`;
+                } else {
+                    abortAutoSubmit();
+                    document.getElementById('submitBtn').click();
+                }
+            }, 1000);
+        }
+
+        function abortAutoSubmit() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+            document.getElementById('safetyBrakeBar').style.display = 'none';
+        }
+
         function previewSelectedImage(event) {
+            abortAutoSubmit();
             const file = event.target.files[0];
             if (file) {
+                customFileUploaded = true;
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('previewImg').src = e.target.result;
-                    document.getElementById('fileNameText').textContent = file.name;
-                    document.getElementById('uploadPlaceholder').style.display = 'none';
-                    document.getElementById('photoPreviewBox').style.display = 'flex';
+                    document.getElementById('liveBannerPreview').src = e.target.result;
+                    document.getElementById('bannerStatusText').textContent = `✓ कस्टम फोटो: ${file.name.slice(0, 18)}`;
                 };
                 reader.readAsDataURL(file);
             }
         }
 
         function getGPSLocation() {
+            abortAutoSubmit();
             const locationInput = document.getElementById('location');
             if (navigator.geolocation) {
                 locationInput.value = "लोकेशन प्राप्त हो रही है...";
                 navigator.geolocation.getCurrentPosition((pos) => {
                     locationInput.value = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+                    updateVerifyStrip();
                 }, () => {
                     showModal("लोकेशन एरर", "GPS लोकेशन नहीं मिल पाई। कृपया मैन्युअली दर्ज करें।");
                     locationInput.value = "";
@@ -571,6 +1266,48 @@
             } else {
                 showModal("सपोर्ट नहीं है", "आपका ब्राउज़र जियोलोकेशन सपोर्ट नहीं करता।");
             }
+        }
+
+        // ⏪ हाल ही में लाइव की गई दुकानों को दिखाना और 1-Tap में वापस फॉर्म में लोड करना
+        function renderRecentHistory() {
+            const card = document.getElementById('recentLogCard');
+            const container = document.getElementById('recentItemsContainer');
+            const countLabel = document.getElementById('recentCountLabel');
+
+            if (recentOnboardedHistory.length === 0) {
+                card.style.display = 'none';
+                return;
+            }
+
+            card.style.display = 'block';
+            countLabel.textContent = `कुल: ${recentOnboardedHistory.length}`;
+            container.innerHTML = recentOnboardedHistory.slice(0, 5).map((shop, idx) => `
+                <div class="recent-item">
+                    <div class="recent-item-info">
+                        <strong>✓ ${shop.store_name}</strong>
+                        <span>ID: ${shop.id} | 📞 ${shop.phone}</span>
+                    </div>
+                    <button type="button" class="re-edit-btn" onclick="loadShopForReEdit(${idx})">✏️ सुधारें</button>
+                </div>
+            `).join('');
+        }
+
+        function loadShopForReEdit(index) {
+            abortAutoSubmit();
+            const shop = recentOnboardedHistory[index];
+            if (!shop) return;
+
+            document.getElementById('merchantId').value = shop.id;
+            document.getElementById('name').value = shop.store_name;
+            document.getElementById('phone').value = shop.phone;
+            document.getElementById('category').value = shop.category;
+            document.getElementById('address').value = shop.address;
+            document.getElementById('location').value = shop.location;
+            selectedBannerUrl = shop.image_url;
+            document.getElementById('liveBannerPreview').src = selectedBannerUrl;
+
+            updateVerifyStrip();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function showModal(title, msg) {
@@ -583,18 +1320,18 @@
             document.getElementById('customModal').classList.remove('active');
         }
 
-        // 🚀 सुपरफास्ट सबमिशन इंजन (Auto-Zero Shield के साथ)
+        // 🚀 सुपरफास्ट सबमिशन इंजन
         document.getElementById('merchantForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            abortAutoSubmit();
             
-            // अगर यूजर ने फोन नंबर खाली छोड़ दिया है, तो सबमिट होते वक्त अपने आप 0000000000 सेट हो जाएगा
             const phoneInput = document.getElementById('phone');
             if (!phoneInput.value.trim()) {
                 phoneInput.value = "0000000000";
             }
 
             const submitBtn = document.getElementById('submitBtn');
-            submitBtn.textContent = "डेटा सेव हो रहा है...";
+            submitBtn.textContent = "⚡ डेटाबेस में लॉक हो रहा है...";
             submitBtn.disabled = true;
 
             const merchantId = document.getElementById('merchantId').value.trim();
@@ -606,10 +1343,10 @@
             const imageFileInput = document.getElementById('storeImageFile');
             const isRapidMode = document.getElementById('rapidModeToggle').checked;
 
-            let assignedImageUrl = "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&auto=format&fit=crop&q=80";
+            let assignedImageUrl = selectedBannerUrl;
 
             try {
-                if (imageFileInput.files && imageFileInput.files[0]) {
+                if (customFileUploaded && imageFileInput.files && imageFileInput.files[0]) {
                     const file = imageFileInput.files[0];
                     const filePath = `merchants/${merchantId}_${Date.now()}.${file.name.split('.').pop()}`;
                     
@@ -628,28 +1365,49 @@
                     }
                 }
 
+                const payload = {
+                    id: merchantId,
+                    phone: phone,
+                    store_name: name,
+                    category: category,
+                    address: address,
+                    location: location,
+                    image_url: assignedImageUrl,
+                    status: 'approved'
+                };
+
                 const { error: dbError } = await supabaseClient
                     .from('merchants')
-                    .upsert([{
-                        id: merchantId,
-                        phone: phone,
-                        store_name: name,
-                        category: category,
-                        address: address,
-                        location: location,
-                        image_url: assignedImageUrl,
-                        status: 'approved'
-                    }]);
+                    .upsert([payload]);
 
                 if (dbError) throw dbError;
 
+                playFeedbackTone(1046, 140);
+
+                // अगर यह री-एडिट नहीं था, तभी काउंटर बढ़ाएं
+                const existingIdx = recentOnboardedHistory.findIndex(item => item.id === merchantId);
+                if (existingIdx !== -1) {
+                    recentOnboardedHistory[existingIdx] = payload;
+                } else {
+                    onboardCount++;
+                    localStorage.setItem('star_onboard_count', onboardCount);
+                    recentOnboardedHistory.unshift(payload);
+                }
+
+                localStorage.setItem('star_recent_shops', JSON.stringify(recentOnboardedHistory.slice(0, 20)));
+                updateCounterUI();
+                renderRecentHistory();
+
                 if (isRapidMode) {
-                    submitBtn.textContent = "✓ सेव हो गया! अगली दुकान डालें...";
+                    submitBtn.textContent = `✓ दुकान #${onboardCount} लाइव!`;
                     setTimeout(() => {
                         clearFullForm();
                         submitBtn.textContent = "दुकान लाइव करें 🚀";
                         submitBtn.disabled = false;
-                    }, 700);
+                        if (batchShopQueue.length > 0) {
+                            loadNextFromQueue();
+                        }
+                    }, 350);
                 } else {
                     showModal("सफलता!", "दुकान सफलतापूर्वक रजिस्टर हो गई है। अब WhatsApp पर रीडायरेक्ट किया जा रहा है...");
                     setTimeout(() => {
@@ -666,4 +1424,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
