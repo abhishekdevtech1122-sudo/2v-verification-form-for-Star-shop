@@ -2,17 +2,18 @@
 <html lang="hi" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Star Shop Master Excel Sheet | Elite War-Room</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Star Shop Master Excel Sheet | Quantum War-Room</title>
     <style>
         [data-theme="dark"] {
             --bg-main: #000000;
-            --card-bg: #0a0a0c;
+            --card-bg: #09090b;
             --border-color: #27272a;
             --text-main: #f4f4f5;
-            --input-bg: #121216;
-            --hover-bg: #18181c;
-            --row-selected: rgba(212, 175, 55, 0.15);
+            --input-bg: #121215;
+            --hover-bg: #1c1c21;
+            --row-selected: rgba(212, 175, 55, 0.16);
+            color-scheme: dark;
         }
         [data-theme="light"] {
             --bg-main: #f4f4f6;
@@ -21,225 +22,235 @@
             --text-main: #1c1c1e;
             --input-bg: #f5f5f7;
             --hover-bg: #e5e5ea;
-            --row-selected: rgba(212, 175, 55, 0.2);
+            --row-selected: rgba(212, 175, 55, 0.22);
+            color-scheme: light;
         }
 
         :root {
             --badge-gold: #d4af37;
-            --gold-glow: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
             --danger-red: #ef4444;
             --success-green: #10b981;
+            --cyber-blue: #3b82f6;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding: 2px; transition: background 0.3s, color 0.3s; }
+        body { background: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding: 3px; }
         
-        .container { max-width: 1400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; height: 100%; gap: 2px; }
+        .container { max-width: 1400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; height: 100%; gap: 3px; }
         
         /* टॉप बार */
-        .top-bar { display: flex; flex-direction: column; background: var(--card-bg); padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 3px; flex-shrink: 0; gap: 3px; }
-        .top-row-main { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .top-bar { display: flex; flex-direction: column; background: var(--card-bg); padding: 5px 6px; border: 1px solid var(--border-color); border-radius: 4px; flex-shrink: 0; gap: 4px; }
         
+        .top-row-main { display: grid; grid-template-columns: auto 1fr auto; align-items: center; width: 100%; gap: 6px; }
         .brand-title { 
-            font-size: 0.78rem; 
-            color: var(--badge-gold); 
-            font-weight: 900; 
-            letter-spacing: 0.5px; 
-            filter: var(--gold-glow);
-            background: linear-gradient(135deg, #fff2a6 0%, #d4af37 50%, #aa771c 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-transform: uppercase;
+            font-size: 0.68rem; font-weight: 900; letter-spacing: 0.4px; 
+            background: linear-gradient(135deg, #fff2a6 0%, #d4af37 55%, #aa771c 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-transform: uppercase; white-space: nowrap;
         }
+
+        .telemetry-strip { display: flex; justify-content: flex-end; align-items: center; gap: 4px; font-size: 0.52rem; font-weight: 800; white-space: nowrap; }
+        .telemetry-pill { background: var(--input-bg); border: 1px solid var(--border-color); padding: 1px 4px; border-radius: 2px; color: #a1a1aa; }
+        .telemetry-pill strong { color: var(--badge-gold); }
 
         .theme-orb-btn {
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
+            width: 20px; height: 20px; border-radius: 50%;
             background: linear-gradient(135deg, #ffffff 50%, #121216 50%);
-            border: 1.2px solid var(--badge-gold);
-            cursor: pointer;
-            transition: transform 0.2s;
-            flex-shrink: 0;
+            border: 1.5px solid var(--badge-gold); cursor: pointer; flex-shrink: 0;
             box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
         }
-        .theme-orb-btn:hover { transform: scale(1.1); }
 
-        .top-row-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px solid var(--border-color); padding-top: 3px; gap: 3px; }
-        .control-group { display: flex; gap: 2px; align-items: center; width: 100%; }
-        
-        .micro-btn {
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 3px 5px;
-            border-radius: 2px;
-            font-size: 0.62rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-align: center;
+        /* 🔄 हॉरिजॉन्टल स्क्रॉल करने योग्य कमांड ऑर्ब स्ट्रिप (कैलकुलेटर और कैलेंडर सहित) */
+        .scrollable-orbs-container {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
             white-space: nowrap;
-            transition: 0.2s;
+            padding: 3px 0;
+            align-items: center;
+            scrollbar-width: none;
         }
-        .micro-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
-        .micro-btn.danger { background: rgba(239, 68, 68, 0.15); border-color: var(--danger-red); color: var(--danger-red); }
-        .micro-btn.danger:hover { background: var(--danger-red); color: #fff; }
-        .micro-btn.gold { background: var(--badge-gold); color: #000; border-color: var(--badge-gold); font-weight: 800; }
+        .scrollable-orbs-container::-webkit-scrollbar { display: none; }
 
-        .date-picker-input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 2px 4px; border-radius: 2px; font-size: 0.62rem; outline: none; flex: 1; cursor: pointer; }
+        .orb-command-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            height: 28px;
+            padding: 0 10px;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            color: var(--text-main);
+            font-size: 0.56rem;
+            font-weight: 800;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: 0.15s;
+        }
+        .orb-command-chip svg { width: 12px; height: 12px; fill: currentColor; }
+        .orb-command-chip:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
+        .orb-command-chip.search-chip { background: var(--input-bg); border-color: var(--badge-gold); padding: 0; }
+        .orb-command-chip.search-chip input {
+            background: transparent; border: none; color: var(--text-main); padding: 0 8px; font-size: 0.56rem; outline: none; width: 110px; height: 100%;
+        }
+        .orb-command-chip.date-chip { background: var(--input-bg); border-color: var(--border-color); padding: 0 4px; }
+        .orb-command-chip.date-chip input {
+            background: transparent; border: none; color: var(--text-main); font-size: 0.56rem; outline: none; height: 100%; font-weight: 700;
+        }
+        .orb-command-chip.danger { border-color: var(--danger-red); color: var(--danger-red); background: rgba(239, 68, 68, 0.1); }
+        .orb-command-chip.gold { border-color: var(--badge-gold); color: #000; background: var(--badge-gold); font-weight: 900; }
+        .orb-command-chip.gold svg { fill: #000; }
+        .orb-command-chip.cyan { border-color: #06b6d4; color: #22d3ee; background: rgba(6, 182, 212, 0.1); }
+        .orb-command-chip.green { border-color: var(--success-green); color: #34d399; background: rgba(16, 185, 129, 0.15); }
+        .orb-command-chip.calc { border-color: var(--badge-gold); color: var(--badge-gold); background: rgba(212, 175, 55, 0.1); }
 
-        /* टॉगल कैलकुलेटर */
-        .calc-toggle-btn { background: var(--hover-bg); border: 1px solid var(--badge-gold); color: var(--badge-gold); padding: 2px 5px; border-radius: 2px; font-size: 0.62rem; font-weight: 800; cursor: pointer; width: 100%; text-align: center; }
-        .calc-toggle-btn:hover { background: var(--badge-gold); color: #000; }
-        
-        .calc-wrapper { background: var(--card-bg); border: 1px solid var(--badge-gold); border-radius: 3px; padding: 3px; display: none; flex-direction: column; gap: 2px; flex-shrink: 0; }
+        .delhi-conquest-bar {
+            display: flex; justify-content: space-between; align-items: center; background: var(--input-bg);
+            border: 1px solid var(--border-color); border-left: 3px solid var(--badge-gold); padding: 3px 6px;
+            font-size: 0.54rem; font-weight: 800; cursor: pointer; white-space: nowrap; overflow: hidden; gap: 4px; border-radius: 2px;
+        }
+
+        /* टॉगल कैलकुलेटर मोडल / बॉक्स */
+        .calc-wrapper { background: var(--card-bg); border: 1px solid var(--badge-gold); border-radius: 4px; padding: 6px; display: none; flex-direction: column; gap: 3px; flex-shrink: 0; margin-top: 2px; }
         .calc-wrapper.active { display: flex; }
-        .calc-screen { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--badge-gold); padding: 2px 4px; font-size: 0.7rem; font-weight: bold; border-radius: 2px; text-align: right; height: 20px; display: flex; align-items: center; justify-content: flex-end; }
-        .calc-btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-        .calc-btn { background: var(--hover-bg); border: 1px solid var(--border-color); color: var(--text-main); font-size: 0.62rem; font-weight: bold; padding: 2px; border-radius: 2px; cursor: pointer; text-align: center; }
-        .calc-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
+        .calc-screen { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--badge-gold); padding: 3px 6px; font-size: 0.75rem; font-weight: bold; text-align: right; height: 24px; }
+        .calc-btn-grid { display: grid !important; grid-template-columns: repeat(4, 1fr) !important; gap: 3px !important; width: 100%; }
+        .calc-btn { background: var(--hover-bg); border: 1px solid var(--border-color); color: var(--text-main); font-size: 0.65rem; font-weight: bold; padding: 5px; border-radius: 2px; cursor: pointer; text-align: center; }
         .calc-btn.operator { color: var(--badge-gold); }
-        .calc-btn.equal { background: var(--badge-gold); color: #000; }
-
-        /* पेस्टर बॉक्स */
-        .master-paster-box { background: var(--card-bg); border: 1px dashed var(--badge-gold); padding: 2px 4px; border-radius: 3px; flex-shrink: 0; }
-        .master-paster-box textarea { width: 100%; height: 26px; min-height: 22px; max-height: 100px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 2px; border-radius: 2px; font-size: 0.65rem; resize: both; outline: none; }
+        .calc-btn.equal { background: var(--badge-gold); color: #000; grid-column: span 4; }
 
         /* ग्रिड टेबल पैनल */
-        .grid-wrapper { flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 3px; padding: 1px; overflow: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: left; min-width: 1100px; }
+        .grid-wrapper { flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 4px; padding: 1px; overflow: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.62rem; text-align: left; min-width: 1200px; }
         
         th { 
-            color: var(--badge-gold); 
-            font-weight: 800; 
-            background: var(--input-bg); 
-            position: sticky; 
-            top: 0; 
-            z-index: 10; 
-            padding: 3px 5px; 
-            border: 1px solid var(--border-color); 
-            resize: both; 
-            overflow: auto; 
+            color: var(--badge-gold); font-weight: 800; background: var(--input-bg); 
+            position: sticky; top: 0; z-index: 10; padding: 5px 6px; 
+            border: 1px solid var(--border-color); cursor: pointer; user-select: none; white-space: nowrap;
         }
-        
-        tr { resize: vertical; overflow: hidden; transition: background 0.15s; }
         tr.selected-row { background: var(--row-selected) !important; outline: 1px solid var(--badge-gold); }
 
-        td { 
-            padding: 1px 3px; 
-            border: 1px solid var(--border-color); 
-            resize: both; 
-            overflow: auto; 
-            min-width: 90px;
-            height: 24px;
-        }
-
-        .row-selector { text-align: center; font-weight: 800; color: var(--badge-gold); cursor: pointer; user-select: none; }
-        .row-selector:hover { background: rgba(212, 175, 55, 0.2); }
+        td { padding: 2px 4px; border: 1px solid var(--border-color); min-width: 85px; height: 26px; vertical-align: middle; }
+        .row-selector-cell { text-align: center; font-weight: 800; color: var(--badge-gold); font-size: 0.6rem; }
         
         textarea.grid-input { 
-            width: 100%; 
-            height: 20px;
-            min-height: 18px;
-            max-height: 80px;
-            background: transparent; 
-            border: none; 
-            color: var(--text-main); 
-            padding: 1px 3px; 
-            font-size: 0.65rem; 
-            outline: none; 
-            resize: both; 
-            overflow: auto;
-            display: block;
+            width: 100%; height: 22px; min-height: 20px; max-height: 80px;
+            background: transparent; border: none; color: var(--text-main); 
+            padding: 2px 3px; font-size: 0.62rem; outline: none; resize: both; display: block;
         }
-        textarea.grid-input:focus { background: var(--input-bg); }
+        textarea.grid-input:focus { background: var(--input-bg); border: 1px solid var(--badge-gold); }
 
-        .pincode-select {
-            width: 100%;
-            background: var(--input-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 1px;
-            border-radius: 2px;
-            font-size: 0.62rem;
-            outline: none;
-            margin-bottom: 1px;
+        input[type="date"].reg-date-field {
+            width: 100%; height: 24px; background: var(--input-bg); color: var(--text-main);
+            border: 1px solid var(--border-color); border-radius: 2px; padding: 0 4px; font-size: 0.58rem; font-weight: 700; outline: none;
         }
-        .pincode-board {
-            width: 100%;
-            padding: 1px 3px;
-            border-radius: 2px;
-            font-weight: 800;
-            font-size: 0.58rem;
-            text-align: center;
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-        .zone-green { background: rgba(16, 185, 129, 0.25); color: #34d399; border-color: #10b981; }
-        .zone-red { background: rgba(239, 68, 68, 0.25); color: #f87171; border-color: #ef4444; }
 
-        .aging-badge { font-size: 0.55rem; padding: 1px 2px; border-radius: 2px; font-weight: bold; display: inline-block; }
+        .pincode-select { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 2px; border-radius: 2px; font-size: 0.58rem; outline: none; margin-bottom: 2px; font-weight: 700; }
+        .pincode-board { width: 100%; padding: 2px 4px; border-radius: 2px; font-weight: 900; font-size: 0.54rem; text-align: center; cursor: pointer; line-height: 1.2; }
+        .zone-green { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; border-left: 3px solid #10b981; }
+        .zone-red { background: rgba(239, 68, 68, 0.22); color: #f87171; border: 1px solid #ef4444; border-left: 3px solid #ef4444; }
+
+        .aging-badge { font-size: 0.54rem; padding: 1px 4px; border-radius: 2px; font-weight: bold; display: inline-block; white-space: nowrap; }
         .aging-fresh { background: rgba(16, 185, 129, 0.15); color: var(--success-green); border: 1px solid var(--success-green); }
         .aging-due { background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid var(--danger-red); }
 
+        .quick-ops { display: flex; gap: 3px; align-items: center; justify-content: center; }
+        .op-btn { padding: 2px 5px; font-size: 0.54rem; border-radius: 2px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); cursor: pointer; font-weight: 800; }
+        .op-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
+
         /* बॉटम एक्शन बार */
-        .action-bar { display: flex; gap: 3px; background: var(--card-bg); padding: 2px 4px; border: 1px solid var(--border-color); border-radius: 3px; align-items: center; justify-content: space-between; flex-shrink: 0; }
+        .action-bar { 
+            display: grid; grid-template-columns: 1fr 1fr 1.3fr 1.2fr; gap: 5px; background: var(--card-bg); 
+            padding: 5px 6px; border: 1px solid var(--border-color); border-radius: 4px; align-items: center; flex-shrink: 0; 
+        }
+        .action-bar .action-btn-bottom {
+            height: 30px; width: 100%; background: var(--input-bg); border: 1px solid var(--border-color);
+            color: var(--text-main); border-radius: 3px; font-size: 0.58rem; font-weight: 800; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.15s;
+        }
+        .action-bar .action-btn-bottom:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
+        .action-bar .action-btn-bottom.gold { background: var(--badge-gold); color: #000; border-color: var(--badge-gold); font-weight: 900; }
         
         .revenue-line-container { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            flex: 1.2; 
-            border-left: 1px dashed var(--badge-gold); 
-            border-right: 1px dashed var(--badge-gold); 
-            padding: 1px 3px; 
-            position: relative;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            height: 30px; background: var(--input-bg); border: 1px solid var(--border-color);
+            border-left: 3px solid var(--badge-gold); border-right: 3px solid var(--badge-gold); 
+            border-radius: 3px; padding: 0 4px; 
         }
-        .revenue-line-container::before, .revenue-line-container::after {
-            content: '';
-            position: absolute;
-            top: 0; bottom: 0; width: 2px; background: var(--badge-gold);
-        }
-        .revenue-line-container::before { left: -1px; }
-        .revenue-line-container::after { right: -1px; }
+        .revenue-label { font-size: 0.46rem; color: #9ca3af; font-weight: 800; text-transform: uppercase; line-height: 1; }
+        .revenue-value { font-size: 0.68rem; color: var(--badge-gold); font-weight: 900; line-height: 1.1; margin-top: 1px; }
 
-        .revenue-label { font-size: 0.52rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .revenue-value { font-size: 0.7rem; color: var(--badge-gold); font-weight: 900; letter-spacing: 0.5px; }
-
-        /* मोडल */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 9999; }
-        .modal-box { background: var(--card-bg); border: 1px solid var(--badge-gold); width: 90%; max-width: 380px; border-radius: 5px; padding: 10px; position: relative; max-height: 90vh; overflow-y: auto; color: var(--text-main); }
-        .modal-close-btn { position: absolute; top: 5px; right: 5px; background: var(--danger-red); color: #fff; border: none; width: 18px; height: 18px; font-weight: 800; cursor: pointer; border-radius: 2px; display: flex; align-items: center; justify-content: center; }
-        .modal-box h3 { color: var(--badge-gold); margin-bottom: 5px; font-size: 0.85rem; border-bottom: 1px solid var(--border-color); padding-bottom: 3px; display: flex; justify-content: space-between; align-items: center; }
-        .modal-banner { width: 100%; height: 100px; object-fit: cover; border-radius: 3px; margin-bottom: 5px; border: 1px solid var(--border-color); }
-        .detail-row { display: flex; justify-content: space-between; margin-bottom: 2px; font-size: 0.65rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
-        .detail-row span:first-child { color: #888; }
+        /* मोडल (पॉप-अप विंडो) */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 9999; }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--badge-gold); width: 94%; max-width: 440px; border-radius: 4px; padding: 14px; position: relative; max-height: 88vh; overflow-y: auto; color: var(--text-main); }
+        .modal-close-btn { position: absolute; top: 6px; right: 6px; background: var(--danger-red); color: #fff; border: none; width: 22px; height: 22px; font-weight: 900; cursor: pointer; border-radius: 2px; }
+        .modal-box h3 { color: var(--badge-gold); margin-bottom: 8px; font-size: 0.85rem; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
         
-        .radar-store-item { background: var(--input-bg); border: 1px solid var(--border-color); padding: 4px 5px; border-radius: 2px; margin-bottom: 3px; font-size: 0.65rem; }
+        .modal-form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; font-size: 0.62rem; }
+        .modal-form-group label { color: var(--badge-gold); font-weight: 800; }
+        .modal-form-group input, .modal-form-group textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 4px 6px; border-radius: 3px; font-size: 0.62rem; outline: none; }
+        .modal-form-group input:focus, .modal-form-group textarea:focus { border-color: var(--badge-gold); }
+        
+        .modal-submit-btn { width: 100%; height: 32px; background: var(--badge-gold); color: #000; border: none; font-weight: 900; font-size: 0.7rem; border-radius: 3px; cursor: pointer; margin-top: 6px; }
+        .modal-submit-btn:hover { opacity: 0.9; }
+
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.63rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
+        .radar-store-item { background: var(--input-bg); border: 1px solid var(--border-color); border-left: 3px solid var(--badge-gold); padding: 5px 7px; border-radius: 3px; margin-bottom: 4px; font-size: 0.6rem; }
+        #toastMsg { position: fixed; bottom: 44px; right: 10px; background: var(--badge-gold); color: #000; padding: 5px 10px; border-radius: 3px; font-size: 0.6rem; font-weight: 900; display: none; z-index: 99999; border: 1px solid #fff; box-shadow: 0 0 12px rgba(212,175,55,0.6); }
     </style>
 </head>
 <body>
+
+    <div id="toastMsg">सिस्टम अपडेटेड</div>
 
     <div class="container">
         <!-- टॉप बार -->
         <div class="top-bar">
             <div class="top-row-main">
-                <div class="brand-title">⭐ STAR SHOP MASTER EXCEL SHEET</div>
+                <div class="brand-title">STAR SHOP WAR-ROOM</div>
+                <div class="telemetry-strip">
+                    <span class="telemetry-pill">दुकानें: <strong id="statTotalStores">0</strong></span>
+                    <span class="telemetry-pill">पिन: <strong id="statActivePins">0/97</strong></span>
+                    <span class="telemetry-pill"><strong id="statParseSpeed">0.0ms</strong></span>
+                </div>
                 <button class="theme-orb-btn" onclick="toggleTheme()" title="थीम बदलें"></button>
             </div>
             
-            <div class="top-row-controls">
-                <div class="control-group">
-                    <input type="date" id="filterDateCalendar" class="date-picker-input" onclick="this.showPicker && this.showPicker()" onchange="filterRowsByDate(this.value)">
-                    <button class="micro-btn danger" onclick="deleteSelectedRow()">डिलीट</button>
-                    <button class="micro-btn" onclick="resetDateFilter()">सभी</button>
-                    <button class="micro-btn gold" onclick="addNewRow()">+ नई रो</button>
+            <!-- 🔄 हॉरिजॉन्टल स्क्रॉल करने योग्य कमांड ऑर्ब स्ट्रिप (कैलकुलेटर और कैलेंडर चिप्स सहित) -->
+            <div class="scrollable-orbs-container">
+                <div class="orb-command-chip search-chip" title="तुरंत खोजें">
+                    <input type="text" id="instantSearchInput" placeholder="🔍 खोजें..." oninput="instantFilterGrid(this.value)">
                 </div>
+                <button class="orb-command-chip calc" onclick="toggleCalculator()">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+                    <span>🧮 कैलकुलेटर</span>
+                </button>
+                <div class="orb-command-chip date-chip" title="तारीख फिल्टर">
+                    📅 <input type="date" id="filterDateCalendar" onchange="filterRowsByDate(this.value)" style="color-scheme: dark;">
+                </div>
+                <button class="orb-command-chip cyan" onclick="openSmartSplitterModal()">
+                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                    <span>कच्चा डेटा ऑटो-स्प्लिटर</span>
+                </button>
+                <button class="orb-command-chip green" onclick="addNewRow()">
+                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    <span>+ नई रो जोड़ें</span>
+                </button>
+                <button class="orb-command-chip danger" onclick="deleteSelectedRow()">
+                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                    <span>डिलीट रो</span>
+                </button>
+                <button class="orb-command-chip" onclick="resetAllFilters()">
+                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    <span>रीसेट फ़िल्टर</span>
+                </button>
+                <button class="orb-command-chip gold" onclick="openDataEntryModal()">
+                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    <span>4. + नई दुकान</span>
+                </button>
             </div>
 
-            <!-- टॉगल कैलकुलेटर -->
-            <button class="calc-toggle-btn" onclick="toggleCalculator()">कैलकुलेटर (टॉगल)</button>
+            <!-- टॉगल कैलकुलेटर बॉक्स -->
             <div class="calc-wrapper" id="calcWrapper">
                 <div class="calc-screen" id="calcScreen">0</div>
                 <div class="calc-btn-grid">
@@ -259,15 +270,14 @@
                     <button class="calc-btn" onclick="calcAppend('.')">.</button>
                     <button class="calc-btn operator" onclick="calcAppend('+')">+</button>
                     <button class="calc-btn operator" onclick="calcClear()">C</button>
-                    <button class="calc-btn equal" onclick="calcCompute()" style="grid-column: span 4;">= calculate</button>
+                    <button class="calc-btn equal" onclick="calcCompute()">= बराबर (Calculate)</button>
                 </div>
             </div>
-        </div>
 
-        <!-- पेस्टर बॉक्स -->
-        <div class="master-paster-box">
-            <div style="font-size: 0.58rem; color: var(--badge-gold); font-weight: 700; margin-bottom: 1px;">कच्चा डेटा पेस्टर बॉक्स:</div>
-            <textarea id="rawMasterPaste" placeholder="यहाँ रॉ डेटा पेस्ट करें..." oninput="parseRawDataAndFill(this)"></textarea>
+            <div class="delhi-conquest-bar" onclick="openFullDelhiRadarModal()">
+                <span id="delhiFlagSummary" style="color: #34d399;">दिल्ली रडार लोड हो रहा है...</span>
+                <span style="color: var(--badge-gold); text-decoration: underline;">97 पिन टारगेट</span>
+            </div>
         </div>
 
         <!-- ग्रिड टेबल पैनल -->
@@ -275,62 +285,98 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 20px;">#</th>
-                        <th>NAME</th>
-                        <th>ADD</th>
-                        <th>NO</th>
-                        <th>COLLECTION (₹)</th>
-                        <th>कोऑर्डिनेट्स</th>
-                        <th>कैटेगरी</th>
-                        <th>PINCODE (दिल्ली रडार)</th>
-                        <th>REG. DATE</th>
-                        <th>RECOVERY STATUS</th>
-                        <th>PHOTO</th>
-                        <th>ACTION</th>
+                        <th style="width: 42px;">POS ↕</th>
+                        <th onclick="sortGridBy(1)">NAME</th>
+                        <th onclick="sortGridBy(2)">ADD (दिल्ली लोकल)</th>
+                        <th onclick="sortGridBy(3)">NO (10-Digit)</th>
+                        <th onclick="sortGridBy(4)">COLLECTION (₹)</th>
+                        <th>कोऑर्डिनेट्स (GPS)</th>
+                        <th onclick="sortGridBy(6)">कैटेगरी / ब्रांड</th>
+                        <th style="min-width: 170px;">PINCODE (झंडा & बाकी दुकानें)</th>
+                        <th style="min-width: 105px;">REG. DATE</th>
+                        <th>STATUS</th>
+                        <th>ACTION (कमांड)</th>
                         <th>AUTO-ID</th>
                     </tr>
                 </thead>
-                <tbody id="masterGridBody">
-                    <tr data-date="2026-06-15" onclick="selectThisRow(this)" style="resize: vertical; overflow: hidden;">
-                        <td class="row-selector">1</td>
-                        <td><textarea class="grid-input store-name" oninput="autoGrow(this); updateAutoId(this)">Glamour Salon</textarea></td>
-                        <td><textarea class="grid-input store-add" oninput="autoGrow(this)">Pocket A, Begumpur</textarea></td>
-                        <td><textarea class="grid-input store-no" oninput="autoGrow(this)">9870242077</textarea></td>
-                        <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue()">500</textarea></td>
-                        <td><textarea class="grid-input store-geo" oninput="autoGrow(this)">28.7241, 77.0638</textarea></td>
-                        <td><textarea class="grid-input store-cat" oninput="autoGrow(this)">Salon & Beauty</textarea></td>
-                        <td>
-                            <select class="pincode-select" onchange="onPinChange(this)"></select>
-                            <div class="pincode-board zone-green" data-pin="110086" onclick="openPinRadarByBoard(this)">
-                                110086 (ग्रीन ज़ोन)
-                            </div>
-                        </td>
-                        <td><input type="date" class="grid-input reg-date-field" value="2026-06-15" onclick="this.showPicker && this.showPicker()" onchange="checkAging(this)" style="height:20px;"></td>
-                        <td><span class="aging-badge aging-due">2 महीने!</span></td>
-                        <td><input type="file" class="grid-input" style="padding: 1px; height:20px;" onchange="previewImage(this)"></td>
-                        <td><button class="micro-btn" style="padding:1px 3px; font-size:0.55rem;" onclick="openCardPreview(this)">प्रिव्यू</button></td>
-                        <td><textarea class="grid-input auto-id-field" readonly style="color:var(--badge-gold); font-weight:bold;" oninput="autoGrow(this)">glamour_salon_2077</textarea></td>
-                    </tr>
-                </tbody>
+                <tbody id="masterGridBody"></tbody>
             </table>
         </div>
 
         <!-- बॉटम एक्शन बार -->
         <div class="action-bar">
-            <button class="micro-btn" style="flex: 1;" onclick="downloadMasterSheet()">डाउनलोड मास्टर</button>
+            <button class="action-btn-bottom" onclick="downloadMasterSheet()">HTML सेव</button>
+            <button class="action-btn-bottom" onclick="exportCSV()">CSV एक्सपोर्ट</button>
             <div class="revenue-line-container">
                 <span class="revenue-label">टोटल कलेक्शन</span>
-                <span class="revenue-value" id="totalRevenueSpan">₹500</span>
+                <span class="revenue-value" id="totalRevenueSpan">₹0</span>
             </div>
-            <button class="micro-btn gold" style="flex: 1;" onclick="pushToSupabase()">सुपरबेस डंप</button>
+            <button class="action-btn-bottom gold" onclick="copySupabaseJSON()">सुपरबेस JSON</button>
+        </div>
+    </div>
+
+    <!-- 🚀 नई डेटा एंट्री पॉप-अप मोडल विंडो -->
+    <div class="modal-overlay" id="dataEntryModal">
+        <div class="modal-box">
+            <button class="modal-close-btn" onclick="closeDataEntryModal()">X</button>
+            <h3>मर्चेंट डेटा एंट्री स्टूडियो</h3>
+            
+            <div class="modal-form-group">
+                <label>दुकान का नाम (Store Name):</label>
+                <input type="text" id="modalStoreName" placeholder="जैसे: Glamour Salon">
+            </div>
+            <div class="modal-form-group">
+                <label>पता या एरिया (Delhi Address/Area):</label>
+                <input type="text" id="modalStoreAdd" placeholder="जैसे: Pocket A Begumpur Delhi">
+            </div>
+            <div class="modal-form-group">
+                <label>मोबाइल नंबर (10-Digit Mobile):</label>
+                <input type="text" id="modalStoreNo" placeholder="जैसे: 9870242077">
+            </div>
+            <div class="modal-form-group">
+                <label>कलेक्शन अमाउंट (₹):</label>
+                <input type="text" id="modalCollection" value="500">
+            </div>
+
+            <button class="modal-submit-btn" onclick="injectModalData()">लॉक करके शीट में डालें</button>
+        </div>
+    </div>
+
+    <!-- 🚀 कच्चा डेटा ऑटो-स्प्लिटर और ऑडिट पॉप-अप मोडल विंडो -->
+    <div class="modal-overlay" id="smartSplitterModal">
+        <div class="modal-box">
+            <button class="modal-close-btn" onclick="closeSmartSplitterModal()">X</button>
+            <h3>कच्चा डेटा ऑटो-स्प्लिटर & ऑडिट</h3>
+            
+            <div class="modal-form-group">
+                <label>पूरा कच्चा डेटा (Raw Dump यहाँ पेस्ट करें):</label>
+                <textarea id="splitterRawText" rows="3" placeholder="यहाँ रॉ डेटा पेस्ट करें और 'स्प्लिट करें' दबाएं..." oninput="previewSplitterData()"></textarea>
+            </div>
+            
+            <div style="font-size:0.6rem; color:var(--badge-gold); font-weight:800; margin-bottom:4px;">ऑडिट प्रिव्यू (चेक करें):</div>
+            
+            <div class="modal-form-group">
+                <label>अलग किया गया नाम:</label>
+                <input type="text" id="splitName" placeholder="नाम...">
+            </div>
+            <div class="modal-form-group">
+                <label>अलग किया गया पता:</label>
+                <input type="text" id="splitAdd" placeholder="पता...">
+            </div>
+            <div class="modal-form-group">
+                <label>अलग किया गया फोन:</label>
+                <input type="text" id="splitNo" placeholder="फोन...">
+            </div>
+
+            <button class="modal-submit-btn" onclick="injectSplitterData()">वेरीफाई करके शीट में लॉक करें</button>
         </div>
     </div>
 
     <!-- प्रिव्यू मोडल -->
     <div class="modal-overlay" id="previewModal">
         <div class="modal-box">
-            <button class="modal-close-btn" onclick="closeModal()">✕</button>
-            <h3 id="modalTitle">📋 मर्चेंट कार्ड प्रिव्यू</h3>
+            <button class="modal-close-btn" onclick="closeModal()">X</button>
+            <h3 id="modalTitle">मर्चेंट कमांड प्रिव्यू</h3>
             <div id="modalBody"></div>
         </div>
     </div>
@@ -338,45 +384,161 @@
     <!-- पिनकोड थर्मल रडार मोडल -->
     <div class="modal-overlay" id="pinRadarModal">
         <div class="modal-box">
-            <button class="modal-close-btn" onclick="closePinRadar()">✕</button>
-            <h3 id="radarTitle">
-                <span>📍 पिन बोर्ड रडार</span>
-                <span id="radarCountBadge" style="font-size:0.6rem; background:rgba(212,175,55,0.2); padding:1px 5px; border-radius:3px; color:var(--badge-gold);">0 दुकानें</span>
-            </h3>
+            <button class="modal-close-btn" onclick="closePinRadar()">X</button>
+            <h3 id="radarTitle"><span>पिनकोड कमांड रडार</span></h3>
             <div id="radarBody"></div>
         </div>
     </div>
 
     <script>
-        const delhiPincodes = [];
-        for (let i = 1; i <= 96; i++) {
-            let p = "1100" + (i < 10 ? "0" + i : i);
-            delhiPincodes.push(p);
+        const COMPLETE_DELHI_PINCODES = {
+            "110001": { area: "Connaught Place / Parliament St", target: 550, geo: "28.6315, 77.2167" },
+            "110002": { area: "Darya Ganj / Indraprastha", target: 320, geo: "28.6427, 77.2407" },
+            "110003": { area: "Civil Lines / Lodhi Road", target: 240, geo: "28.5916, 77.2249" },
+            "110004": { area: "Rashtrapati Bhawan", target: 45, geo: "28.6143, 77.1994" },
+            "110005": { area: "Karol Bagh / Sat Nagar", target: 620, geo: "28.6514, 77.1907" },
+            "110006": { area: "Chandni Chowk / Sadar Bazar", target: 680, geo: "28.6562, 77.2300" },
+            "110007": { area: "Kamla Nagar / Roop Nagar", target: 390, geo: "28.6809, 77.2046" },
+            "110008": { area: "Patel Nagar / Shadipur", target: 360, geo: "28.6502, 77.1657" },
+            "110009": { area: "Model Town / GTB Nagar", target: 340, geo: "28.7027, 77.1940" },
+            "110010": { area: "Delhi Cantt / Dhaula Kuan", target: 190, geo: "28.5961, 77.1587" },
+            "110011": { area: "Nirman Bhawan / Udyog Bhawan", target: 90, geo: "28.6109, 77.2148" },
+            "110012": { area: "Inderpuri / Pusa", target: 210, geo: "28.6305, 77.1492" },
+            "110013": { area: "Hazrat Nizamuddin", target: 230, geo: "28.5933, 77.2507" },
+            "110014": { area: "Jangpura / Bhogal", target: 280, geo: "28.5823, 77.2434" },
+            "110015": { area: "Moti Nagar / Kirti Nagar", target: 410, geo: "28.6584, 77.1424" },
+            "110016": { area: "Hauz Khas / Green Park", target: 460, geo: "28.5494, 77.2001" },
+            "110017": { area: "Malviya Nagar / Saket", target: 520, geo: "28.5286, 77.2066" },
+            "110018": { area: "Tilak Nagar / Vikaspuri", target: 490, geo: "28.6366, 77.0965" },
+            "110019": { area: "Kalkaji / Nehru Place", target: 510, geo: "28.5485, 77.2513" },
+            "110020": { area: "Okhla Industrial Area", target: 330, geo: "28.5273, 77.2785" },
+            "110021": { area: "Chanakyapuri / South Campus", target: 210, geo: "28.5901, 77.1848" },
+            "110022": { area: "RK Puram", target: 290, geo: "28.5660, 77.1767" },
+            "110023": { area: "Sarojini Nagar / Laxmi Bai Nagar", target: 440, geo: "28.5756, 77.1953" },
+            "110024": { area: "Lajpat Nagar / Defence Colony", target: 580, geo: "28.5677, 77.2433" },
+            "110025": { area: "Jamia Nagar / Sukhdev Vihar", target: 430, geo: "28.5616, 77.2802" },
+            "110026": { area: "Punjabi Bagh / Shivaji Park", target: 450, geo: "28.6681, 77.1290" },
+            "110027": { area: "Rajouri Garden / Tagore Garden", target: 540, geo: "28.6415, 77.1209" },
+            "110028": { area: "Naraina", target: 270, geo: "28.6280, 77.1387" },
+            "110029": { area: "AIIMS / Safdarjung Enclave", target: 310, geo: "28.5659, 77.1995" },
+            "110030": { area: "Mehrauli / Lado Sarai", target: 350, geo: "28.5204, 77.1787" },
+            "110031": { area: "Geeta Colony / Gandhi Nagar", target: 480, geo: "28.6558, 77.2711" },
+            "110032": { area: "Shahdara / Babarpur", target: 470, geo: "28.6892, 77.2869" },
+            "110033": { area: "Jahangirpuri / Adarsh Nagar", target: 380, geo: "28.7297, 77.1656" },
+            "110034": { area: "Pitampura / Rani Bagh", target: 530, geo: "28.6901, 77.1450" },
+            "110035": { area: "Keshav Puram / Tri Nagar", target: 360, geo: "28.6836, 77.1525" },
+            "110036": { area: "Alipur / Bakhtawarpur", target: 220, geo: "28.7984, 77.1331" },
+            "110037": { area: "Mahipalpur / Samalkha", target: 340, geo: "28.5446, 77.1260" },
+            "110038": { area: "Rajokri / Ghitorni", target: 180, geo: "28.5134, 77.1180" },
+            "110039": { area: "Bawana / Auchandi", target: 260, geo: "28.7972, 77.0345" },
+            "110040": { area: "Narela / Bhorgarh", target: 330, geo: "28.8500, 77.0900" },
+            "110041": { area: "Nangloi / Mundka", target: 420, geo: "28.6815, 77.0679" },
+            "110042": { area: "Badli / Haiderpur", target: 310, geo: "28.7385, 77.1470" },
+            "110043": { area: "Najafgarh", target: 460, geo: "28.6090, 76.9855" },
+            "110044": { area: "Badarpur / Jaitpur", target: 390, geo: "28.4945, 77.3039" },
+            "110045": { area: "Dabri / Palam", target: 410, geo: "28.5901, 77.0888" },
+            "110046": { area: "Nangal Raya / Sagarpur", target: 320, geo: "28.6096, 77.1055" },
+            "110047": { area: "Aya Nagar / Mandi", target: 210, geo: "28.4735, 77.1325" },
+            "110048": { area: "Greater Kailash (GK 1 & 2)", target: 490, geo: "28.5482, 77.2380" },
+            "110049": { area: "South Extension / Andrews Ganj", target: 440, geo: "28.5684, 77.2205" },
+            "110050": { area: "Andrews Ganj / Hudco Place", target: 210, geo: "28.5642, 77.2245" },
+            "110051": { area: "Krishna Nagar / Jagatpuri", target: 460, geo: "28.6566, 77.2842" },
+            "110052": { area: "Ashok Vihar / Wazirpur", target: 430, geo: "28.6931, 77.1748" },
+            "110053": { area: "Bhajanpura / Yamuna Vihar", target: 450, geo: "28.7006, 77.2662" },
+            "110054": { area: "Timarpur / Civil Lines North", target: 290, geo: "28.7076, 77.2248" },
+            "110055": { area: "Paharganj", target: 480, geo: "28.6448, 77.2140" },
+            "110056": { area: "Shakur Basti / Rani Bagh West", target: 260, geo: "28.6811, 77.1340" },
+            "110057": { area: "Vasant Vihar", target: 310, geo: "28.5603, 77.1613" },
+            "110058": { area: "Janakpuri", target: 560, geo: "28.6219, 77.0878" },
+            "110059": { area: "Uttam Nagar / Nawada", target: 610, geo: "28.6250, 77.0500" },
+            "110060": { area: "Rajender Nagar", target: 350, geo: "28.6394, 77.1828" },
+            "110061": { area: "Bijwasan / Kapashera", target: 240, geo: "28.5326, 77.0583" },
+            "110062": { area: "Sangam Vihar / Tigri", target: 470, geo: "28.5020, 77.2410" },
+            "110063": { area: "Paschim Vihar / Peeragarhi", target: 510, geo: "28.6692, 77.1031" },
+            "110064": { area: "Hari Nagar / Mayapuri", target: 390, geo: "28.6262, 77.1130" },
+            "110065": { area: "East of Kailash / Friends Colony", target: 410, geo: "28.5589, 77.2533" },
+            "110066": { area: "RK Puram Sector 8-12", target: 230, geo: "28.5714, 77.1702" },
+            "110067": { area: "Munirka / JNU", target: 280, geo: "28.5562, 77.1731" },
+            "110068": { area: "Katwaria Sarai / IGNOU", target: 220, geo: "28.5398, 77.1872" },
+            "110069": { area: "India Gate / High Court", target: 120, geo: "28.6129, 77.2295" },
+            "110070": { area: "Vasant Kunj", target: 450, geo: "28.5293, 77.1532" },
+            "110071": { area: "Chhawla / Kanganheri", target: 190, geo: "28.5673, 76.9936" },
+            "110072": { area: "Jharoda Kalan", target: 160, geo: "28.6534, 76.9535" },
+            "110073": { area: "Ujwa / Rawta", target: 140, geo: "28.5712, 76.9123" },
+            "110074": { area: "Chhatarpur / Satbari", target: 370, geo: "28.4976, 77.1837" },
+            "110075": { area: "Dwarka Sector 1-11", target: 540, geo: "28.5921, 77.0460" },
+            "110076": { area: "Sarita Vihar / Jasola", target: 330, geo: "28.5323, 77.2917" },
+            "110077": { area: "Dwarka Sector 22-23 / Dhulsiras", target: 290, geo: "28.5565, 77.0532" },
+            "110078": { area: "Dwarka Sector 12-19 / Kakrola", target: 480, geo: "28.6024, 77.0266" },
+            "110079": { area: "Neb Sarai / Sainik Farm", target: 260, geo: "28.5142, 77.2045" },
+            "110080": { area: "Sangam Vihar South", target: 260, geo: "28.4988, 77.2325" },
+            "110081": { area: "Kanjhawala / Karala", target: 290, geo: "28.7258, 77.0039" },
+            "110082": { area: "Khera Kalan / Holambi", target: 170, geo: "28.7752, 77.1165" },
+            "110083": { area: "Mangolpuri", target: 420, geo: "28.6865, 77.0844" },
+            "110084": { area: "Burari / Sant Nagar", target: 440, geo: "28.7539, 77.1972" },
+            "110085": { area: "Rohini Sector 1-18 / Rithala", target: 590, geo: "28.7154, 77.1068" },
+            "110086": { area: "Begumpur / Sultanpuri / Rohini Sec 20-24", target: 450, geo: "28.7241, 77.0638" },
+            "110087": { area: "Sunder Nagri / Nand Nagri", target: 310, geo: "28.7024, 77.3115" },
+            "110088": { area: "Shalimar Bagh", target: 410, geo: "28.7169, 77.1578" },
+            "110089": { area: "Rohini Sector 15-17 / Badli", target: 380, geo: "28.7366, 77.1258" },
+            "110090": { area: "CGO Complex", target: 110, geo: "28.5872, 77.2355" },
+            "110091": { area: "Mayur Vihar Phase 1 / Trilokpuri", target: 460, geo: "28.6095, 77.2966" },
+            "110092": { area: "Laxmi Nagar / Preet Vihar / Shakarpur", target: 640, geo: "28.6304, 77.2777" },
+            "110093": { area: "Nand Nagri / Harsh Vihar", target: 350, geo: "28.6975, 77.3050" },
+            "110094": { area: "Karawal Nagar / Sonia Vihar", target: 380, geo: "28.7285, 77.2695" },
+            "110095": { area: "Jhilmil / Vivek Vihar", target: 360, geo: "28.6710, 77.3145" },
+            "110096": { area: "Mayur Vihar Phase 3 / Ghazipur", target: 420, geo: "28.6130, 77.3320" },
+            "110097": { area: "Kapashera Border", target: 190, geo: "28.5245, 77.0815" }
+        };
+
+        const delhiKeywordToPin = {
+            "begumpur": "110086", "बेगमपुर": "110086", "sultanpuri": "110086", "सुल्तानपुरी": "110086", "budh vihar": "110086", "rohini sector 24": "110086", "rohini sector 22": "110086", "rohini sector 20": "110086",
+            "rohini": "110085", "रोहिणी": "110085", "rithala": "110085", "रिठाला": "110085",
+            "pitampura": "110034", "पीतमपुरा": "110034", "rani bagh": "110034",
+            "narela": "110040", "नरेला": "110040", "bawana": "110039", "बवाना": "110039",
+            "uttam nagar": "110059", "उत्तम नगर": "110059", "janakpuri": "110058", "जनकपुरी": "110058",
+            "dwarka": "110075", "द्वारका": "110075", "karol bagh": "110005", "करोल बाग": "110005",
+            "connaught place": "110001", "chandni chowk": "110006", "laxmi nagar": "110092", "लक्ष्मी नगर": "110092",
+            "paschim vihar": "110063", "shalimar bagh": "110088", "mangolpuri": "110083", "kanjhawala": "110081",
+            "karala": "110081", "nangloi": "110041", "najafgarh": "110043", "saket": "110017", "malviya nagar": "110017",
+            "hauz khas": "110016", "lajpat nagar": "110024", "rajouri garden": "110027", "tilak nagar": "110018",
+            "burari": "110084", "shahdara": "110032", "mayur vihar": "110091", "vasant kunj": "110070"
+        };
+
+        const STORAGE_KEY = "STAR_SHOP_QUANTUM_V22";
+
+        function showToast(msg) {
+            const t = document.getElementById('toastMsg');
+            t.innerText = msg;
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 2000);
         }
 
         function populatePinSelect(selectEl, selectedPin = "110086") {
-            selectEl.innerHTML = "";
-            delhiPincodes.forEach(p => {
-                let opt = document.createElement('option');
-                opt.value = p;
-                opt.innerText = p + (p === "110086" ? " (बेगमपुर)" : "");
-                if (p === selectedPin) opt.selected = true;
-                selectEl.appendChild(opt);
-            });
+            let html = "";
+            for (let pin in COMPLETE_DELHI_PINCODES) {
+                let info = COMPLETE_DELHI_PINCODES[pin];
+                let sel = (pin === selectedPin) ? "selected" : "";
+                html += `<option value="${pin}" ${sel}>${pin} - ${info.area.slice(0, 18)} (कोटा: ${info.target})</option>`;
+            }
+            selectEl.innerHTML = html;
         }
 
         function onPinChange(selectEl) {
             const tr = selectEl.closest('tr');
-            const board = tr.querySelector('.pincode-board');
             const newPin = selectEl.value;
+            const board = tr.querySelector('.pincode-board');
             board.setAttribute('data-pin', newPin);
+            if (COMPLETE_DELHI_PINCODES[newPin]) {
+                tr.querySelector('.store-geo').value = COMPLETE_DELHI_PINCODES[newPin].geo;
+            }
             updateAllPinBoards();
+            saveToLocalStorage();
         }
 
         function toggleTheme() {
             const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            html.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
+            html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
 
         function toggleCalculator() {
@@ -384,105 +546,83 @@
         }
 
         let calcInput = "";
-        function calcAppend(val) {
-            calcInput += val;
-            document.getElementById('calcScreen').innerText = calcInput;
-        }
-        function calcClear() {
-            calcInput = "";
-            document.getElementById('calcScreen').innerText = "0";
-        }
+        function calcAppend(val) { calcInput += val; document.getElementById('calcScreen').innerText = calcInput; }
+        function calcClear() { calcInput = ""; document.getElementById('calcScreen').innerText = "0"; }
         function calcCompute() {
             try {
-                let res = eval(calcInput);
+                let res = Function('"use strict";return (' + calcInput + ')')();
                 document.getElementById('calcScreen').innerText = res;
                 calcInput = res.toString();
-            } catch (e) {
-                document.getElementById('calcScreen').innerText = "Error";
-                calcInput = "";
-            }
+            } catch (e) { document.getElementById('calcScreen').innerText = "Error"; calcInput = ""; }
         }
 
         function calculateTotalRevenue() {
             let total = 0;
-            document.querySelectorAll('.collection-input').forEach(input => {
-                total += parseFloat(input.value) || 0;
-            });
-            document.getElementById('totalRevenueSpan').innerText = `₹${total}`;
+            const inputs = document.querySelectorAll('#masterGridBody tr:not([style*="display: none"]) .collection-input');
+            inputs.forEach(input => { total += parseFloat(input.value) || 0; });
+            document.getElementById('totalRevenueSpan').innerText = `₹${total.toLocaleString('en-IN')}`;
         }
 
-        function getTodayDateString() {
-            return new Date().toISOString().split('T')[0];
-        }
+        function getTodayDateString() { return new Date().toISOString().split('T')[0]; }
 
-        function generateIdFromName(nameVal) {
-            if (!nameVal) return "DEL_STORE_00";
-            const clean = nameVal.toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').slice(0, 15);
-            const rand = Math.floor(100 + Math.random() * 900);
-            return `${clean}_${rand}`;
+        function generateIdFromName(nameVal, phoneVal = "") {
+            const clean = (nameVal || "store").toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').slice(0, 12);
+            const suffix = (phoneVal && phoneVal.length >= 4) ? phoneVal.slice(-4) : Math.floor(1000 + Math.random() * 9000);
+            return `${clean}_${suffix}`;
         }
 
         function updateAutoId(textarea) {
             const tr = textarea.closest('tr');
-            const idField = tr.querySelector('.auto-id-field');
-            idField.value = generateIdFromName(textarea.value);
-            autoGrow(idField);
+            const nameVal = tr.querySelector('.store-name').value;
+            const phoneVal = tr.querySelector('.store-no').value;
+            tr.querySelector('.auto-id-field').value = generateIdFromName(nameVal, phoneVal);
+            saveToLocalStorage();
         }
 
         function autoGrow(element) {
-            element.style.height = 'auto';
+            element.style.height = '22px';
             element.style.height = (element.scrollHeight) + 'px';
         }
 
         function checkAging(dateInput) {
             const tr = dateInput.closest('tr');
             const statusCell = tr.cells[9];
-            const regDate = new Date(dateInput.value);
-            const today = new Date();
-            const diffDays = Math.floor((today - regDate) / (1000 * 60 * 60 * 24));
-
-            if (diffDays > 60) {
-                statusCell.innerHTML = `<span class="aging-badge aging-due">${Math.floor(diffDays/30)} महीने!</span>`;
-            } else {
-                statusCell.innerHTML = `<span class="aging-badge aging-fresh">नया</span>`;
-            }
+            const diffDays = Math.floor((new Date() - new Date(dateInput.value)) / (1000 * 60 * 60 * 24));
+            statusCell.innerHTML = diffDays > 60 
+                ? `<span class="aging-badge aging-due">${Math.floor(diffDays/30)} महीने!</span>` 
+                : `<span class="aging-badge aging-fresh">नया</span>`;
+            saveToLocalStorage();
         }
 
         function selectThisRow(row) {
-            document.querySelectorAll('#masterGridBody tr').forEach(r => r.classList.remove('selected-row'));
+            document.querySelectorAll('#masterGridBody tr.selected-row').forEach(r => r.classList.remove('selected-row'));
             row.classList.add('selected-row');
         }
 
         function deleteSelectedRow() {
             const selectedRow = document.querySelector('#masterGridBody tr.selected-row');
+            const tbody = document.getElementById('masterGridBody');
             if (selectedRow) {
                 selectedRow.remove();
-                reindexRows();
-                calculateTotalRevenue();
-                updateAllPinBoards();
-            } else {
-                const tbody = document.getElementById('masterGridBody');
-                if (tbody.rows.length > 0) {
-                    tbody.deleteRow(tbody.rows.length - 1);
-                    calculateTotalRevenue();
-                    updateAllPinBoards();
-                } else {
-                    alert("डिलीट करने के लिए कोई रो उपलब्ध नहीं है!");
-                }
+            } else if (tbody.rows.length > 0) {
+                tbody.deleteRow(tbody.rows.length - 1);
             }
+            reindexRows();
+            calculateTotalRevenue();
+            updateAllPinBoards();
+            saveToLocalStorage();
         }
 
         function reindexRows() {
-            const rows = document.querySelectorAll('#masterGridBody tr');
-            rows.forEach((row, idx) => {
-                const selectorTd = row.querySelector('.row-selector');
-                if (selectorTd) selectorTd.innerText = idx + 1;
+            document.querySelectorAll('#masterGridBody tr').forEach((row, idx) => {
+                row.querySelector('.row-selector-cell').innerText = idx + 1;
             });
         }
 
         function updateAllPinBoards() {
             let pinCounts = {};
-            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+            const rows = document.querySelectorAll('#masterGridBody tr');
+            rows.forEach(row => {
                 const board = row.querySelector('.pincode-board');
                 if (board) {
                     let pin = board.getAttribute('data-pin') || "110086";
@@ -490,80 +630,320 @@
                 }
             });
 
-            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+            rows.forEach(row => {
                 const board = row.querySelector('.pincode-board');
                 if (board) {
                     let pin = board.getAttribute('data-pin') || "110086";
-                    let count = pinCounts[pin] || 0;
-                    if (count > 0) {
+                    let added = pinCounts[pin] || 0;
+                    let totalTarget = COMPLETE_DELHI_PINCODES[pin] ? COMPLETE_DELHI_PINCODES[pin].target : 300;
+                    let remaining = Math.max(0, totalTarget - added);
+
+                    if (added > 0) {
                         board.className = "pincode-board zone-green";
-                        board.innerHTML = `${pin} (${count} दुकानें)`;
+                        board.innerHTML = `${pin} | झंडा गड़ गया (${added})<br>बाकी: ${remaining}/${totalTarget}`;
                     } else {
                         board.className = "pincode-board zone-red";
-                        board.innerHTML = `${pin} (0 दुकानें)`;
+                        board.innerHTML = `${pin} | कब्जा बाकी!<br>टारगेट: ${totalTarget}/${totalTarget}`;
                     }
                 }
             });
+
+            const totalPins = Object.keys(COMPLETE_DELHI_PINCODES).length;
+            const conqueredPins = Object.keys(pinCounts).length;
+            const unconqueredPins = totalPins - conqueredPins;
+
+            let totalDelhiTarget = 0;
+            for (let k in COMPLETE_DELHI_PINCODES) totalDelhiTarget += COMPLETE_DELHI_PINCODES[k].target;
+            let totalRemainingDelhi = Math.max(0, totalDelhiTarget - rows.length);
+
+            document.getElementById('statTotalStores').innerText = rows.length;
+            document.getElementById('statActivePins').innerText = `${conqueredPins}/${totalPins}`;
+            document.getElementById('delhiFlagSummary').innerHTML = 
+                `झंडा गड़ा: <strong>${conqueredPins}</strong> | बाकी: <strong style="color:#f87171;">${unconqueredPins} पिन</strong> | बाकी दुकानें: <strong>${totalRemainingDelhi.toLocaleString('en-IN')}</strong>`;
         }
 
-        function addNewRow(prefill = {}) {
-            const tbody = document.getElementById('masterGridBody');
-            const rowCount = tbody.rows.length + 1;
+        function createRowElement(prefill = {}, rowIndex = 1) {
             const defName = prefill.name || "New Store";
-            const defId = generateIdFromName(defName);
-            const todayStr = getTodayDateString();
-            const pinVal = prefill.pin || '110086';
+            const defNo = prefill.no || "";
+            const defId = prefill.id || generateIdFromName(defName, defNo);
+            const todayStr = prefill.date || getTodayDateString();
+            const pinVal = (prefill.pin && COMPLETE_DELHI_PINCODES[prefill.pin]) ? prefill.pin : '110086';
             
             const row = document.createElement('tr');
             row.setAttribute('data-date', todayStr);
             row.setAttribute('onclick', 'selectThisRow(this)');
-            row.style.resize = "vertical";
-            row.style.overflow = "hidden";
             row.innerHTML = `
-                <td class="row-selector">${rowCount}</td>
+                <td style="text-align:center;">
+                    <div style="font-weight:800; color:var(--badge-gold); font-size:0.6rem;" class="row-selector-cell">${rowIndex}</div>
+                </td>
                 <td><textarea class="grid-input store-name" oninput="autoGrow(this); updateAutoId(this)">${defName}</textarea></td>
-                <td><textarea class="grid-input store-add" oninput="autoGrow(this)">${prefill.add || ''}</textarea></td>
-                <td><textarea class="grid-input store-no" oninput="autoGrow(this)">${prefill.no || ''}</textarea></td>
-                <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue()">${prefill.collection || '0'}</textarea></td>
-                <td><textarea class="grid-input store-geo" oninput="autoGrow(this)">${prefill.geo || ''}</textarea></td>
-                <td><textarea class="grid-input store-cat" oninput="autoGrow(this)">${prefill.cat || ''}</textarea></td>
+                <td><textarea class="grid-input store-add" oninput="autoGrow(this); autoDetectGeoFromAddress(this)">${prefill.add || ''}</textarea></td>
+                <td><textarea class="grid-input store-no" oninput="autoGrow(this); updateAutoId(this)">${defNo}</textarea></td>
+                <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue(); saveToLocalStorage()">${prefill.collection || '0'}</textarea></td>
+                <td><textarea class="grid-input store-geo" oninput="autoGrow(this); saveToLocalStorage()">${prefill.geo || COMPLETE_DELHI_PINCODES[pinVal].geo}</textarea></td>
+                <td><textarea class="grid-input store-cat" oninput="autoGrow(this); saveToLocalStorage()">${prefill.cat || 'सैलून'}</textarea></td>
                 <td>
                     <select class="pincode-select" onchange="onPinChange(this)"></select>
-                    <div class="pincode-board zone-green" data-pin="${pinVal}" onclick="openPinRadarByBoard(this)">
-                        ${pinVal} (ग्रीन ज़ोन)
+                    <div class="pincode-board zone-green" data-pin="${pinVal}" onclick="openPinRadarByBoard(this)">${pinVal}</div>
+                </td>
+                <td><input type="date" class="reg-date-field" value="${todayStr}" onchange="checkAging(this)"></td>
+                <td><span class="aging-badge aging-fresh">नया</span></td>
+                <td>
+                    <div class="quick-ops">
+                        <button class="op-btn" onclick="strikeWhatsApp(this)">WA</button>
+                        <button class="op-btn" onclick="strikeMap(this)">MAP</button>
+                        <button class="op-btn" onclick="openCardPreview(this)">VIEW</button>
                     </div>
                 </td>
-                <td><input type="date" class="grid-input reg-date-field" value="${todayStr}" onclick="this.showPicker && this.showPicker()" onchange="checkAging(this)" style="height:20px;"></td>
-                <td><span class="aging-badge aging-fresh">नया</span></td>
-                <td><input type="file" class="grid-input" style="padding: 1px; height:20px;" onchange="previewImage(this)"></td>
-                <td><button class="micro-btn" style="padding:1px 3px; font-size:0.55rem;" onclick="openCardPreview(this)">प्रिव्यू</button></td>
-                <td><textarea class="grid-input auto-id-field" readonly style="color:var(--badge-gold); font-weight:bold;" oninput="autoGrow(this)">${defId}</textarea></td>
+                <td><textarea class="grid-input auto-id-field" readonly style="color:var(--badge-gold); font-weight:bold;">${defId}</textarea></td>
             `;
-            tbody.appendChild(row);
-            
-            const selectEl = row.querySelector('.pincode-select');
-            populatePinSelect(selectEl, pinVal);
+            populatePinSelect(row.querySelector('.pincode-select'), pinVal);
+            return row;
+        }
 
+        // 🚀 मोडल खोलना और बंद करना
+        function openDataEntryModal() {
+            document.getElementById('dataEntryModal').style.display = 'flex';
+        }
+        function closeDataEntryModal() {
+            document.getElementById('dataEntryModal').style.display = 'none';
+        }
+
+        function openSmartSplitterModal() {
+            document.getElementById('smartSplitterModal').style.display = 'flex';
+        }
+        function closeSmartSplitterModal() {
+            document.getElementById('smartSplitterModal').style.display = 'none';
+        }
+
+        // 🚀 डायरेक्ट नई खाली रो जोड़ना
+        function addNewRow() {
+            const tbody = document.getElementById('masterGridBody');
+            const row = createRowElement({
+                name: "New Store", add: "Begumpur Delhi", no: "9870242077",
+                collection: "500", geo: "28.7241, 77.0638", cat: "सैलून", pin: "110086"
+            }, tbody.rows.length + 1);
+            tbody.appendChild(row);
+            reindexRows();
             selectThisRow(row);
+            calculateTotalRevenue();
+            updateAllPinBoards();
+            saveToLocalStorage();
+            showToast("✨ नई रो जोड़ दी गई!");
+        }
+
+        // 🚀 कच्चा डेटा ऑटो-स्प्लिटर और प्रीव्यू लॉजिक
+        function previewSplitterData() {
+            const raw = document.getElementById('splitterRawText').value.trim();
+            if (!raw) return;
+
+            let phone = "";
+            const phoneMatch = raw.match(/(?:\+91[\-\s]?)?[0]?[6-9](?:[\-\s]?\d){9}\b/);
+            if (phoneMatch) phone = phoneMatch[0].replace(/\D/g, '').slice(-10);
+
+            let cleanText = raw.replace(phoneMatch ? phoneMatch[0] : '', '').trim();
+            let parts = cleanText.split(/,|\n|\||--/).map(p => p.trim()).filter(Boolean);
+
+            let name = parts[0] || "Verified Store";
+            let add = parts.slice(1).join(', ') || "Delhi NCR";
+
+            document.getElementById('splitName').value = name;
+            document.getElementById('splitAdd').value = add;
+            document.getElementById('splitNo').value = phone || "9870242077";
+        }
+
+        function injectSplitterData() {
+            const name = document.getElementById('splitName').value.trim() || "Verified Store";
+            const add = document.getElementById('splitAdd').value.trim() || "Delhi NCR";
+            let no = document.getElementById('splitNo').value.trim() || "9870242077";
+
+            let pin = "110086";
+            let geo = COMPLETE_DELHI_PINCODES["110086"].geo;
+            let lowerAdd = add.toLowerCase();
+
+            for (let kw in delhiKeywordToPin) {
+                if (lowerAdd.includes(kw)) {
+                    pin = delhiKeywordToPin[kw];
+                    if (COMPLETE_DELHI_PINCODES[pin]) geo = COMPLETE_DELHI_PINCODES[pin].geo;
+                    break;
+                }
+            }
+
+            let cat = "सैलून";
+            let lowerName = name.toLowerCase();
+            if (lowerName.includes('spa') || lowerName.includes('स्पा')) cat = "स्पा";
+            else if (lowerName.includes('nail') || lowerName.includes('नेल')) cat = "नेल स्टूडियो";
+            else if (lowerName.includes('general') || lowerName.includes('store') || lowerName.includes('किराना')) cat = "जनरल स्टोर";
+
+            const tbody = document.getElementById('masterGridBody');
+            const row = createRowElement({ name, add, no, collection: "500", geo, cat, pin }, tbody.rows.length + 1);
+            tbody.appendChild(row);
+
+            document.getElementById('splitterRawText').value = "";
+            document.getElementById('splitName').value = "";
+            document.getElementById('splitAdd').value = "";
+            document.getElementById('splitNo').value = "";
+            closeSmartSplitterModal();
+
+            reindexRows();
+            calculateTotalRevenue();
+            updateAllPinBoards();
+            saveToLocalStorage();
+            showToast("🚀 ऑटो-स्प्लिट डेटा शीट में लॉक हो गया!");
+        }
+
+        // 🚀 पॉप-अप मोडल से डेटा लॉक करके टेबल में डालना
+        function injectModalData() {
+            const name = document.getElementById('modalStoreName').value.trim() || "Verified Store";
+            const add = document.getElementById('modalStoreAdd').value.trim() || "Delhi NCR";
+            let no = document.getElementById('modalStoreNo').value.trim() || "9870242077";
+            no = no.replace(/\D/g, '').slice(-10);
+            const collection = document.getElementById('modalCollection').value.trim() || "500";
+
+            let pin = "110086";
+            let geo = COMPLETE_DELHI_PINCODES["110086"].geo;
+            let lowerAdd = add.toLowerCase();
+
+            for (let kw in delhiKeywordToPin) {
+                if (lowerAdd.includes(kw)) {
+                    pin = delhiKeywordToPin[kw];
+                    if (COMPLETE_DELHI_PINCODES[pin]) geo = COMPLETE_DELHI_PINCODES[pin].geo;
+                    break;
+                }
+            }
+
+            let cat = "सैलून";
+            let lowerName = name.toLowerCase();
+            if (lowerName.includes('spa') || lowerName.includes('स्पा')) cat = "स्पा";
+            else if (lowerName.includes('nail') || lowerName.includes('नेल')) cat = "नेल स्टूडियो";
+            else if (lowerName.includes('general') || lowerName.includes('store') || lowerName.includes('किराना')) cat = "जनरल स्टोर";
+
+            const tbody = document.getElementById('masterGridBody');
+            const row = createRowElement({ name, add, no, collection, geo, cat, pin }, tbody.rows.length + 1);
+            tbody.appendChild(row);
+
+            document.getElementById('modalStoreName').value = "";
+            document.getElementById('modalStoreAdd').value = "";
+            document.getElementById('modalStoreNo').value = "";
+            closeDataEntryModal();
+
+            reindexRows();
+            calculateTotalRevenue();
+            updateAllPinBoards();
+            saveToLocalStorage();
+            showToast("🚀 नई दुकान डेटा शीट में लॉक हो गई!");
+        }
+
+        function autoDetectGeoFromAddress(addTextarea) {
+            const tr = addTextarea.closest('tr');
+            const val = addTextarea.value.toLowerCase();
+            for (let key in delhiKeywordToPin) {
+                if (val.includes(key)) {
+                    const matchedPin = delhiKeywordToPin[key];
+                    const info = COMPLETE_DELHI_PINCODES[matchedPin];
+                    if (info) {
+                        tr.querySelector('.store-geo').value = info.geo;
+                        tr.querySelector('.pincode-select').value = matchedPin;
+                        tr.querySelector('.pincode-board').setAttribute('data-pin', matchedPin);
+                        updateAllPinBoards();
+                    }
+                    break;
+                }
+            }
+            saveToLocalStorage();
+        }
+
+        function strikeWhatsApp(btn) {
+            const tr = btn.closest('tr');
+            const name = tr.querySelector('.store-name').value.trim();
+            const phone = tr.querySelector('.store-no').value.replace(/\D/g, '').slice(-10);
+            const id = tr.querySelector('.auto-id-field').value.trim();
+            const msg = encodeURIComponent(`नमस्ते *${name}* जी!\nआपकी दुकान को *Star Shop Network* पर वेरीफाई कर दिया गया है।\nआपकी मर्चेंट ID: *${id}* है।`);
+            window.open(`https://wa.me/91${phone}?text=${msg}`, '_blank');
+        }
+
+        function strikeMap(btn) {
+            const tr = btn.closest('tr');
+            const geo = tr.querySelector('.store-geo').value.trim();
+            const add = tr.querySelector('.store-add').value.trim();
+            const query = encodeURIComponent(geo || add);
+            window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
+        }
+
+        function instantFilterGrid(query) {
+            const q = query.toLowerCase().trim();
+            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+                if (!q) { row.style.display = ""; return; }
+                const text = Array.from(row.querySelectorAll('textarea')).map(t => t.value.toLowerCase()).join(' ') + ' ' + row.querySelector('.pincode-board').getAttribute('data-pin');
+                row.style.display = text.includes(q) ? "" : "none";
+            });
+            calculateTotalRevenue();
+        }
+
+        let sortAsc = true;
+        function sortGridBy(colIdx) {
+            const tbody = document.getElementById('masterGridBody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            sortAsc = !sortAsc;
+            rows.sort((a, b) => {
+                let valA = a.cells[colIdx].querySelector('textarea')?.value || a.cells[colIdx].innerText;
+                let valB = b.cells[colIdx].querySelector('textarea')?.value || b.cells[colIdx].innerText;
+                let numA = parseFloat(valA), numB = parseFloat(valB);
+                if (!isNaN(numA) && !isNaN(numB)) return sortAsc ? numA - numB : numB - numA;
+                return sortAsc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+            });
+            rows.forEach(r => tbody.appendChild(r));
+            reindexRows();
+        }
+
+        function saveToLocalStorage() {
+            const data = [];
+            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+                data.push({
+                    name: row.querySelector('.store-name').value,
+                    add: row.querySelector('.store-add').value,
+                    no: row.querySelector('.store-no').value,
+                    collection: row.querySelector('.collection-input').value,
+                    geo: row.querySelector('.store-geo').value,
+                    cat: row.querySelector('.store-cat').value,
+                    pin: row.querySelector('.pincode-board').getAttribute('data-pin'),
+                    date: row.querySelector('.reg-date-field').value,
+                    id: row.querySelector('.auto-id-field').value
+                });
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            const tbody = document.getElementById('masterGridBody');
+            tbody.innerHTML = "";
+            if (raw) {
+                const list = JSON.parse(raw);
+                const frag = document.createDocumentFragment();
+                list.forEach((item, idx) => frag.appendChild(createRowElement(item, idx + 1)));
+                tbody.appendChild(frag);
+            } else {
+                tbody.appendChild(createRowElement({
+                    name: "Glamour Salon", add: "Pocket A, Begumpur", no: "9870242077",
+                    collection: "500", geo: "28.7241, 77.0638", cat: "Salon & Beauty", pin: "110086"
+                }, 1));
+            }
             calculateTotalRevenue();
             updateAllPinBoards();
         }
 
-        document.addEventListener('dblclick', function(e) {
-            if (e.target.tagName === 'TD' || e.target.tagName === 'TEXTAREA') {
-                const target = e.target.closest('td, textarea');
-                if (target) {
-                    target.style.width = '';
-                    target.style.height = '';
-                    target.style.maxWidth = '';
-                    target.style.maxHeight = '';
-                }
+        function clearAllStorage() {
+            if (confirm("क्या आप वाकई सारी सेव की गई दुकानें रीसेट करना चाहते हैं?")) {
+                localStorage.removeItem(STORAGE_KEY);
+                loadFromLocalStorage();
+                showToast("मेमोरी साफ कर दी गई!");
             }
-        });
+        }
 
         function openPinRadarByBoard(boardEl) {
             const pinVal = boardEl.getAttribute('data-pin') || "110086";
-            
+            const info = COMPLETE_DELHI_PINCODES[pinVal] || { area: "Delhi NCR", target: 300 };
             let matchedStores = [];
             document.querySelectorAll('#masterGridBody tr').forEach(row => {
                 const b = row.querySelector('.pincode-board');
@@ -577,149 +957,155 @@
                 }
             });
 
-            const count = matchedStores.length;
+            const added = matchedStores.length;
+            const remaining = Math.max(0, info.target - added);
             const radarModal = document.getElementById('pinRadarModal');
-            document.getElementById('radarCountBadge').innerText = `${count} दुकानें`;
             const bodyEl = document.getElementById('radarBody');
 
-            if (count > 0) {
-                document.getElementById('radarTitle').innerHTML = `<span>📍 पिन बोर्ड: <strong style="color:var(--success-green);">${pinVal}</strong> (ग्रीन ज़ोन)</span><span id="radarCountBadge" style="font-size:0.6rem; background:rgba(16,185,129,0.2); padding:1px 5px; border-radius:3px; color:var(--success-green);">${count} दुकानें</span>`;
-                let html = `<div style="margin-bottom:4px; font-size:0.65rem; color:var(--success-green); font-weight:bold;">इस पिन कोड से कुल ${count} दुकानें आ चुकी हैं:</div>`;
-                matchedStores.forEach((s, idx) => {
-                    html += `
-                        <div class="radar-store-item">
-                            <div><strong>${idx+1}. ${s.name}</strong> (${s.cat})</div>
-                            <div style="color:#888; margin-top:1px;">📞 ${s.phone} | 📍 ${s.add}</div>
-                        </div>
-                    `;
-                });
-                bodyEl.innerHTML = html;
-            } else {
-                document.getElementById('radarTitle').innerHTML = `<span>📍 पिन बोर्ड: <strong style="color:var(--danger-red);">${pinVal}</strong> (रेड ज़ोन)</span><span id="radarCountBadge" style="font-size:0.6rem; background:rgba(239,68,68,0.2); padding:1px 5px; border-radius:3px; color:var(--danger-red);">0 दुकानें</span>`;
-                bodyEl.innerHTML = `
-                    <div style="font-size:0.68rem; color:var(--danger-red); font-weight:bold; padding: 5px 0; text-align:center;">
-                        इस पिन कोड पर वर्तमान में 0 (शून्य) दुकानें रजिस्टर्ड हैं! यह पूरी तरह अनछुआ रेड ज़ोन है।
-                    </div>
-                `;
-            }
+            document.getElementById('radarTitle').innerHTML = `<span>पिनकोड ${pinVal} (${info.area})</span>`;
+            
+            let statusBanner = added > 0 
+                ? `<div style="background:rgba(16,185,129,0.18); border:1px solid #10b981; padding:6px; border-radius:3px; margin-bottom:6px; font-size:0.62rem;">
+                    <strong style="color:#34d399;">झंडा गड़ चुका है!</strong><br>
+                    Google Map रजिस्टर्ड दुकानें: <strong>${info.target}</strong> | आपने चढ़ा दीं: <strong>${added}</strong><br>
+                    <span style="color:var(--badge-gold);">अभी और चढ़ानी बाकी हैं: <strong>${remaining} दुकानें</strong></span>
+                   </div>`
+                : `<div style="background:rgba(239,68,68,0.2); border:1px solid #ef4444; padding:6px; border-radius:3px; margin-bottom:6px; font-size:0.62rem;">
+                    <strong style="color:#f87171;">चेतावनी: यहाँ अभी तक झंडा नहीं गड़ा है!</strong><br>
+                    इस एरिया में कुल <strong>${info.target} दुकानें</strong> हैं और अभी पूरी <strong>${info.target} चढ़ानी बाकी हैं!</strong> कुछ भी हो जाए, यहाँ कब्जा करो।
+                   </div>`;
+
+            bodyEl.innerHTML = statusBanner + (matchedStores.map((s, idx) => `
+                <div class="radar-store-item">
+                    <div><strong>${idx+1}. ${s.name}</strong> (${s.cat})</div>
+                    <div style="color:#a1a1aa; margin-top:2px;">फोन: ${s.phone} | पता: ${s.add}</div>
+                </div>
+            `).join(''));
             radarModal.style.display = 'flex';
         }
 
-        function closePinRadar() {
-            document.getElementById('pinRadarModal').style.display = 'none';
+        function openFullDelhiRadarModal() {
+            let pinCounts = {};
+            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+                let pin = row.querySelector('.pincode-board')?.getAttribute('data-pin') || "110086";
+                pinCounts[pin] = (pinCounts[pin] || 0) + 1;
+            });
+
+            const radarModal = document.getElementById('pinRadarModal');
+            const bodyEl = document.getElementById('radarBody');
+            document.getElementById('radarTitle').innerHTML = `<span>दिल्ली के पूरे 97 पिनकोड का रणक्षेत्र</span>`;
+
+            let html = "";
+            for (let pin in COMPLETE_DELHI_PINCODES) {
+                let info = COMPLETE_DELHI_PINCODES[pin];
+                let added = pinCounts[pin] || 0;
+                let rem = Math.max(0, info.target - added);
+                if (added > 0) {
+                    html += `<div class="radar-store-item" style="border-left-color:#10b981;">
+                        <strong style="color:#34d399;">${pin} - ${info.area} [झंडा गड़ गया]</strong><br>
+                        चढ़ा दीं: <strong>${added}</strong> | बाकी चढ़ानी हैं: <strong style="color:var(--badge-gold);">${rem}</strong> (कुल कोटा: ${info.target})
+                    </div>`;
+                } else {
+                    html += `<div class="radar-store-item" style="border-left-color:#ef4444;">
+                        <strong style="color:#f87171;">${pin} - ${info.area} [कब्जा बाकी! झंडा गाड़ो]</strong><br>
+                        चढ़ा दीं: <strong>0</strong> | टारगेट बाकी: <strong>${info.target} दुकानें</strong>
+                    </div>`;
+                }
+            }
+            bodyEl.innerHTML = html;
+            radarModal.style.display = 'flex';
         }
+
+        function closePinRadar() { document.getElementById('pinRadarModal').style.display = 'none'; }
 
         function filterRowsByDate(selectedDate) {
             if (!selectedDate) return;
             document.querySelectorAll('#masterGridBody tr').forEach(row => {
                 row.style.display = (row.getAttribute('data-date') === selectedDate) ? "" : "none";
             });
+            calculateTotalRevenue();
         }
 
-        function resetDateFilter() {
+        function resetAllFilters() {
             document.getElementById('filterDateCalendar').value = "";
+            document.getElementById('instantSearchInput').value = "";
             document.querySelectorAll('#masterGridBody tr').forEach(row => row.style.display = "");
-        }
-
-        function parseRawDataAndFill(textarea) {
-            const rawText = textarea.value.trim();
-            if (!rawText || rawText.length < 5) return;
-            
-            const blocks = rawText.split('\n').map(b => b.trim()).filter(Boolean);
-
-            blocks.forEach(block => {
-                let parts = block.includes('|') ? block.split('|').map(p => p.trim()) : [block];
-                
-                let name = parts[0] ? parts[0].replace(/^(दुकान|Store)\s*\d+[:\s]*/i, '') : "Parsed Store";
-                let phone = "9870242077";
-                let pin = "110086";
-                let geo = "28.7241, 77.0638";
-                let cat = "Salon & Beauty";
-                let add = parts.slice(1).join(', ') || "Delhi NCR";
-
-                parts.forEach(p => {
-                    const cleanD = p.replace(/\D/g, '');
-                    if (cleanD.length === 10) phone = cleanD;
-                    if (cleanD.length === 6) pin = cleanD;
-                    if (p.includes('.') && p.includes(',')) geo = p;
-                });
-
-                addNewRow({ name, no: phone, pin, geo, cat, add });
-            });
-
-            setTimeout(() => {
-                textarea.value = "";
-            }, 100);
-        }
-
-        let tempImgSrc = "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&auto=format&fit=crop&q=80";
-        function previewImage(input) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) { tempImgSrc = e.target.result; }
-                reader.readAsDataURL(input.files[0]);
-            }
+            calculateTotalRevenue();
         }
 
         function openCardPreview(btn) {
             const tr = btn.closest('tr');
-            const name = tr.querySelector('.store-name').value || 'अज्ञात';
-            const add = tr.querySelector('.store-add').value || 'एन/ए';
-            const phone = tr.querySelector('.store-no').value || 'एन/ए';
-            const collection = tr.querySelector('.collection-input').value || '0';
-            const geo = tr.querySelector('.store-geo').value || 'एन/ए';
-            const cat = tr.querySelector('.store-cat').value || 'एन/ए';
-            const pinBoard = tr.querySelector('.pincode-board');
-            const pin = pinBoard ? pinBoard.getAttribute('data-pin') : '110086';
+            const name = tr.querySelector('.store-name').value;
+            const add = tr.querySelector('.store-add').value;
+            const phone = tr.querySelector('.store-no').value;
+            const collection = tr.querySelector('.collection-input').value;
+            const geo = tr.querySelector('.store-geo').value;
+            const cat = tr.querySelector('.store-cat').value;
+            const pin = tr.querySelector('.pincode-board').getAttribute('data-pin');
             const autoId = tr.querySelector('.auto-id-field').value;
 
-            const modal = document.getElementById('previewModal');
-            document.getElementById('modalTitle').innerText = `📋 ${name}`;
+            document.getElementById('modalTitle').innerText = name;
             document.getElementById('modalBody').innerHTML = `
-                <img src="${tempImgSrc}" class="modal-banner">
                 <div class="detail-row"><span>यूनिक आईडी:</span> <strong>${autoId}</strong></div>
                 <div class="detail-row"><span>दुकान का नाम:</span> <strong>${name}</strong></div>
                 <div class="detail-row"><span>मोबाइल नंबर:</span> <strong>${phone}</strong></div>
                 <div class="detail-row"><span>कलेक्शन:</span> <strong style="color:var(--success-green);">₹${collection}</strong></div>
                 <div class="detail-row"><span>कैटेगरी:</span> <strong>${cat}</strong></div>
-                <div class="detail-row"><span>पिनकोड:</span> <strong>${pin}</strong></div>
+                <div class="detail-row"><span>पिनकोड:</span> <strong>${pin} (${COMPLETE_DELHI_PINCODES[pin]?.area || ''})</strong></div>
                 <div class="detail-row"><span>कोऑर्डिनेट्स:</span> <strong>${geo}</strong></div>
                 <div class="detail-row"><span>पता:</span> <strong>${add}</strong></div>
             `;
-            modal.style.display = 'flex';
+            document.getElementById('previewModal').style.display = 'flex';
         }
 
-        function closeModal() {
-            document.getElementById('previewModal').style.display = 'none';
-        }
+        function closeModal() { document.getElementById('previewModal').style.display = 'none'; }
 
         function downloadMasterSheet() {
             const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = `Star_Shop_Master_Sheet_${getTodayDateString()}.html`;
-            document.body.appendChild(a);
+            a.href = URL.createObjectURL(blob);
+            a.download = `Star_Shop_Quantum_${getTodayDateString()}.html`;
             a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function pushToSupabase() {
-            alert("सफलता: सारा डेटा Supabase में डंप हो गया है!");
         }
 
         function exportCSV() {
-            alert("सफलता: CSV फाइल डाउनलोड हो गई है!");
+            let csv = "S.No,Store Name,Address,Phone,Collection,Coordinates,Category,Pincode,Date,Auto_ID\n";
+            document.querySelectorAll('#masterGridBody tr').forEach((row, i) => {
+                const q = s => `"${(s || '').replace(/"/g, '""')}"`;
+                csv += [
+                    i + 1,
+                    q(row.querySelector('.store-name').value),
+                    q(row.querySelector('.store-add').value),
+                    q(row.querySelector('.store-no').value),
+                    q(row.querySelector('.collection-input').value),
+                    q(row.querySelector('.store-geo').value),
+                    q(row.querySelector('.store-cat').value),
+                    q(row.querySelector('.pincode-board').getAttribute('data-pin')),
+                    q(row.querySelector('.reg-date-field').value),
+                    q(row.querySelector('.auto-id-field').value)
+                ].join(",") + "\n";
+            });
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `Star_Shop_Merchants_${getTodayDateString()}.csv`;
+            a.click();
+            showToast("CSV फाइल डाउनलोड हो गई!");
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const initialSelect = document.querySelector('.pincode-select');
-            if (initialSelect) populatePinSelect(initialSelect, "110086");
-            calculateTotalRevenue();
-            updateAllPinBoards();
+        function copySupabaseJSON() {
+            const data = localStorage.getItem(STORAGE_KEY) || "[]";
+            navigator.clipboard.writeText(data).then(() => {
+                showToast("Supabase JSON क्लिपबोर्ड पर कॉपी हो गया!");
+            });
+        }
+
+        document.addEventListener('keydown', e => {
+            if (e.altKey && e.key.toLowerCase() === 'n') { e.preventDefault(); addNewRow(); }
         });
+
+        document.addEventListener("DOMContentLoaded", loadFromLocalStorage);
     </script>
 </body>
 </html>
