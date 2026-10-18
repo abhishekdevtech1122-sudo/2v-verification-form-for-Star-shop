@@ -130,21 +130,25 @@
         .aging-due { background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid var(--danger-red); }
 
         .quick-ops { display: flex; gap: 3px; align-items: center; justify-content: center; }
-        .op-btn { padding: 2px 5px; font-size: 0.54rem; border-radius: 2px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); cursor: pointer; font-weight: 800; }
-        .op-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
+.op-btn { padding: 2px 5px; font-size: 0.54rem; border-radius: 2px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); cursor: pointer; }
+.op-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
 
-        .action-bar { 
-            display: grid; grid-template-columns: 1fr 1fr 1.3fr 1.2fr; gap: 5px; background: var(--card-bg); 
-            padding: 5px 6px; border: 1px solid var(--border-color); border-radius: 4px; align-items: center; flex-shrink: 0; 
-        }
-        .action-bar .action-btn-bottom {
-            height: 30px; width: 100%; background: var(--input-bg); border: 1px solid var(--border-color);
-            color: var(--text-main); border-radius: 3px; font-size: 0.58rem; font-weight: 800; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.15s;
-        }
-        .action-bar .action-btn-bottom:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
-        .action-bar .action-btn-bottom.gold { background: var(--badge-gold); color: #000; border-color: var(--badge-gold); font-weight: 900; }
-        
+.action-bar { 
+    position: sticky; 
+    top: 0; 
+    z-index: 99999; 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1.3fr 1.2fr; 
+    gap: 5px; 
+    background: var(--card-bg); 
+    padding: 6px 8px; 
+    border: 1px solid var(--badge-gold); 
+    border-radius: 4px; 
+    align-items: center; 
+    flex-shrink: 0; 
+    box-shadow: 0 4px 16px rgba(0,0,0,0.9);
+    margin-bottom: 4px;
+}
         .revenue-line-container { 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             height: 30px; background: var(--input-bg); border: 1px solid var(--border-color);
