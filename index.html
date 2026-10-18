@@ -138,7 +138,7 @@
     top: 0; 
     z-index: 99999; 
     display: grid; 
-    grid-template-columns: 1fr 1fr 1.3fr 1.2fr; 
+    grid-template-columns: repeat(4, 1fr);
     gap: 5px; 
     background: var(--card-bg); 
     padding: 6px 8px; 
@@ -966,11 +966,16 @@
             });
         }
 
-        document.addEventListener('keydown', e => {
-            if (e.altKey && e.key.toLowerCase() === 'n') { e.preventDefault(); addNewRow(); }
-        });
+            document.addEventListener("DOMContentLoaded", loadFromLocalStorage);
+</script>
 
-        document.addEventListener("DOMContentLoaded", loadFromLocalStorage);
-    </script>
+<div class="action-bar">
+    <button class="action-btn" onclick="downloadMasterSheet()">HTML सेव</button>
+    <button class="action-btn" onclick="exportCSV()">CSV एक्सपोर्ट</button>
+    <button class="action-btn gold" onclick="copySupabaseJSON()">सुपरबेस JSON</button>
+    <button class="action-btn" onclick="triggerTopSubmit()">त्वरित सबमिट</button>
+</div>
+
 </body>
 </html>
+
