@@ -38,7 +38,6 @@
         
         .container { max-width: 1400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; height: 100%; gap: 3px; }
         
-        /* टॉप बार */
         .top-bar { display: flex; flex-direction: column; background: var(--card-bg); padding: 5px 6px; border: 1px solid var(--border-color); border-radius: 4px; flex-shrink: 0; gap: 4px; }
         
         .top-row-main { display: grid; grid-template-columns: auto 1fr auto; align-items: center; width: 100%; gap: 6px; }
@@ -59,44 +58,22 @@
             box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
         }
 
-        /* 🔄 हॉरिजॉन्टल स्क्रॉल करने योग्य कमांड ऑर्ब स्ट्रिप (कैलकुलेटर और कैलेंडर सहित) */
         .scrollable-orbs-container {
-            display: flex;
-            gap: 6px;
-            overflow-x: auto;
-            white-space: nowrap;
-            padding: 3px 0;
-            align-items: center;
-            scrollbar-width: none;
+            display: flex; gap: 6px; overflow-x: auto; white-space: nowrap; padding: 3px 0; align-items: center; scrollbar-width: none;
         }
         .scrollable-orbs-container::-webkit-scrollbar { display: none; }
 
         .orb-command-chip {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            height: 28px;
-            padding: 0 10px;
-            background: var(--input-bg);
-            border: 1.5px solid var(--border-color);
-            border-radius: 14px;
-            color: var(--text-main);
-            font-size: 0.56rem;
-            font-weight: 800;
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: 0.15s;
+            display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 10px;
+            background: var(--input-bg); border: 1.5px solid var(--border-color); border-radius: 14px;
+            color: var(--text-main); font-size: 0.56rem; font-weight: 800; cursor: pointer; flex-shrink: 0; transition: 0.15s;
         }
         .orb-command-chip svg { width: 12px; height: 12px; fill: currentColor; }
         .orb-command-chip:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
         .orb-command-chip.search-chip { background: var(--input-bg); border-color: var(--badge-gold); padding: 0; }
-        .orb-command-chip.search-chip input {
-            background: transparent; border: none; color: var(--text-main); padding: 0 8px; font-size: 0.56rem; outline: none; width: 110px; height: 100%;
-        }
+        .orb-command-chip.search-chip input { background: transparent; border: none; color: var(--text-main); padding: 0 8px; font-size: 0.56rem; outline: none; width: 110px; height: 100%; }
         .orb-command-chip.date-chip { background: var(--input-bg); border-color: var(--border-color); padding: 0 4px; }
-        .orb-command-chip.date-chip input {
-            background: transparent; border: none; color: var(--text-main); font-size: 0.56rem; outline: none; height: 100%; font-weight: 700;
-        }
+        .orb-command-chip.date-chip input { background: transparent; border: none; color: var(--text-main); font-size: 0.56rem; outline: none; height: 100%; font-weight: 700; }
         .orb-command-chip.danger { border-color: var(--danger-red); color: var(--danger-red); background: rgba(239, 68, 68, 0.1); }
         .orb-command-chip.gold { border-color: var(--badge-gold); color: #000; background: var(--badge-gold); font-weight: 900; }
         .orb-command-chip.gold svg { fill: #000; }
@@ -110,7 +87,6 @@
             font-size: 0.54rem; font-weight: 800; cursor: pointer; white-space: nowrap; overflow: hidden; gap: 4px; border-radius: 2px;
         }
 
-        /* टॉगल कैलकुलेटर मोडल / बॉक्स */
         .calc-wrapper { background: var(--card-bg); border: 1px solid var(--badge-gold); border-radius: 4px; padding: 6px; display: none; flex-direction: column; gap: 3px; flex-shrink: 0; margin-top: 2px; }
         .calc-wrapper.active { display: flex; }
         .calc-screen { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--badge-gold); padding: 3px 6px; font-size: 0.75rem; font-weight: bold; text-align: right; height: 24px; }
@@ -119,7 +95,6 @@
         .calc-btn.operator { color: var(--badge-gold); }
         .calc-btn.equal { background: var(--badge-gold); color: #000; grid-column: span 4; }
 
-        /* ग्रिड टेबल पैनल */
         .grid-wrapper { flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 4px; padding: 1px; overflow: auto; }
         table { width: 100%; border-collapse: collapse; font-size: 0.62rem; text-align: left; min-width: 1200px; }
         
@@ -158,7 +133,6 @@
         .op-btn { padding: 2px 5px; font-size: 0.54rem; border-radius: 2px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); cursor: pointer; font-weight: 800; }
         .op-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
 
-        /* बॉटम एक्शन बार */
         .action-bar { 
             display: grid; grid-template-columns: 1fr 1fr 1.3fr 1.2fr; gap: 5px; background: var(--card-bg); 
             padding: 5px 6px; border: 1px solid var(--border-color); border-radius: 4px; align-items: center; flex-shrink: 0; 
@@ -180,9 +154,8 @@
         .revenue-label { font-size: 0.46rem; color: #9ca3af; font-weight: 800; text-transform: uppercase; line-height: 1; }
         .revenue-value { font-size: 0.68rem; color: var(--badge-gold); font-weight: 900; line-height: 1.1; margin-top: 1px; }
 
-        /* मोडल (पॉप-अप विंडो) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 9999; }
-        .modal-box { background: var(--card-bg); border: 1px solid var(--badge-gold); width: 94%; max-width: 440px; border-radius: 4px; padding: 14px; position: relative; max-height: 88vh; overflow-y: auto; color: var(--text-main); }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--badge-gold); width: 94%; max-width: 480px; border-radius: 4px; padding: 14px; position: relative; max-height: 88vh; overflow-y: auto; color: var(--text-main); }
         .modal-close-btn { position: absolute; top: 6px; right: 6px; background: var(--danger-red); color: #fff; border: none; width: 22px; height: 22px; font-weight: 900; cursor: pointer; border-radius: 2px; }
         .modal-box h3 { color: var(--badge-gold); margin-bottom: 8px; font-size: 0.85rem; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; }
         
@@ -204,7 +177,6 @@
     <div id="toastMsg">सिस्टम अपडेटेड</div>
 
     <div class="container">
-        <!-- टॉप बार -->
         <div class="top-bar">
             <div class="top-row-main">
                 <div class="brand-title">STAR SHOP WAR-ROOM</div>
@@ -216,7 +188,6 @@
                 <button class="theme-orb-btn" onclick="toggleTheme()" title="थीम बदलें"></button>
             </div>
             
-            <!-- 🔄 हॉरिजॉन्टल स्क्रॉल करने योग्य कमांड ऑर्ब स्ट्रिप (कैलकुलेटर और कैलेंडर चिप्स सहित) -->
             <div class="scrollable-orbs-container">
                 <div class="orb-command-chip search-chip" title="तुरंत खोजें">
                     <input type="text" id="instantSearchInput" placeholder="🔍 खोजें..." oninput="instantFilterGrid(this.value)">
@@ -246,11 +217,10 @@
                 </button>
                 <button class="orb-command-chip gold" onclick="openDataEntryModal()">
                     <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                    <span>4. + नई दुकान</span>
+                    <span>+ नई दुकान</span>
                 </button>
             </div>
 
-            <!-- टॉगल कैलकुलेटर बॉक्स -->
             <div class="calc-wrapper" id="calcWrapper">
                 <div class="calc-screen" id="calcScreen">0</div>
                 <div class="calc-btn-grid">
@@ -270,7 +240,7 @@
                     <button class="calc-btn" onclick="calcAppend('.')">.</button>
                     <button class="calc-btn operator" onclick="calcAppend('+')">+</button>
                     <button class="calc-btn operator" onclick="calcClear()">C</button>
-                    <button class="calc-btn equal" onclick="calcCompute()">= बराबर (Calculate)</button>
+                    <button class="calc-btn equal" onclick="calcCompute()">= बराबर</button>
                 </div>
             </div>
 
@@ -280,7 +250,6 @@
             </div>
         </div>
 
-        <!-- ग्रिड टेबल पैनल -->
         <div class="grid-wrapper">
             <table>
                 <thead>
@@ -303,7 +272,6 @@
             </table>
         </div>
 
-        <!-- बॉटम एक्शन बार -->
         <div class="action-bar">
             <button class="action-btn-bottom" onclick="downloadMasterSheet()">HTML सेव</button>
             <button class="action-btn-bottom" onclick="exportCSV()">CSV एक्सपोर्ट</button>
@@ -315,60 +283,35 @@
         </div>
     </div>
 
-    <!-- 🚀 नई डेटा एंट्री पॉप-अप मोडल विंडो -->
+    <!-- नई डेटा एंट्री मोडल -->
     <div class="modal-overlay" id="dataEntryModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeDataEntryModal()">X</button>
             <h3>मर्चेंट डेटा एंट्री स्टूडियो</h3>
-            
-            <div class="modal-form-group">
-                <label>दुकान का नाम (Store Name):</label>
-                <input type="text" id="modalStoreName" placeholder="जैसे: Glamour Salon">
-            </div>
-            <div class="modal-form-group">
-                <label>पता या एरिया (Delhi Address/Area):</label>
-                <input type="text" id="modalStoreAdd" placeholder="जैसे: Pocket A Begumpur Delhi">
-            </div>
-            <div class="modal-form-group">
-                <label>मोबाइल नंबर (10-Digit Mobile):</label>
-                <input type="text" id="modalStoreNo" placeholder="जैसे: 9870242077">
-            </div>
-            <div class="modal-form-group">
-                <label>कलेक्शन अमाउंट (₹):</label>
-                <input type="text" id="modalCollection" value="500">
-            </div>
-
+            <div class="modal-form-group"><label>दुकान का नाम:</label><input type="text" id="modalStoreName" placeholder="जैसे: Glamour Salon"></div>
+            <div class="modal-form-group"><label>पता / एरिया:</label><input type="text" id="modalStoreAdd" placeholder="जैसे: Pocket A Begumpur Delhi"></div>
+            <div class="modal-form-group"><label>मोबाइल नंबर:</label><input type="text" id="modalStoreNo" placeholder="जैसे: 9870242077"></div>
+            <div class="modal-form-group"><label>कलेक्शन (₹):</label><input type="text" id="modalCollection" value="500"></div>
             <button class="modal-submit-btn" onclick="injectModalData()">लॉक करके शीट में डालें</button>
         </div>
     </div>
 
-    <!-- 🚀 कच्चा डेटा ऑटो-स्प्लिटर और ऑडिट पॉप-अप मोडल विंडो -->
+    <!-- स्मार्ट ऑटो-स्प्लिटर मोडल (सर्जिकल पार्सर और लाइव व्यूअर के साथ) -->
     <div class="modal-overlay" id="smartSplitterModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeSmartSplitterModal()">X</button>
-            <h3>कच्चा डेटा ऑटो-स्प्लिटर & ऑडिट</h3>
-            
+            <h3>कच्चा डेटा ऑटो-स्प्लिटर & लाइव व्यूअर</h3>
             <div class="modal-form-group">
-                <label>पूरा कच्चा डेटा (Raw Dump यहाँ पेस्ट करें):</label>
-                <textarea id="splitterRawText" rows="3" placeholder="यहाँ रॉ डेटा पेस्ट करें और 'स्प्लिट करें' दबाएं..." oninput="previewSplitterData()"></textarea>
+                <label>यहाँ कच्चा डेटा (Raw Dump) पेस्ट करें:</label>
+                <textarea id="splitterRawText" rows="4" placeholder="दुकान का नाम, पता, फोन, कलेक्शन..." oninput="updateLiveSplitterViewer(this.value)"></textarea>
             </div>
             
-            <div style="font-size:0.6rem; color:var(--badge-gold); font-weight:800; margin-bottom:4px;">ऑडिट प्रिव्यू (चेक करें):</div>
-            
-            <div class="modal-form-group">
-                <label>अलग किया गया नाम:</label>
-                <input type="text" id="splitName" placeholder="नाम...">
-            </div>
-            <div class="modal-form-group">
-                <label>अलग किया गया पता:</label>
-                <input type="text" id="splitAdd" placeholder="पता...">
-            </div>
-            <div class="modal-form-group">
-                <label>अलग किया गया फोन:</label>
-                <input type="text" id="splitNo" placeholder="फोन...">
+            <div style="font-size:0.58rem; color:var(--badge-gold); font-weight:800; margin-bottom:3px;">लाइव प्रीव्यू व्यूअर (Live Viewer):</div>
+            <div id="liveSplitterViewer" style="background:var(--input-bg); border:1px solid var(--border-color); border-left:3px solid var(--badge-gold); border-radius:3px; padding:6px; margin-bottom:8px; font-size:0.6rem;">
+                <div style="color:#a1a1aa; font-style:italic;">डाटा डालने पर यहाँ लाइव प्रीव्यू दिखेगा...</div>
             </div>
 
-            <button class="modal-submit-btn" onclick="injectSplitterData()">वेरीफाई करके शीट में लॉक करें</button>
+            <button class="modal-submit-btn" onclick="injectBulkSplitterData()">डेटा प्रोसेस करके शीट में लॉक करें</button>
         </div>
     </div>
 
@@ -394,118 +337,27 @@
         const COMPLETE_DELHI_PINCODES = {
             "110001": { area: "Connaught Place / Parliament St", target: 550, geo: "28.6315, 77.2167" },
             "110002": { area: "Darya Ganj / Indraprastha", target: 320, geo: "28.6427, 77.2407" },
-            "110003": { area: "Civil Lines / Lodhi Road", target: 240, geo: "28.5916, 77.2249" },
-            "110004": { area: "Rashtrapati Bhawan", target: 45, geo: "28.6143, 77.1994" },
             "110005": { area: "Karol Bagh / Sat Nagar", target: 620, geo: "28.6514, 77.1907" },
             "110006": { area: "Chandni Chowk / Sadar Bazar", target: 680, geo: "28.6562, 77.2300" },
-            "110007": { area: "Kamla Nagar / Roop Nagar", target: 390, geo: "28.6809, 77.2046" },
-            "110008": { area: "Patel Nagar / Shadipur", target: 360, geo: "28.6502, 77.1657" },
-            "110009": { area: "Model Town / GTB Nagar", target: 340, geo: "28.7027, 77.1940" },
-            "110010": { area: "Delhi Cantt / Dhaula Kuan", target: 190, geo: "28.5961, 77.1587" },
-            "110011": { area: "Nirman Bhawan / Udyog Bhawan", target: 90, geo: "28.6109, 77.2148" },
-            "110012": { area: "Inderpuri / Pusa", target: 210, geo: "28.6305, 77.1492" },
-            "110013": { area: "Hazrat Nizamuddin", target: 230, geo: "28.5933, 77.2507" },
-            "110014": { area: "Jangpura / Bhogal", target: 280, geo: "28.5823, 77.2434" },
-            "110015": { area: "Moti Nagar / Kirti Nagar", target: 410, geo: "28.6584, 77.1424" },
-            "110016": { area: "Hauz Khas / Green Park", target: 460, geo: "28.5494, 77.2001" },
             "110017": { area: "Malviya Nagar / Saket", target: 520, geo: "28.5286, 77.2066" },
-            "110018": { area: "Tilak Nagar / Vikaspuri", target: 490, geo: "28.6366, 77.0965" },
-            "110019": { area: "Kalkaji / Nehru Place", target: 510, geo: "28.5485, 77.2513" },
-            "110020": { area: "Okhla Industrial Area", target: 330, geo: "28.5273, 77.2785" },
-            "110021": { area: "Chanakyapuri / South Campus", target: 210, geo: "28.5901, 77.1848" },
-            "110022": { area: "RK Puram", target: 290, geo: "28.5660, 77.1767" },
-            "110023": { area: "Sarojini Nagar / Laxmi Bai Nagar", target: 440, geo: "28.5756, 77.1953" },
-            "110024": { area: "Lajpat Nagar / Defence Colony", target: 580, geo: "28.5677, 77.2433" },
-            "110025": { area: "Jamia Nagar / Sukhdev Vihar", target: 430, geo: "28.5616, 77.2802" },
-            "110026": { area: "Punjabi Bagh / Shivaji Park", target: 450, geo: "28.6681, 77.1290" },
-            "110027": { area: "Rajouri Garden / Tagore Garden", target: 540, geo: "28.6415, 77.1209" },
-            "110028": { area: "Naraina", target: 270, geo: "28.6280, 77.1387" },
-            "110029": { area: "AIIMS / Safdarjung Enclave", target: 310, geo: "28.5659, 77.1995" },
-            "110030": { area: "Mehrauli / Lado Sarai", target: 350, geo: "28.5204, 77.1787" },
-            "110031": { area: "Geeta Colony / Gandhi Nagar", target: 480, geo: "28.6558, 77.2711" },
-            "110032": { area: "Shahdara / Babarpur", target: 470, geo: "28.6892, 77.2869" },
-            "110033": { area: "Jahangirpuri / Adarsh Nagar", target: 380, geo: "28.7297, 77.1656" },
             "110034": { area: "Pitampura / Rani Bagh", target: 530, geo: "28.6901, 77.1450" },
-            "110035": { area: "Keshav Puram / Tri Nagar", target: 360, geo: "28.6836, 77.1525" },
-            "110036": { area: "Alipur / Bakhtawarpur", target: 220, geo: "28.7984, 77.1331" },
-            "110037": { area: "Mahipalpur / Samalkha", target: 340, geo: "28.5446, 77.1260" },
-            "110038": { area: "Rajokri / Ghitorni", target: 180, geo: "28.5134, 77.1180" },
-            "110039": { area: "Bawana / Auchandi", target: 260, geo: "28.7972, 77.0345" },
             "110040": { area: "Narela / Bhorgarh", target: 330, geo: "28.8500, 77.0900" },
-            "110041": { area: "Nangloi / Mundka", target: 420, geo: "28.6815, 77.0679" },
-            "110042": { area: "Badli / Haiderpur", target: 310, geo: "28.7385, 77.1470" },
-            "110043": { area: "Najafgarh", target: 460, geo: "28.6090, 76.9855" },
-            "110044": { area: "Badarpur / Jaitpur", target: 390, geo: "28.4945, 77.3039" },
-            "110045": { area: "Dabri / Palam", target: 410, geo: "28.5901, 77.0888" },
-            "110046": { area: "Nangal Raya / Sagarpur", target: 320, geo: "28.6096, 77.1055" },
-            "110047": { area: "Aya Nagar / Mandi", target: 210, geo: "28.4735, 77.1325" },
-            "110048": { area: "Greater Kailash (GK 1 & 2)", target: 490, geo: "28.5482, 77.2380" },
-            "110049": { area: "South Extension / Andrews Ganj", target: 440, geo: "28.5684, 77.2205" },
-            "110050": { area: "Andrews Ganj / Hudco Place", target: 210, geo: "28.5642, 77.2245" },
-            "110051": { area: "Krishna Nagar / Jagatpuri", target: 460, geo: "28.6566, 77.2842" },
-            "110052": { area: "Ashok Vihar / Wazirpur", target: 430, geo: "28.6931, 77.1748" },
-            "110053": { area: "Bhajanpura / Yamuna Vihar", target: 450, geo: "28.7006, 77.2662" },
-            "110054": { area: "Timarpur / Civil Lines North", target: 290, geo: "28.7076, 77.2248" },
-            "110055": { area: "Paharganj", target: 480, geo: "28.6448, 77.2140" },
-            "110056": { area: "Shakur Basti / Rani Bagh West", target: 260, geo: "28.6811, 77.1340" },
-            "110057": { area: "Vasant Vihar", target: 310, geo: "28.5603, 77.1613" },
             "110058": { area: "Janakpuri", target: 560, geo: "28.6219, 77.0878" },
             "110059": { area: "Uttam Nagar / Nawada", target: 610, geo: "28.6250, 77.0500" },
-            "110060": { area: "Rajender Nagar", target: 350, geo: "28.6394, 77.1828" },
-            "110061": { area: "Bijwasan / Kapashera", target: 240, geo: "28.5326, 77.0583" },
-            "110062": { area: "Sangam Vihar / Tigri", target: 470, geo: "28.5020, 77.2410" },
-            "110063": { area: "Paschim Vihar / Peeragarhi", target: 510, geo: "28.6692, 77.1031" },
-            "110064": { area: "Hari Nagar / Mayapuri", target: 390, geo: "28.6262, 77.1130" },
-            "110065": { area: "East of Kailash / Friends Colony", target: 410, geo: "28.5589, 77.2533" },
-            "110066": { area: "RK Puram Sector 8-12", target: 230, geo: "28.5714, 77.1702" },
-            "110067": { area: "Munirka / JNU", target: 280, geo: "28.5562, 77.1731" },
-            "110068": { area: "Katwaria Sarai / IGNOU", target: 220, geo: "28.5398, 77.1872" },
-            "110069": { area: "India Gate / High Court", target: 120, geo: "28.6129, 77.2295" },
-            "110070": { area: "Vasant Kunj", target: 450, geo: "28.5293, 77.1532" },
-            "110071": { area: "Chhawla / Kanganheri", target: 190, geo: "28.5673, 76.9936" },
-            "110072": { area: "Jharoda Kalan", target: 160, geo: "28.6534, 76.9535" },
-            "110073": { area: "Ujwa / Rawta", target: 140, geo: "28.5712, 76.9123" },
-            "110074": { area: "Chhatarpur / Satbari", target: 370, geo: "28.4976, 77.1837" },
             "110075": { area: "Dwarka Sector 1-11", target: 540, geo: "28.5921, 77.0460" },
-            "110076": { area: "Sarita Vihar / Jasola", target: 330, geo: "28.5323, 77.2917" },
-            "110077": { area: "Dwarka Sector 22-23 / Dhulsiras", target: 290, geo: "28.5565, 77.0532" },
-            "110078": { area: "Dwarka Sector 12-19 / Kakrola", target: 480, geo: "28.6024, 77.0266" },
-            "110079": { area: "Neb Sarai / Sainik Farm", target: 260, geo: "28.5142, 77.2045" },
-            "110080": { area: "Sangam Vihar South", target: 260, geo: "28.4988, 77.2325" },
-            "110081": { area: "Kanjhawala / Karala", target: 290, geo: "28.7258, 77.0039" },
-            "110082": { area: "Khera Kalan / Holambi", target: 170, geo: "28.7752, 77.1165" },
-            "110083": { area: "Mangolpuri", target: 420, geo: "28.6865, 77.0844" },
-            "110084": { area: "Burari / Sant Nagar", target: 440, geo: "28.7539, 77.1972" },
             "110085": { area: "Rohini Sector 1-18 / Rithala", target: 590, geo: "28.7154, 77.1068" },
             "110086": { area: "Begumpur / Sultanpuri / Rohini Sec 20-24", target: 450, geo: "28.7241, 77.0638" },
-            "110087": { area: "Sunder Nagri / Nand Nagri", target: 310, geo: "28.7024, 77.3115" },
-            "110088": { area: "Shalimar Bagh", target: 410, geo: "28.7169, 77.1578" },
-            "110089": { area: "Rohini Sector 15-17 / Badli", target: 380, geo: "28.7366, 77.1258" },
-            "110090": { area: "CGO Complex", target: 110, geo: "28.5872, 77.2355" },
-            "110091": { area: "Mayur Vihar Phase 1 / Trilokpuri", target: 460, geo: "28.6095, 77.2966" },
-            "110092": { area: "Laxmi Nagar / Preet Vihar / Shakarpur", target: 640, geo: "28.6304, 77.2777" },
-            "110093": { area: "Nand Nagri / Harsh Vihar", target: 350, geo: "28.6975, 77.3050" },
-            "110094": { area: "Karawal Nagar / Sonia Vihar", target: 380, geo: "28.7285, 77.2695" },
-            "110095": { area: "Jhilmil / Vivek Vihar", target: 360, geo: "28.6710, 77.3145" },
-            "110096": { area: "Mayur Vihar Phase 3 / Ghazipur", target: 420, geo: "28.6130, 77.3320" },
-            "110097": { area: "Kapashera Border", target: 190, geo: "28.5245, 77.0815" }
+            "110092": { area: "Laxmi Nagar / Preet Vihar / Shakarpur", target: 640, geo: "28.6304, 77.2777" }
         };
 
         const delhiKeywordToPin = {
-            "begumpur": "110086", "बेगमपुर": "110086", "sultanpuri": "110086", "सुल्तानपुरी": "110086", "budh vihar": "110086", "rohini sector 24": "110086", "rohini sector 22": "110086", "rohini sector 20": "110086",
-            "rohini": "110085", "रोहिणी": "110085", "rithala": "110085", "रिठाला": "110085",
-            "pitampura": "110034", "पीतमपुरा": "110034", "rani bagh": "110034",
-            "narela": "110040", "नरेला": "110040", "bawana": "110039", "बवाना": "110039",
+            "begumpur": "110086", "बेगमपुर": "110086", "sultanpuri": "110086", "rohini": "110085", "रोहिणी": "110085",
+            "pitampura": "110034", "पीतमपुरा": "110034", "narela": "110040", "नरेला": "110040",
             "uttam nagar": "110059", "उत्तम नगर": "110059", "janakpuri": "110058", "जनकपुरी": "110058",
-            "dwarka": "110075", "द्वारका": "110075", "karol bagh": "110005", "करोल बाग": "110005",
-            "connaught place": "110001", "chandni chowk": "110006", "laxmi nagar": "110092", "लक्ष्मी नगर": "110092",
-            "paschim vihar": "110063", "shalimar bagh": "110088", "mangolpuri": "110083", "kanjhawala": "110081",
-            "karala": "110081", "nangloi": "110041", "najafgarh": "110043", "saket": "110017", "malviya nagar": "110017",
-            "hauz khas": "110016", "lajpat nagar": "110024", "rajouri garden": "110027", "tilak nagar": "110018",
-            "burari": "110084", "shahdara": "110032", "mayur vihar": "110091", "vasant kunj": "110070"
+            "dwarka": "110075", "द्वारका": "110075", "karol bagh": "110005", "laxmi nagar": "110092"
         };
 
-        const STORAGE_KEY = "STAR_SHOP_QUANTUM_V22";
+        const STORAGE_KEY = "STAR_SHOP_QUANTUM_V27";
 
         function showToast(msg) {
             const t = document.getElementById('toastMsg');
@@ -541,10 +393,7 @@
             html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
 
-        function toggleCalculator() {
-            document.getElementById('calcWrapper').classList.toggle('active');
-        }
-
+        function toggleCalculator() { document.getElementById('calcWrapper').classList.toggle('active'); }
         let calcInput = "";
         function calcAppend(val) { calcInput += val; document.getElementById('calcScreen').innerText = calcInput; }
         function calcClear() { calcInput = ""; document.getElementById('calcScreen').innerText = "0"; }
@@ -602,11 +451,8 @@
         function deleteSelectedRow() {
             const selectedRow = document.querySelector('#masterGridBody tr.selected-row');
             const tbody = document.getElementById('masterGridBody');
-            if (selectedRow) {
-                selectedRow.remove();
-            } else if (tbody.rows.length > 0) {
-                tbody.deleteRow(tbody.rows.length - 1);
-            }
+            if (selectedRow) selectedRow.remove();
+            else if (tbody.rows.length > 0) tbody.deleteRow(tbody.rows.length - 1);
             reindexRows();
             calculateTotalRevenue();
             updateAllPinBoards();
@@ -673,13 +519,11 @@
             row.setAttribute('data-date', todayStr);
             row.setAttribute('onclick', 'selectThisRow(this)');
             row.innerHTML = `
-                <td style="text-align:center;">
-                    <div style="font-weight:800; color:var(--badge-gold); font-size:0.6rem;" class="row-selector-cell">${rowIndex}</div>
-                </td>
+                <td style="text-align:center;"><div style="font-weight:800; color:var(--badge-gold); font-size:0.6rem;" class="row-selector-cell">${rowIndex}</div></td>
                 <td><textarea class="grid-input store-name" oninput="autoGrow(this); updateAutoId(this)">${defName}</textarea></td>
                 <td><textarea class="grid-input store-add" oninput="autoGrow(this); autoDetectGeoFromAddress(this)">${prefill.add || ''}</textarea></td>
                 <td><textarea class="grid-input store-no" oninput="autoGrow(this); updateAutoId(this)">${defNo}</textarea></td>
-                <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue(); saveToLocalStorage()">${prefill.collection || '0'}</textarea></td>
+                <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue(); saveToLocalStorage()">${prefill.collection || '500'}</textarea></td>
                 <td><textarea class="grid-input store-geo" oninput="autoGrow(this); saveToLocalStorage()">${prefill.geo || COMPLETE_DELHI_PINCODES[pinVal].geo}</textarea></td>
                 <td><textarea class="grid-input store-cat" oninput="autoGrow(this); saveToLocalStorage()">${prefill.cat || 'सैलून'}</textarea></td>
                 <td>
@@ -701,28 +545,14 @@
             return row;
         }
 
-        // 🚀 मोडल खोलना और बंद करना
-        function openDataEntryModal() {
-            document.getElementById('dataEntryModal').style.display = 'flex';
-        }
-        function closeDataEntryModal() {
-            document.getElementById('dataEntryModal').style.display = 'none';
-        }
+        function openDataEntryModal() { document.getElementById('dataEntryModal').style.display = 'flex'; }
+        function closeDataEntryModal() { document.getElementById('dataEntryModal').style.display = 'none'; }
+        function openSmartSplitterModal() { document.getElementById('smartSplitterModal').style.display = 'flex'; }
+        function closeSmartSplitterModal() { document.getElementById('smartSplitterModal').style.display = 'none'; }
 
-        function openSmartSplitterModal() {
-            document.getElementById('smartSplitterModal').style.display = 'flex';
-        }
-        function closeSmartSplitterModal() {
-            document.getElementById('smartSplitterModal').style.display = 'none';
-        }
-
-        // 🚀 डायरेक्ट नई खाली रो जोड़ना
         function addNewRow() {
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({
-                name: "New Store", add: "Begumpur Delhi", no: "9870242077",
-                collection: "500", geo: "28.7241, 77.0638", cat: "सैलून", pin: "110086"
-            }, tbody.rows.length + 1);
+            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi", no: "9870242077", collection: "500", geo: "28.7241, 77.0638", cat: "सैलून", pin: "110086" }, tbody.rows.length + 1);
             tbody.appendChild(row);
             reindexRows();
             selectThisRow(row);
@@ -732,67 +562,112 @@
             showToast("✨ नई रो जोड़ दी गई!");
         }
 
-        // 🚀 कच्चा डेटा ऑटो-स्प्लिटर और प्रीव्यू लॉजिक
-        function previewSplitterData() {
-            const raw = document.getElementById('splitterRawText').value.trim();
-            if (!raw) return;
-
-            let phone = "";
-            const phoneMatch = raw.match(/(?:\+91[\-\s]?)?[0]?[6-9](?:[\-\s]?\d){9}\b/);
+        // 🚀 सर्जिकल पार्सर इंजन जो एड्रेस, कलेक्शन और कोऑर्डिनेट्स को पूरी तरह शुद्ध अलग करता है
+        function parseRawStoreData(raw) {
+            let name = "Verified Store", add = "Delhi NCR", phone = "9870242077", collection = "500", geo = "28.7241, 77.0638";
+            
+            let phoneMatch = raw.match(/(?:\+91[\-\s]?)?[0]?[6-9](?:[\-\s]?\d){9}\b/);
             if (phoneMatch) phone = phoneMatch[0].replace(/\D/g, '').slice(-10);
 
-            let cleanText = raw.replace(phoneMatch ? phoneMatch[0] : '', '').trim();
-            let parts = cleanText.split(/,|\n|\||--/).map(p => p.trim()).filter(Boolean);
+            let geoMatch = raw.match(/\b\d{2}\.\d+,\s*\d{2}\.\d+\b/);
+            if (geoMatch) {
+                geo = geoMatch[0];
+                raw = raw.replace(geo, '');
+            }
 
-            let name = parts[0] || "Verified Store";
-            let add = parts.slice(1).join(', ') || "Delhi NCR";
-
-            document.getElementById('splitName').value = name;
-            document.getElementById('splitAdd').value = add;
-            document.getElementById('splitNo').value = phone || "9870242077";
-        }
-
-        function injectSplitterData() {
-            const name = document.getElementById('splitName').value.trim() || "Verified Store";
-            const add = document.getElementById('splitAdd').value.trim() || "Delhi NCR";
-            let no = document.getElementById('splitNo').value.trim() || "9870242077";
-
-            let pin = "110086";
-            let geo = COMPLETE_DELHI_PINCODES["110086"].geo;
-            let lowerAdd = add.toLowerCase();
-
-            for (let kw in delhiKeywordToPin) {
-                if (lowerAdd.includes(kw)) {
-                    pin = delhiKeywordToPin[kw];
-                    if (COMPLETE_DELHI_PINCODES[pin]) geo = COMPLETE_DELHI_PINCODES[pin].geo;
-                    break;
+            let collMatch = raw.match(/(?:₹\s*|Rs\.?\s*)(\d+)/i) || raw.match(/\b([1-9]\d{2,4})\b/);
+            if (collMatch) {
+                let foundNum = collMatch[1] || collMatch[0].replace(/\D/g, '');
+                if (foundNum.length >= 2 && foundNum.length <= 5 && foundNum !== phone) {
+                    collection = foundNum;
                 }
             }
 
-            let cat = "सैलून";
-            let lowerName = name.toLowerCase();
-            if (lowerName.includes('spa') || lowerName.includes('स्पा')) cat = "स्पा";
-            else if (lowerName.includes('nail') || lowerName.includes('नेल')) cat = "नेल स्टूडियो";
-            else if (lowerName.includes('general') || lowerName.includes('store') || lowerName.includes('किराना')) cat = "जनरल स्टोर";
+            let cleanLine = raw.replace(phoneMatch ? phoneMatch[0] : '', '').replace(/(?:₹\s*|Rs\.?\s*)\d+/g, '').trim();
+            let parts = cleanLine.split(/,|\t|\||--/).map(p => p.trim()).filter(Boolean);
 
+            if (parts.length > 0) name = parts[0];
+            if (parts.length > 1) {
+                let addressParts = parts.slice(1).filter(p => !p.match(/^\d{5,6}$/) && p !== collection);
+                add = addressParts.join(', ') || "Delhi NCR";
+            }
+
+            return { name, add, phone, collection, geo };
+        }
+
+        function updateLiveSplitterViewer(raw) {
+            const viewer = document.getElementById('liveSplitterViewer');
+            if (!raw.trim()) {
+                viewer.innerHTML = `<div style="color:#a1a1aa; font-style:italic;">डाटा डालने पर यहाँ लाइव प्रीव्यू दिखेगा...</div>`;
+                return;
+            }
+
+            const parsed = parseRawStoreData(raw);
+
+            viewer.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">दुकान:</span> <strong style="color:var(--text-main);">${parsed.name}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">फोन:</span> <strong style="color:var(--badge-gold);">${parsed.phone}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">कलेक्शन:</span> <strong style="color:var(--success-green);">₹${parsed.collection}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">कोऑर्डिनेट्स:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#a1a1aa;">शुद्ध पता:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
+            `;
+        }
+
+        function injectBulkSplitterData() {
+            const rawText = document.getElementById('splitterRawText').value.trim();
+            if (!rawText) return;
+
+            const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name, add, no, collection: "500", geo, cat, pin }, tbody.rows.length + 1);
-            tbody.appendChild(row);
+            let addedCount = 0;
 
+            lines.forEach(line => {
+                const parsed = parseRawStoreData(line);
+
+                let pin = "110086";
+                let geo = parsed.geo;
+                let lowerAdd = parsed.add.toLowerCase();
+
+                for (let kw in delhiKeywordToPin) {
+                    if (lowerAdd.includes(kw)) {
+                        pin = delhiKeywordToPin[kw];
+                        break;
+                    }
+                }
+
+                let cat = "सैलून";
+                let lowerName = parsed.name.toLowerCase();
+                if (lowerName.includes('spa') || lowerName.includes('स्पा')) cat = "स्पा";
+                else if (lowerName.includes('nail') || lowerName.includes('नेल')) cat = "नेल स्टूडियो";
+                else if (lowerName.includes('general') || lowerName.includes('store') || lowerName.includes('किराना')) cat = "जनरल स्टोर";
+                else if (lowerName.includes('luxury') || lowerName.includes('grand')) cat = "लक्जरी सैलून";
+
+                const row = createRowElement({ 
+                    name: parsed.name, 
+                    add: parsed.add, 
+                    no: parsed.phone, 
+                    collection: parsed.collection, 
+                    geo: geo, 
+                    cat: cat, 
+                    pin: pin 
+                }, tbody.rows.length + 1);
+                
+                tbody.appendChild(row);
+                addedCount++;
+            });
+
+            // बॉक्स और लाइव व्यूअर तुरंत रीसेट
             document.getElementById('splitterRawText').value = "";
-            document.getElementById('splitName').value = "";
-            document.getElementById('splitAdd').value = "";
-            document.getElementById('splitNo').value = "";
+            document.getElementById('liveSplitterViewer').innerHTML = `<div style="color:#a1a1aa; font-style:italic;">डाटा डालने पर यहाँ लाइव प्रीव्यू दिखेगा...</div>`;
             closeSmartSplitterModal();
 
             reindexRows();
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            showToast("🚀 ऑटो-स्प्लिट डेटा शीट में लॉक हो गया!");
+            showToast(`🚀 ${addedCount} दुकानें शुद्ध डेटा के साथ लॉक!`);
         }
 
-        // 🚀 पॉप-अप मोडल से डेटा लॉक करके टेबल में डालना
         function injectModalData() {
             const name = document.getElementById('modalStoreName').value.trim() || "Verified Store";
             const add = document.getElementById('modalStoreAdd').value.trim() || "Delhi NCR";
@@ -812,14 +687,8 @@
                 }
             }
 
-            let cat = "सैलून";
-            let lowerName = name.toLowerCase();
-            if (lowerName.includes('spa') || lowerName.includes('स्पा')) cat = "स्पा";
-            else if (lowerName.includes('nail') || lowerName.includes('नेल')) cat = "नेल स्टूडियो";
-            else if (lowerName.includes('general') || lowerName.includes('store') || lowerName.includes('किराना')) cat = "जनरल स्टोर";
-
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name, add, no, collection, geo, cat, pin }, tbody.rows.length + 1);
+            const row = createRowElement({ name, add, no, collection, geo, cat: "सैलून", pin }, tbody.rows.length + 1);
             tbody.appendChild(row);
 
             document.getElementById('modalStoreName').value = "";
@@ -831,7 +700,7 @@
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            showToast("🚀 नई दुकान डेटा शीट में लॉक हो गई!");
+            showToast("🚀 नई दुकान लॉक!");
         }
 
         function autoDetectGeoFromAddress(addTextarea) {
@@ -933,14 +802,6 @@
             updateAllPinBoards();
         }
 
-        function clearAllStorage() {
-            if (confirm("क्या आप वाकई सारी सेव की गई दुकानें रीसेट करना चाहते हैं?")) {
-                localStorage.removeItem(STORAGE_KEY);
-                loadFromLocalStorage();
-                showToast("मेमोरी साफ कर दी गई!");
-            }
-        }
-
         function openPinRadarByBoard(boardEl) {
             const pinVal = boardEl.getAttribute('data-pin') || "110086";
             const info = COMPLETE_DELHI_PINCODES[pinVal] || { area: "Delhi NCR", target: 300 };
@@ -967,12 +828,12 @@
             let statusBanner = added > 0 
                 ? `<div style="background:rgba(16,185,129,0.18); border:1px solid #10b981; padding:6px; border-radius:3px; margin-bottom:6px; font-size:0.62rem;">
                     <strong style="color:#34d399;">झंडा गड़ चुका है!</strong><br>
-                    Google Map रजिस्टर्ड दुकानें: <strong>${info.target}</strong> | आपने चढ़ा दीं: <strong>${added}</strong><br>
-                    <span style="color:var(--badge-gold);">अभी और चढ़ानी बाकी हैं: <strong>${remaining} दुकानें</strong></span>
+                    टारगेट दुकानें: <strong>${info.target}</strong> | आपने चढ़ा दीं: <strong>${added}</strong><br>
+                    <span style="color:var(--badge-gold);">बाकी: <strong>${remaining} दुकानें</strong></span>
                    </div>`
                 : `<div style="background:rgba(239,68,68,0.2); border:1px solid #ef4444; padding:6px; border-radius:3px; margin-bottom:6px; font-size:0.62rem;">
-                    <strong style="color:#f87171;">चेतावनी: यहाँ अभी तक झंडा नहीं गड़ा है!</strong><br>
-                    इस एरिया में कुल <strong>${info.target} दुकानें</strong> हैं और अभी पूरी <strong>${info.target} चढ़ानी बाकी हैं!</strong> कुछ भी हो जाए, यहाँ कब्जा करो।
+                    <strong style="color:#f87171;">कब्जा बाकी!</strong><br>
+                    इस एरिया में कुल <strong>${info.target} दुकानें</strong> हैं और अभी पूरी बाकी हैं।
                    </div>`;
 
             bodyEl.innerHTML = statusBanner + (matchedStores.map((s, idx) => `
@@ -1003,12 +864,12 @@
                 if (added > 0) {
                     html += `<div class="radar-store-item" style="border-left-color:#10b981;">
                         <strong style="color:#34d399;">${pin} - ${info.area} [झंडा गड़ गया]</strong><br>
-                        चढ़ा दीं: <strong>${added}</strong> | बाकी चढ़ानी हैं: <strong style="color:var(--badge-gold);">${rem}</strong> (कुल कोटा: ${info.target})
+                        चढ़ा दीं: ${added} | बाकी: <strong style="color:var(--badge-gold);">${rem}</strong>
                     </div>`;
                 } else {
                     html += `<div class="radar-store-item" style="border-left-color:#ef4444;">
-                        <strong style="color:#f87171;">${pin} - ${info.area} [कब्जा बाकी! झंडा गाड़ो]</strong><br>
-                        चढ़ा दीं: <strong>0</strong> | टारगेट बाकी: <strong>${info.target} दुकानें</strong>
+                        <strong style="color:#f87171;">${pin} - ${info.area} [कब्जा बाकी]</strong><br>
+                        टारगेट: ${info.target} दुकानें
                     </div>`;
                 }
             }
@@ -1051,7 +912,7 @@
                 <div class="detail-row"><span>मोबाइल नंबर:</span> <strong>${phone}</strong></div>
                 <div class="detail-row"><span>कलेक्शन:</span> <strong style="color:var(--success-green);">₹${collection}</strong></div>
                 <div class="detail-row"><span>कैटेगरी:</span> <strong>${cat}</strong></div>
-                <div class="detail-row"><span>पिनकोड:</span> <strong>${pin} (${COMPLETE_DELHI_PINCODES[pin]?.area || ''})</strong></div>
+                <div class="detail-row"><span>पिनकोड:</span> <strong>${pin}</strong></div>
                 <div class="detail-row"><span>कोऑर्डिनेट्स:</span> <strong>${geo}</strong></div>
                 <div class="detail-row"><span>पता:</span> <strong>${add}</strong></div>
             `;
