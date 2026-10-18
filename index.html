@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Star Shop Master Excel Sheet | Elite War-Room</title>
     <style>
-        /* 🌟 थीम वेरिएबल्स (डार्क ऑक्सीडियन और वेलवेट व्हाइट) */
         [data-theme="dark"] {
             --bg-main: #000000;
             --card-bg: #0a0a0c;
@@ -13,6 +12,7 @@
             --text-main: #f4f4f5;
             --input-bg: #121216;
             --hover-bg: #18181c;
+            --row-selected: rgba(212, 175, 55, 0.15);
         }
         [data-theme="light"] {
             --bg-main: #f4f4f6;
@@ -21,29 +21,30 @@
             --text-main: #1c1c1e;
             --input-bg: #f5f5f7;
             --hover-bg: #e5e5ea;
+            --row-selected: rgba(212, 175, 55, 0.2);
         }
 
         :root {
             --badge-gold: #d4af37;
-            --gold-glow: drop-shadow(0 0 12px rgba(212, 175, 55, 0.6));
+            --gold-glow: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
             --danger-red: #ef4444;
             --success-green: #10b981;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding: 6px; transition: background 0.3s, color 0.3s; }
+        body { background: var(--bg-main); color: var(--text-main); display: flex; flex-direction: column; height: 100vh; overflow: hidden; padding: 2px; transition: background 0.3s, color 0.3s; }
         
-        .container { max-width: 1400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; height: 100%; gap: 6px; }
+        .container { max-width: 1400px; width: 100%; margin: 0 auto; display: flex; flex-direction: column; height: 100%; gap: 2px; }
         
-        /* टॉप बार (80 कैरेट गोल्ड ग्लोइंग ब्रांडिंग) */
-        .top-bar { display: flex; flex-direction: column; background: var(--card-bg); padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; flex-shrink: 0; gap: 6px; transition: 0.3s; }
+        /* टॉप बार */
+        .top-bar { display: flex; flex-direction: column; background: var(--card-bg); padding: 4px 6px; border: 1px solid var(--border-color); border-radius: 3px; flex-shrink: 0; gap: 3px; }
         .top-row-main { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         
         .brand-title { 
-            font-size: 0.95rem; 
+            font-size: 0.78rem; 
             color: var(--badge-gold); 
             font-weight: 900; 
-            letter-spacing: 1px; 
+            letter-spacing: 0.5px; 
             filter: var(--gold-glow);
             background: linear-gradient(135deg, #fff2a6 0%, #d4af37 50%, #aa771c 100%);
             -webkit-background-clip: text;
@@ -51,34 +52,62 @@
             text-transform: uppercase;
         }
 
-        .theme-toggle-btn { background: var(--input-bg); border: 1px solid var(--badge-gold); color: var(--badge-gold); padding: 4px 8px; border-radius: 4px; font-size: 0.68rem; font-weight: 800; cursor: pointer; transition: 0.2s; }
-        .theme-toggle-btn:hover { background: var(--badge-gold); color: #000; }
+        .theme-orb-btn {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffffff 50%, #121216 50%);
+            border: 1.2px solid var(--badge-gold);
+            cursor: pointer;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+            box-shadow: 0 0 6px rgba(212, 175, 55, 0.4);
+        }
+        .theme-orb-btn:hover { transform: scale(1.1); }
 
-        .top-row-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px solid var(--border-color); padding-top: 6px; gap: 6px; }
-        .control-group { display: flex; gap: 4px; align-items: center; width: 100%; }
-        .date-picker-input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 8px; border-radius: 4px; font-size: 0.72rem; outline: none; flex: 1; }
-        .action-chip { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 700; cursor: pointer; white-space: nowrap; }
+        .top-row-controls { display: flex; justify-content: space-between; align-items: center; width: 100%; border-top: 1px solid var(--border-color); padding-top: 3px; gap: 3px; }
+        .control-group { display: flex; gap: 2px; align-items: center; width: 100%; }
+        
+        .micro-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 3px 5px;
+            border-radius: 2px;
+            font-size: 0.62rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            white-space: nowrap;
+            transition: 0.2s;
+        }
+        .micro-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
+        .micro-btn.danger { background: rgba(239, 68, 68, 0.15); border-color: var(--danger-red); color: var(--danger-red); }
+        .micro-btn.danger:hover { background: var(--danger-red); color: #fff; }
+        .micro-btn.gold { background: var(--badge-gold); color: #000; border-color: var(--badge-gold); font-weight: 800; }
 
-        /* टॉगल कैलकुलेटर ड्रॉवर */
-        .calc-toggle-btn { background: var(--hover-bg); border: 1px solid var(--badge-gold); color: var(--badge-gold); padding: 5px 10px; border-radius: 4px; font-size: 0.72rem; font-weight: 800; cursor: pointer; width: 100%; text-align: center; transition: 0.2s; }
+        .date-picker-input { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 2px 4px; border-radius: 2px; font-size: 0.62rem; outline: none; flex: 1; cursor: pointer; }
+
+        /* टॉगल कैलकुलेटर */
+        .calc-toggle-btn { background: var(--hover-bg); border: 1px solid var(--badge-gold); color: var(--badge-gold); padding: 2px 5px; border-radius: 2px; font-size: 0.62rem; font-weight: 800; cursor: pointer; width: 100%; text-align: center; }
         .calc-toggle-btn:hover { background: var(--badge-gold); color: #000; }
         
-        .calc-wrapper { background: var(--card-bg); border: 1px solid var(--badge-gold); border-radius: 6px; padding: 6px; display: none; flex-direction: column; gap: 4px; flex-shrink: 0; box-shadow: 0 4px 15px rgba(212,175,55,0.1); }
+        .calc-wrapper { background: var(--card-bg); border: 1px solid var(--badge-gold); border-radius: 3px; padding: 3px; display: none; flex-direction: column; gap: 2px; flex-shrink: 0; }
         .calc-wrapper.active { display: flex; }
-        .calc-screen { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--badge-gold); padding: 4px 8px; font-size: 0.85rem; font-weight: bold; border-radius: 4px; text-align: right; height: 26px; display: flex; align-items: center; justify-content: flex-end; }
-        .calc-btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
-        .calc-btn { background: var(--hover-bg); border: 1px solid var(--border-color); color: var(--text-main); font-size: 0.7rem; font-weight: bold; padding: 4px; border-radius: 3px; cursor: pointer; text-align: center; }
+        .calc-screen { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--badge-gold); padding: 2px 4px; font-size: 0.7rem; font-weight: bold; border-radius: 2px; text-align: right; height: 20px; display: flex; align-items: center; justify-content: flex-end; }
+        .calc-btn-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+        .calc-btn { background: var(--hover-bg); border: 1px solid var(--border-color); color: var(--text-main); font-size: 0.62rem; font-weight: bold; padding: 2px; border-radius: 2px; cursor: pointer; text-align: center; }
         .calc-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
         .calc-btn.operator { color: var(--badge-gold); }
         .calc-btn.equal { background: var(--badge-gold); color: #000; }
 
-        /* रॉ डेटा पेस्टर बॉक्स */
-        .master-paster-box { background: var(--card-bg); border: 1px dashed var(--badge-gold); padding: 8px; border-radius: 6px; flex-shrink: 0; transition: 0.3s; }
-        .master-paster-box textarea { width: 100%; height: 50px; min-height: 40px; max-height: 300px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 8px; border-radius: 4px; font-size: 0.75rem; resize: both; outline: none; }
+        /* पेस्टर बॉक्स */
+        .master-paster-box { background: var(--card-bg); border: 1px dashed var(--badge-gold); padding: 2px 4px; border-radius: 3px; flex-shrink: 0; }
+        .master-paster-box textarea { width: 100%; height: 26px; min-height: 22px; max-height: 100px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 2px; border-radius: 2px; font-size: 0.65rem; resize: both; outline: none; }
 
         /* ग्रिड टेबल पैनल */
-        .grid-wrapper { flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; overflow: auto; transition: 0.3s; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.72rem; text-align: left; min-width: 1200px; }
+        .grid-wrapper { flex: 1; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 3px; padding: 1px; overflow: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.65rem; text-align: left; min-width: 1100px; }
         
         th { 
             color: var(--badge-gold); 
@@ -87,56 +116,84 @@
             position: sticky; 
             top: 0; 
             z-index: 10; 
-            padding: 8px; 
-            border: 1px solid var(--border-color); 
-            resize: horizontal; 
-            overflow: hidden; 
-        }
-        
-        tr { resize: vertical; overflow: auto; }
-
-        td { 
-            padding: 4px; 
+            padding: 3px 5px; 
             border: 1px solid var(--border-color); 
             resize: both; 
             overflow: auto; 
-            min-width: 130px;
-            min-height: 40px;
         }
+        
+        tr { resize: vertical; overflow: hidden; transition: background 0.15s; }
+        tr.selected-row { background: var(--row-selected) !important; outline: 1px solid var(--badge-gold); }
+
+        td { 
+            padding: 1px 3px; 
+            border: 1px solid var(--border-color); 
+            resize: both; 
+            overflow: auto; 
+            min-width: 90px;
+            height: 24px;
+        }
+
+        .row-selector { text-align: center; font-weight: 800; color: var(--badge-gold); cursor: pointer; user-select: none; }
+        .row-selector:hover { background: rgba(212, 175, 55, 0.2); }
         
         textarea.grid-input { 
             width: 100%; 
-            min-height: 32px;
-            max-height: 150px;
+            height: 20px;
+            min-height: 18px;
+            max-height: 80px;
             background: transparent; 
             border: none; 
             color: var(--text-main); 
-            padding: 4px 6px; 
-            font-size: 0.72rem; 
+            padding: 1px 3px; 
+            font-size: 0.65rem; 
             outline: none; 
-            resize: vertical; 
-            overflow: hidden;
+            resize: both; 
+            overflow: auto;
             display: block;
         }
         textarea.grid-input:focus { background: var(--input-bg); }
 
-        /* रिकवरी स्टेटस बैज */
-        .aging-badge { font-size: 0.65rem; padding: 2px 4px; border-radius: 3px; font-weight: bold; display: inline-block; }
+        .pincode-select {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 1px;
+            border-radius: 2px;
+            font-size: 0.62rem;
+            outline: none;
+            margin-bottom: 1px;
+        }
+        .pincode-board {
+            width: 100%;
+            padding: 1px 3px;
+            border-radius: 2px;
+            font-weight: 800;
+            font-size: 0.58rem;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .zone-green { background: rgba(16, 185, 129, 0.25); color: #34d399; border-color: #10b981; }
+        .zone-red { background: rgba(239, 68, 68, 0.25); color: #f87171; border-color: #ef4444; }
+
+        .aging-badge { font-size: 0.55rem; padding: 1px 2px; border-radius: 2px; font-weight: bold; display: inline-block; }
         .aging-fresh { background: rgba(16, 185, 129, 0.15); color: var(--success-green); border: 1px solid var(--success-green); }
         .aging-due { background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid var(--danger-red); }
 
-        /* ⚡ बॉटम एक्शन बार और स्लीक मिनिमलिस्टिक कट-लाइन टोटल काउंटर */
-        .action-bar { display: flex; gap: 8px; background: var(--card-bg); padding: 8px 10px; border: 1px solid var(--border-color); border-radius: 6px; align-items: center; justify-content: space-between; flex-shrink: 0; transition: 0.3s; }
+        /* बॉटम एक्शन बार */
+        .action-bar { display: flex; gap: 3px; background: var(--card-bg); padding: 2px 4px; border: 1px solid var(--border-color); border-radius: 3px; align-items: center; justify-content: space-between; flex-shrink: 0; }
         
         .revenue-line-container { 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: center; 
-            flex: 1.5; 
+            flex: 1.2; 
             border-left: 1px dashed var(--badge-gold); 
             border-right: 1px dashed var(--badge-gold); 
-            padding: 2px 6px; 
+            padding: 1px 3px; 
             position: relative;
         }
         .revenue-line-container::before, .revenue-line-container::after {
@@ -147,45 +204,42 @@
         .revenue-line-container::before { left: -1px; }
         .revenue-line-container::after { right: -1px; }
 
-        .revenue-label { font-size: 0.62rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
-        .revenue-value { font-size: 0.85rem; color: var(--badge-gold); font-weight: 900; letter-spacing: 0.5px; }
+        .revenue-label { font-size: 0.52rem; color: #888; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .revenue-value { font-size: 0.7rem; color: var(--badge-gold); font-weight: 900; letter-spacing: 0.5px; }
 
-        .btn-crisp { border: none; padding: 8px 12px; font-weight: 800; border-radius: 4px; cursor: pointer; font-size: 0.72rem; text-align: center; transition: 0.2s; }
-        .btn-pro-dark { background: var(--hover-bg); color: var(--text-main); border: 1px solid var(--border-color); flex: 1; }
-        .btn-pro-dark:hover { border-color: var(--badge-gold); }
-        .btn-pro-gold { background: var(--badge-gold); color: #000; flex: 1; }
-        .btn-pro-gold:hover { opacity: 0.9; }
-
-        /* पॉप-अप मोडल */
+        /* मोडल */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 9999; }
-        .modal-box { background: var(--card-bg); border: 1px solid var(--badge-gold); width: 90%; max-width: 380px; border-radius: 6px; padding: 14px; position: relative; max-height: 90vh; overflow-y: auto; color: var(--text-main); }
-        .modal-close-btn { position: absolute; top: 8px; right: 8px; background: var(--danger-red); color: #fff; border: none; width: 22px; height: 22px; font-weight: 800; cursor: pointer; border-radius: 3px; display: flex; align-items: center; justify-content: center; }
-        .modal-box h3 { color: var(--badge-gold); margin-bottom: 10px; font-size: 0.9rem; }
-        .modal-banner { width: 100%; height: 130px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; border: 1px solid var(--border-color); }
-        .detail-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.75rem; border-bottom: 1px solid var(--border-color); padding-bottom: 3px; }
+        .modal-box { background: var(--card-bg); border: 1px solid var(--badge-gold); width: 90%; max-width: 380px; border-radius: 5px; padding: 10px; position: relative; max-height: 90vh; overflow-y: auto; color: var(--text-main); }
+        .modal-close-btn { position: absolute; top: 5px; right: 5px; background: var(--danger-red); color: #fff; border: none; width: 18px; height: 18px; font-weight: 800; cursor: pointer; border-radius: 2px; display: flex; align-items: center; justify-content: center; }
+        .modal-box h3 { color: var(--badge-gold); margin-bottom: 5px; font-size: 0.85rem; border-bottom: 1px solid var(--border-color); padding-bottom: 3px; display: flex; justify-content: space-between; align-items: center; }
+        .modal-banner { width: 100%; height: 100px; object-fit: cover; border-radius: 3px; margin-bottom: 5px; border: 1px solid var(--border-color); }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 2px; font-size: 0.65rem; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; }
         .detail-row span:first-child { color: #888; }
+        
+        .radar-store-item { background: var(--input-bg); border: 1px solid var(--border-color); padding: 4px 5px; border-radius: 2px; margin-bottom: 3px; font-size: 0.65rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- टॉप बार (80 कैरेट गोल्ड ब्रांडिंग + थीम टॉगल) -->
+        <!-- टॉप बार -->
         <div class="top-bar">
             <div class="top-row-main">
                 <div class="brand-title">⭐ STAR SHOP MASTER EXCEL SHEET</div>
-                <button class="theme-toggle-btn" onclick="toggleTheme()">☯ थीम बदलो (Dark/Light)</button>
+                <button class="theme-orb-btn" onclick="toggleTheme()" title="थीम बदलें"></button>
             </div>
             
             <div class="top-row-controls">
                 <div class="control-group">
-                    <input type="date" id="filterDateCalendar" class="date-picker-input" onchange="filterRowsByDate(this.value)">
-                    <button class="action-chip" onclick="resetDateFilter()">सभी</button>
-                    <button class="action-chip" style="background:var(--badge-gold); color:#000;" onclick="addNewRow()">+ नई रो</button>
+                    <input type="date" id="filterDateCalendar" class="date-picker-input" onclick="this.showPicker && this.showPicker()" onchange="filterRowsByDate(this.value)">
+                    <button class="micro-btn danger" onclick="deleteSelectedRow()">डिलीट</button>
+                    <button class="micro-btn" onclick="resetDateFilter()">सभी</button>
+                    <button class="micro-btn gold" onclick="addNewRow()">+ नई रो</button>
                 </div>
             </div>
 
             <!-- टॉगल कैलकुलेटर -->
-            <button class="calc-toggle-btn" onclick="toggleCalculator()">🧮 कैलकुलेटर खोलें / बंद करें</button>
+            <button class="calc-toggle-btn" onclick="toggleCalculator()">कैलकुलेटर (टॉगल)</button>
             <div class="calc-wrapper" id="calcWrapper">
                 <div class="calc-screen" id="calcScreen">0</div>
                 <div class="calc-btn-grid">
@@ -212,7 +266,7 @@
 
         <!-- पेस्टर बॉक्स -->
         <div class="master-paster-box">
-            <div style="font-size: 0.7rem; color: var(--badge-gold); font-weight: 700; margin-bottom: 3px;">📥 कच्चा डेटा पेस्टर बॉक्स (डेटा डालते ही ऑटो-क्लियर होगा):</div>
+            <div style="font-size: 0.58rem; color: var(--badge-gold); font-weight: 700; margin-bottom: 1px;">कच्चा डेटा पेस्टर बॉक्स:</div>
             <textarea id="rawMasterPaste" placeholder="यहाँ रॉ डेटा पेस्ट करें..." oninput="parseRawDataAndFill(this)"></textarea>
         </div>
 
@@ -221,14 +275,14 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 28px;">#</th>
+                        <th style="width: 20px;">#</th>
                         <th>NAME</th>
                         <th>ADD</th>
                         <th>NO</th>
                         <th>COLLECTION (₹)</th>
                         <th>कोऑर्डिनेट्स</th>
                         <th>कैटेगरी</th>
-                        <th>PINCode</th>
+                        <th>PINCODE (दिल्ली रडार)</th>
                         <th>REG. DATE</th>
                         <th>RECOVERY STATUS</th>
                         <th>PHOTO</th>
@@ -237,33 +291,38 @@
                     </tr>
                 </thead>
                 <tbody id="masterGridBody">
-                    <tr data-date="2026-06-15" style="resize: vertical; overflow: auto;">
-                        <td>1</td>
-                        <td><textarea class="grid-input" oninput="autoGrow(this); updateAutoId(this)">Glamour Salon</textarea></td>
-                        <td><textarea class="grid-input" oninput="autoGrow(this)">Pocket A, Begumpur</textarea></td>
-                        <td><textarea class="grid-input" oninput="autoGrow(this)">9870242077</textarea></td>
+                    <tr data-date="2026-06-15" onclick="selectThisRow(this)" style="resize: vertical; overflow: hidden;">
+                        <td class="row-selector">1</td>
+                        <td><textarea class="grid-input store-name" oninput="autoGrow(this); updateAutoId(this)">Glamour Salon</textarea></td>
+                        <td><textarea class="grid-input store-add" oninput="autoGrow(this)">Pocket A, Begumpur</textarea></td>
+                        <td><textarea class="grid-input store-no" oninput="autoGrow(this)">9870242077</textarea></td>
                         <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue()">500</textarea></td>
-                        <td><textarea class="grid-input" oninput="autoGrow(this)">28.7241, 77.0638</textarea></td>
-                        <td><textarea class="grid-input" oninput="autoGrow(this)">Salon & Beauty</textarea></td>
-                        <td><textarea class="grid-input" oninput="autoGrow(this)">110086</textarea></td>
-                        <td><input type="date" class="grid-input reg-date-field" value="2026-06-15" onchange="checkAging(this)" style="height:32px;"></td>
-                        <td><span class="aging-badge aging-due">⚠️ 2 महीने से ज्यादा!</span></td>
-                        <td><input type="file" class="grid-input" style="padding: 2px; height:32px;" onchange="previewImage(this)"></td>
-                        <td><button class="btn-crisp btn-pro-dark" style="padding:3px 6px; font-size:0.68rem;" onclick="openCardPreview(this)">प्रिव्यू</button></td>
+                        <td><textarea class="grid-input store-geo" oninput="autoGrow(this)">28.7241, 77.0638</textarea></td>
+                        <td><textarea class="grid-input store-cat" oninput="autoGrow(this)">Salon & Beauty</textarea></td>
+                        <td>
+                            <select class="pincode-select" onchange="onPinChange(this)"></select>
+                            <div class="pincode-board zone-green" data-pin="110086" onclick="openPinRadarByBoard(this)">
+                                110086 (ग्रीन ज़ोन)
+                            </div>
+                        </td>
+                        <td><input type="date" class="grid-input reg-date-field" value="2026-06-15" onclick="this.showPicker && this.showPicker()" onchange="checkAging(this)" style="height:20px;"></td>
+                        <td><span class="aging-badge aging-due">2 महीने!</span></td>
+                        <td><input type="file" class="grid-input" style="padding: 1px; height:20px;" onchange="previewImage(this)"></td>
+                        <td><button class="micro-btn" style="padding:1px 3px; font-size:0.55rem;" onclick="openCardPreview(this)">प्रिव्यू</button></td>
                         <td><textarea class="grid-input auto-id-field" readonly style="color:var(--badge-gold); font-weight:bold;" oninput="autoGrow(this)">glamour_salon_2077</textarea></td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- बॉटम एक्शन बार और स्लीक मिनिमलिस्टिक कट-लाइन टोटल काउंटर -->
+        <!-- बॉटम एक्शन बार -->
         <div class="action-bar">
-            <button class="btn-crisp btn-pro-dark" onclick="exportCSV()">CSV डाउनलोड</button>
+            <button class="micro-btn" style="flex: 1;" onclick="downloadMasterSheet()">डाउनलोड मास्टर</button>
             <div class="revenue-line-container">
                 <span class="revenue-label">टोटल कलेक्शन</span>
                 <span class="revenue-value" id="totalRevenueSpan">₹500</span>
             </div>
-            <button class="btn-crisp btn-pro-gold" onclick="pushToSupabase()">सुपरबेस डंप</button>
+            <button class="micro-btn gold" style="flex: 1;" onclick="pushToSupabase()">सुपरबेस डंप</button>
         </div>
     </div>
 
@@ -276,21 +335,52 @@
         </div>
     </div>
 
+    <!-- पिनकोड थर्मल रडार मोडल -->
+    <div class="modal-overlay" id="pinRadarModal">
+        <div class="modal-box">
+            <button class="modal-close-btn" onclick="closePinRadar()">✕</button>
+            <h3 id="radarTitle">
+                <span>📍 पिन बोर्ड रडार</span>
+                <span id="radarCountBadge" style="font-size:0.6rem; background:rgba(212,175,55,0.2); padding:1px 5px; border-radius:3px; color:var(--badge-gold);">0 दुकानें</span>
+            </h3>
+            <div id="radarBody"></div>
+        </div>
+    </div>
+
     <script>
-        // थीम टॉगल लॉजिक (डार्क ऑक्सीडियन / वेलवेट व्हाइट)
+        const delhiPincodes = [];
+        for (let i = 1; i <= 96; i++) {
+            let p = "1100" + (i < 10 ? "0" + i : i);
+            delhiPincodes.push(p);
+        }
+
+        function populatePinSelect(selectEl, selectedPin = "110086") {
+            selectEl.innerHTML = "";
+            delhiPincodes.forEach(p => {
+                let opt = document.createElement('option');
+                opt.value = p;
+                opt.innerText = p + (p === "110086" ? " (बेगमपुर)" : "");
+                if (p === selectedPin) opt.selected = true;
+                selectEl.appendChild(opt);
+            });
+        }
+
+        function onPinChange(selectEl) {
+            const tr = selectEl.closest('tr');
+            const board = tr.querySelector('.pincode-board');
+            const newPin = selectEl.value;
+            board.setAttribute('data-pin', newPin);
+            updateAllPinBoards();
+        }
+
         function toggleTheme() {
             const html = document.documentElement;
             const currentTheme = html.getAttribute('data-theme');
-            if (currentTheme === 'dark') {
-                html.setAttribute('data-theme', 'light');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-            }
+            html.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
         }
 
         function toggleCalculator() {
-            const wrap = document.getElementById('calcWrapper');
-            wrap.classList.toggle('active');
+            document.getElementById('calcWrapper').classList.toggle('active');
         }
 
         let calcInput = "";
@@ -315,17 +405,14 @@
 
         function calculateTotalRevenue() {
             let total = 0;
-            const collectionInputs = document.querySelectorAll('.collection-input');
-            collectionInputs.forEach(input => {
-                let val = parseFloat(input.value) || 0;
-                total += val;
+            document.querySelectorAll('.collection-input').forEach(input => {
+                total += parseFloat(input.value) || 0;
             });
             document.getElementById('totalRevenueSpan').innerText = `₹${total}`;
         }
 
         function getTodayDateString() {
-            const today = new Date();
-            return today.toISOString().split('T')[0];
+            return new Date().toISOString().split('T')[0];
         }
 
         function generateIdFromName(nameVal) {
@@ -355,10 +442,68 @@
             const diffDays = Math.floor((today - regDate) / (1000 * 60 * 60 * 24));
 
             if (diffDays > 60) {
-                statusCell.innerHTML = `<span class="aging-badge aging-due">⚠️ ${Math.floor(diffDays/30)} महीने!</span>`;
+                statusCell.innerHTML = `<span class="aging-badge aging-due">${Math.floor(diffDays/30)} महीने!</span>`;
             } else {
-                statusCell.innerHTML = `<span class="aging-badge aging-fresh">✅ नया (${diffDays} दिन)</span>`;
+                statusCell.innerHTML = `<span class="aging-badge aging-fresh">नया</span>`;
             }
+        }
+
+        function selectThisRow(row) {
+            document.querySelectorAll('#masterGridBody tr').forEach(r => r.classList.remove('selected-row'));
+            row.classList.add('selected-row');
+        }
+
+        function deleteSelectedRow() {
+            const selectedRow = document.querySelector('#masterGridBody tr.selected-row');
+            if (selectedRow) {
+                selectedRow.remove();
+                reindexRows();
+                calculateTotalRevenue();
+                updateAllPinBoards();
+            } else {
+                const tbody = document.getElementById('masterGridBody');
+                if (tbody.rows.length > 0) {
+                    tbody.deleteRow(tbody.rows.length - 1);
+                    calculateTotalRevenue();
+                    updateAllPinBoards();
+                } else {
+                    alert("डिलीट करने के लिए कोई रो उपलब्ध नहीं है!");
+                }
+            }
+        }
+
+        function reindexRows() {
+            const rows = document.querySelectorAll('#masterGridBody tr');
+            rows.forEach((row, idx) => {
+                const selectorTd = row.querySelector('.row-selector');
+                if (selectorTd) selectorTd.innerText = idx + 1;
+            });
+        }
+
+        function updateAllPinBoards() {
+            let pinCounts = {};
+            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+                const board = row.querySelector('.pincode-board');
+                if (board) {
+                    let pin = board.getAttribute('data-pin') || "110086";
+                    pinCounts[pin] = (pinCounts[pin] || 0) + 1;
+                }
+            });
+
+            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+                const board = row.querySelector('.pincode-board');
+                if (board) {
+                    let pin = board.getAttribute('data-pin') || "110086";
+                    let count = pinCounts[pin] || 0;
+                    if (count > 0) {
+                        board.className = "pincode-board zone-green";
+                        board.innerHTML = `${pin} (${count} दुकानें)`;
+                    } else {
+                        board.className = "pincode-board zone-red";
+                        board.innerHTML = `${pin} (0 दुकानें)`;
+                    }
+                }
+            });
         }
 
         function addNewRow(prefill = {}) {
@@ -367,63 +512,141 @@
             const defName = prefill.name || "New Store";
             const defId = generateIdFromName(defName);
             const todayStr = getTodayDateString();
+            const pinVal = prefill.pin || '110086';
             
             const row = document.createElement('tr');
             row.setAttribute('data-date', todayStr);
+            row.setAttribute('onclick', 'selectThisRow(this)');
             row.style.resize = "vertical";
-            row.style.overflow = "auto";
+            row.style.overflow = "hidden";
             row.innerHTML = `
-                <td>${rowCount}</td>
-                <td><textarea class="grid-input" oninput="autoGrow(this); updateAutoId(this)">${defName}</textarea></td>
-                <td><textarea class="grid-input" oninput="autoGrow(this)">${prefill.add || ''}</textarea></td>
-                <td><textarea class="grid-input" oninput="autoGrow(this)">${prefill.no || ''}</textarea></td>
-                <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue()">0</textarea></td>
-                <td><textarea class="grid-input" oninput="autoGrow(this)">${prefill.geo || ''}</textarea></td>
-                <td><textarea class="grid-input" oninput="autoGrow(this)">${prefill.cat || ''}</textarea></td>
-                <td><textarea class="grid-input" oninput="autoGrow(this)">${prefill.pin || '110086'}</textarea></td>
-                <td><input type="date" class="grid-input reg-date-field" value="${todayStr}" onchange="checkAging(this)" style="height:32px;"></td>
-                <td><span class="aging-badge aging-fresh">✅ नया (0 दिन)</span></td>
-                <td><input type="file" class="grid-input" style="padding: 2px; height:32px;" onchange="previewImage(this)"></td>
-                <td><button class="btn-crisp btn-pro-dark" style="padding:3px 6px; font-size:0.68rem;" onclick="openCardPreview(this)">प्रिव्यू</button></td>
+                <td class="row-selector">${rowCount}</td>
+                <td><textarea class="grid-input store-name" oninput="autoGrow(this); updateAutoId(this)">${defName}</textarea></td>
+                <td><textarea class="grid-input store-add" oninput="autoGrow(this)">${prefill.add || ''}</textarea></td>
+                <td><textarea class="grid-input store-no" oninput="autoGrow(this)">${prefill.no || ''}</textarea></td>
+                <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue()">${prefill.collection || '0'}</textarea></td>
+                <td><textarea class="grid-input store-geo" oninput="autoGrow(this)">${prefill.geo || ''}</textarea></td>
+                <td><textarea class="grid-input store-cat" oninput="autoGrow(this)">${prefill.cat || ''}</textarea></td>
+                <td>
+                    <select class="pincode-select" onchange="onPinChange(this)"></select>
+                    <div class="pincode-board zone-green" data-pin="${pinVal}" onclick="openPinRadarByBoard(this)">
+                        ${pinVal} (ग्रीन ज़ोन)
+                    </div>
+                </td>
+                <td><input type="date" class="grid-input reg-date-field" value="${todayStr}" onclick="this.showPicker && this.showPicker()" onchange="checkAging(this)" style="height:20px;"></td>
+                <td><span class="aging-badge aging-fresh">नया</span></td>
+                <td><input type="file" class="grid-input" style="padding: 1px; height:20px;" onchange="previewImage(this)"></td>
+                <td><button class="micro-btn" style="padding:1px 3px; font-size:0.55rem;" onclick="openCardPreview(this)">प्रिव्यू</button></td>
                 <td><textarea class="grid-input auto-id-field" readonly style="color:var(--badge-gold); font-weight:bold;" oninput="autoGrow(this)">${defId}</textarea></td>
             `;
             tbody.appendChild(row);
+            
+            const selectEl = row.querySelector('.pincode-select');
+            populatePinSelect(selectEl, pinVal);
+
+            selectThisRow(row);
             calculateTotalRevenue();
+            updateAllPinBoards();
+        }
+
+        document.addEventListener('dblclick', function(e) {
+            if (e.target.tagName === 'TD' || e.target.tagName === 'TEXTAREA') {
+                const target = e.target.closest('td, textarea');
+                if (target) {
+                    target.style.width = '';
+                    target.style.height = '';
+                    target.style.maxWidth = '';
+                    target.style.maxHeight = '';
+                }
+            }
+        });
+
+        function openPinRadarByBoard(boardEl) {
+            const pinVal = boardEl.getAttribute('data-pin') || "110086";
+            
+            let matchedStores = [];
+            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+                const b = row.querySelector('.pincode-board');
+                if (b && b.getAttribute('data-pin') === pinVal) {
+                    matchedStores.push({
+                        name: row.querySelector('.store-name').value.trim() || 'अज्ञात',
+                        phone: row.querySelector('.store-no').value.trim() || 'एन/ए',
+                        cat: row.querySelector('.store-cat').value.trim() || 'एन/ए',
+                        add: row.querySelector('.store-add').value.trim() || 'एन/ए'
+                    });
+                }
+            });
+
+            const count = matchedStores.length;
+            const radarModal = document.getElementById('pinRadarModal');
+            document.getElementById('radarCountBadge').innerText = `${count} दुकानें`;
+            const bodyEl = document.getElementById('radarBody');
+
+            if (count > 0) {
+                document.getElementById('radarTitle').innerHTML = `<span>📍 पिन बोर्ड: <strong style="color:var(--success-green);">${pinVal}</strong> (ग्रीन ज़ोन)</span><span id="radarCountBadge" style="font-size:0.6rem; background:rgba(16,185,129,0.2); padding:1px 5px; border-radius:3px; color:var(--success-green);">${count} दुकानें</span>`;
+                let html = `<div style="margin-bottom:4px; font-size:0.65rem; color:var(--success-green); font-weight:bold;">इस पिन कोड से कुल ${count} दुकानें आ चुकी हैं:</div>`;
+                matchedStores.forEach((s, idx) => {
+                    html += `
+                        <div class="radar-store-item">
+                            <div><strong>${idx+1}. ${s.name}</strong> (${s.cat})</div>
+                            <div style="color:#888; margin-top:1px;">📞 ${s.phone} | 📍 ${s.add}</div>
+                        </div>
+                    `;
+                });
+                bodyEl.innerHTML = html;
+            } else {
+                document.getElementById('radarTitle').innerHTML = `<span>📍 पिन बोर्ड: <strong style="color:var(--danger-red);">${pinVal}</strong> (रेड ज़ोन)</span><span id="radarCountBadge" style="font-size:0.6rem; background:rgba(239,68,68,0.2); padding:1px 5px; border-radius:3px; color:var(--danger-red);">0 दुकानें</span>`;
+                bodyEl.innerHTML = `
+                    <div style="font-size:0.68rem; color:var(--danger-red); font-weight:bold; padding: 5px 0; text-align:center;">
+                        इस पिन कोड पर वर्तमान में 0 (शून्य) दुकानें रजिस्टर्ड हैं! यह पूरी तरह अनछुआ रेड ज़ोन है।
+                    </div>
+                `;
+            }
+            radarModal.style.display = 'flex';
+        }
+
+        function closePinRadar() {
+            document.getElementById('pinRadarModal').style.display = 'none';
         }
 
         function filterRowsByDate(selectedDate) {
             if (!selectedDate) return;
-            const rows = document.querySelectorAll('#masterGridBody tr');
-            rows.forEach(row => {
-                const rowDate = row.getAttribute('data-date');
-                row.style.display = (rowDate === selectedDate) ? "" : "none";
+            document.querySelectorAll('#masterGridBody tr').forEach(row => {
+                row.style.display = (row.getAttribute('data-date') === selectedDate) ? "" : "none";
             });
         }
 
         function resetDateFilter() {
             document.getElementById('filterDateCalendar').value = "";
-            const rows = document.querySelectorAll('#masterGridBody tr');
-            rows.forEach(row => row.style.display = "");
+            document.querySelectorAll('#masterGridBody tr').forEach(row => row.style.display = "");
         }
 
         function parseRawDataAndFill(textarea) {
-            const text = textarea.value.trim();
-            if (!text || text.length < 5) return;
+            const rawText = textarea.value.trim();
+            if (!rawText || rawText.length < 5) return;
             
-            const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
-            let name = lines[0] || "Parsed Store";
-            let phone = "9870242077";
-            let pin = "110086";
-            let add = lines.slice(1).join(', ') || "Delhi NCR";
+            const blocks = rawText.split('\n').map(b => b.trim()).filter(Boolean);
 
-            lines.forEach(l => {
-                const cleanD = l.replace(/\D/g, '');
-                if (cleanD.length === 10) phone = cleanD;
-                if (cleanD.length === 6) pin = cleanD;
+            blocks.forEach(block => {
+                let parts = block.includes('|') ? block.split('|').map(p => p.trim()) : [block];
+                
+                let name = parts[0] ? parts[0].replace(/^(दुकान|Store)\s*\d+[:\s]*/i, '') : "Parsed Store";
+                let phone = "9870242077";
+                let pin = "110086";
+                let geo = "28.7241, 77.0638";
+                let cat = "Salon & Beauty";
+                let add = parts.slice(1).join(', ') || "Delhi NCR";
+
+                parts.forEach(p => {
+                    const cleanD = p.replace(/\D/g, '');
+                    if (cleanD.length === 10) phone = cleanD;
+                    if (cleanD.length === 6) pin = cleanD;
+                    if (p.includes('.') && p.includes(',')) geo = p;
+                });
+
+                addNewRow({ name, no: phone, pin, geo, cat, add });
             });
 
-            addNewRow({ name, no: phone, pin, add });
-            
             setTimeout(() => {
                 textarea.value = "";
             }, 100);
@@ -440,14 +663,14 @@
 
         function openCardPreview(btn) {
             const tr = btn.closest('tr');
-            const textareas = tr.querySelectorAll('textarea');
-            const name = textareas[0].value || 'अज्ञात';
-            const add = textareas[1].value || 'एन/ए';
-            const phone = textareas[2].value || 'एन/ए';
-            const collection = textareas[3].value || '0';
-            const geo = textareas[4].value || 'एन/ए';
-            const cat = textareas[5].value || 'एन/ए';
-            const pin = textareas[6].value || 'एन/ए';
+            const name = tr.querySelector('.store-name').value || 'अज्ञात';
+            const add = tr.querySelector('.store-add').value || 'एन/ए';
+            const phone = tr.querySelector('.store-no').value || 'एन/ए';
+            const collection = tr.querySelector('.collection-input').value || '0';
+            const geo = tr.querySelector('.store-geo').value || 'एन/ए';
+            const cat = tr.querySelector('.store-cat').value || 'एन/ए';
+            const pinBoard = tr.querySelector('.pincode-board');
+            const pin = pinBoard ? pinBoard.getAttribute('data-pin') : '110086';
             const autoId = tr.querySelector('.auto-id-field').value;
 
             const modal = document.getElementById('previewModal');
@@ -470,6 +693,19 @@
             document.getElementById('previewModal').style.display = 'none';
         }
 
+        function downloadMasterSheet() {
+            const htmlContent = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Star_Shop_Master_Sheet_${getTodayDateString()}.html`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
         function pushToSupabase() {
             alert("सफलता: सारा डेटा Supabase में डंप हो गया है!");
         }
@@ -478,7 +714,12 @@
             alert("सफलता: CSV फाइल डाउनलोड हो गई है!");
         }
 
-        calculateTotalRevenue();
+        document.addEventListener("DOMContentLoaded", () => {
+            const initialSelect = document.querySelector('.pincode-select');
+            if (initialSelect) populatePinSelect(initialSelect, "110086");
+            calculateTotalRevenue();
+            updateAllPinBoards();
+        });
     </script>
 </body>
 </html>
