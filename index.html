@@ -278,8 +278,8 @@
             <button class="modal-close-btn" onclick="closeSmartSplitterModal()">X</button>
             <h3>Raw Data Auto-Splitter & Live Viewer</h3>
             <div class="modal-form-group">
-                <label>Paste Raw Dump Here:</label>
-                <textarea id="splitterRawText" rows="4" placeholder="Store name, address, phone, collection..." oninput="updateLiveSplitterViewer(this.value)"></textarea>
+                <label>Paste Raw Dump Here (Store: ... | Category: ...):</label>
+                <textarea id="splitterRawText" rows="4" placeholder="Store: Royal Touch | Category: Spa | Address: ..." oninput="updateLiveSplitterViewer(this.value)"></textarea>
             </div>
             
             <div style="font-size:0.58rem; color:var(--badge-gold); font-weight:800; margin-bottom:3px;">Live Viewer:</div>
@@ -353,7 +353,23 @@
             setTimeout(() => { t.style.display = 'none'; }, 2000);
         }
 
-        // 🔗 Supabase SDK Sync (सफल सिंक के बाद ग्रिड को पूरी तरह खाली करने वाला लॉजिक)
+        // 🛡️ अचूक एंटी-डुप्लीकेशन शील्ड (लोकल ग्रिड चेक)
+        function checkIsDuplicate(phone, name) {
+            let cleanPhone = (phone || '').replace(/\D/g, '').slice(-10);
+            let cleanName = (name || '').trim().toLowerCase();
+            
+            let rows = document.querySelectorAll('#masterGridBody tr');
+            for (let row of rows) {
+                let exPhone = row.querySelector('.store-no').value.replace(/\D/g, '').slice(-10);
+                let exName = row.querySelector('.store-name').value.trim().toLowerCase();
+                
+                if ((cleanPhone && exPhone && cleanPhone === exPhone) || (exName === cleanName)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         async function syncToSupabaseRealtime() {
             const rawData = localStorage.getItem(STORAGE_KEY);
             if (!rawData) {
@@ -382,7 +398,7 @@
 
                 const { error } = await _supabase
                     .from('merchants')
-                    .upsert(mappedPayload);
+                    .upsert(mappedPayload, { onConflict: 'id' });
 
                 if (error) {
                     console.error("Supabase SDK Error:", error);
@@ -592,47 +608,68 @@
             showToast("Row added successfully.");
         }
 
-        // 🧠 स्मार्ट डायनेमिक कैटेगरी डिटेक्टर (Smart Category Matrix for English standard)
+        // 🧠 अल्टीमेट की-वैल्यू और स्टैंडर्ड मास्टर पार्सर इंजन
         function parseRawStoreData(raw) {
             let name = "Verified Store", add = "Delhi NCR", phone = "9870242077", collection = "500", geo = "28.7241, 77.0638", cat = "Salon";
-            
-            let phoneMatch = raw.match(/(?:\+91[\-\s]?)?[0]?[6-9](?:[\-\s]?\d){9}\b/);
-            if (phoneMatch) phone = phoneMatch[0].replace(/\D/g, '').slice(-10);
 
-            let geoMatch = raw.match(/\b\d{2}\.\d+,\s*\d{2}\.\d+\b/);
-            if (geoMatch) {
-                geo = geoMatch[0];
-                raw = raw.replace(geo, '');
+            if (raw.includes(':')) {
+                let extract = (key) => {
+                    let regex = new RegExp(`${key}\\s*[:=]\\s*([^|\\n]+)`, 'i');
+                    let match = raw.match(regex);
+                    return match ? match[1].trim() : null;
+                };
+
+                let sName = extract('Store');
+                if (sName) name = sName;
+
+                let sCat = extract('Category');
+                if (sCat) cat = sCat;
+
+                let sAdd = extract('Address');
+                if (sAdd) add = sAdd;
+
+                let sPhone = extract('Phone');
+                if (sPhone) phone = sPhone.replace(/\D/g, '').slice(-10);
+
+                let sGeo = extract('Coordinates') || extract('Geo');
+                if (sGeo) geo = sGeo;
+
+                let sColl = extract('Collection');
+                if (sColl) collection = sColl.replace(/\D/g, '');
+
+                if (!add || add.length < 3) add = "Delhi NCR";
+                return { name, add, phone, collection, geo, cat };
             }
 
-            let collMatch = raw.match(/(?:₹\s*|Rs\.?\s*)(\d+)/i) || raw.match(/\b([1-9]\d{2,4})\b/);
+            let cleanRaw = raw.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
+            let phoneMatch = cleanRaw.match(/(?:\+91[\-\s]?)?[0]?[6-9](?:[\-\s]?\d){9}\b/);
+            if (phoneMatch) {
+                phone = phoneMatch[0].replace(/\D/g, '').slice(-10);
+                cleanRaw = cleanRaw.replace(phoneMatch[0], ' ');
+            }
+
+            let geoMatch = cleanRaw.match(/\b\d{2}\.\d+,\s*\d{2}\.\d+\b/);
+            if (geoMatch) {
+                geo = geoMatch[0];
+                cleanRaw = cleanRaw.replace(geoMatch[0], ' ');
+            }
+
+            let collMatch = cleanRaw.match(/(?:₹\s*|Rs\.?\s*)(\d+)/i) || cleanRaw.match(/\b([1-9]\d{2,4})\b/);
             if (collMatch) {
                 let foundNum = collMatch[1] || collMatch[0].replace(/\D/g, '');
                 if (foundNum.length >= 2 && foundNum.length <= 5 && foundNum !== phone) {
                     collection = foundNum;
+                    cleanRaw = cleanRaw.replace(collMatch[0], ' ');
                 }
             }
 
-            let cleanLine = raw.replace(phoneMatch ? phoneMatch[0] : '', '').replace(/(?:₹\s*|Rs\.?\s*)\d+/g, '').trim();
-            let parts = cleanLine.split(/,|\t|\||--/).map(p => p.trim()).filter(Boolean);
+            let lowerFull = cleanRaw.toLowerCase();
+            if (lowerFull.includes('boutique')) cat = "Boutique";
+            else if (lowerFull.includes('parlor') || lowerFull.includes('makeover')) cat = "Parlor";
+            else if (lowerFull.includes('spa')) cat = "Spa";
+            else if (lowerFull.includes('salon')) cat = "Salon";
 
-            if (parts.length > 0) name = parts[0];
-            if (parts.length > 1) {
-                let addressParts = parts.slice(1).filter(p => !p.match(/^\d{5,6}$/) && p !== collection);
-                add = addressParts.join(', ') || "Delhi NCR";
-            }
-
-            let lowerFull = raw.toLowerCase();
-            if (lowerFull.includes('boutique') || lowerFull.includes('बुटीक')) cat = "Boutique";
-            else if (lowerFull.includes('parlor') || lowerFull.includes('पार्लर') || lowerFull.includes('makeover')) cat = "Parlor";
-            else if (lowerFull.includes('nail') || lowerFull.includes('नेल')) cat = "Nail Studio";
-            else if (lowerFull.includes('spa') || lowerFull.includes('स्पा')) cat = "Spa";
-            else if (lowerFull.includes('general') || lowerFull.includes('store') || lowerFull.includes('kirana') || lowerFull.includes('किराना')) cat = "General Store";
-            else if (lowerFull.includes('cafe') || lowerFull.includes('food') || lowerFull.includes('restaurant')) cat = "Cafe & Food";
-            else if (lowerFull.includes('medical') || lowerFull.includes('pharmacy')) cat = "Medical & Pharmacy";
-            else cat = "Salon";
-
-            return { name, add, phone, collection, geo, cat };
+            return { name, add: cleanRaw, phone, collection, geo, cat };
         }
 
         function updateLiveSplitterViewer(raw) {
@@ -643,13 +680,15 @@
             }
 
             const parsed = parseRawStoreData(raw);
+            const isDup = checkIsDuplicate(parsed.phone, parsed.name);
 
             viewer.innerHTML = `
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Store:</span> <strong style="color:var(--text-main);">${parsed.name}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Phone:</span> <strong style="color:var(--badge-gold);">${parsed.phone}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Coordinates:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Category:</span> <strong style="color:var(--success-green);">${parsed.cat}</strong></div>
-                <div style="display:flex; justify-content:space-between;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
+                ${isDup ? `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:3px; text-align:center; border-radius:2px;">⚠️ WARNING: यह मर्चेंट पहले से शीट में मौजूद है (Duplicate)!</div>` : `<div style="color:#10b981; font-weight:900; background:rgba(16,185,129,0.15); padding:3px; text-align:center; border-radius:2px;">✅ Fresh Record - Ready to Lock</div>`}
             `;
         }
 
@@ -660,9 +699,15 @@
             const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
             const tbody = document.getElementById('masterGridBody');
             let addedCount = 0;
+            let skippedCount = 0;
 
             lines.forEach(line => {
                 const parsed = parseRawStoreData(line);
+
+                if (checkIsDuplicate(parsed.phone, parsed.name)) {
+                    skippedCount++;
+                    return;
+                }
 
                 let pin = "110086";
                 let geo = parsed.geo;
@@ -697,7 +742,8 @@
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            showToast(`${addedCount} stores processed and locked.`);
+            
+            showToast(`${addedCount} added, ${skippedCount} duplicates skipped.`);
         }
 
         function injectModalData() {
@@ -707,6 +753,11 @@
             no = no.replace(/\D/g, '').slice(-10);
             const collection = document.getElementById('modalCollection').value.trim() || "500";
             const cat = document.getElementById('modalStoreCat').value;
+
+            if (checkIsDuplicate(no, name)) {
+                showToast("Error: Duplicate store or phone number!");
+                return;
+            }
 
             let pin = "110086";
             let geo = COMPLETE_DELHI_PINCODES["110086"].geo;
@@ -988,7 +1039,9 @@
             showToast("CSV exported successfully.");
         }
 
-        document.addEventListener("DOMContentLoaded", loadFromLocalStorage);
+        window.addEventListener('DOMContentLoaded', () => {
+            loadFromLocalStorage();
+        });
     </script>
 </body>
 </html>
