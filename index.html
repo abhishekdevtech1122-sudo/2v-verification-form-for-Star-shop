@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="hi" data-theme="dark">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Star Shop Master Excel Sheet | Quantum War-Room</title>
+    <title>Star Shop Master Excel Sheet | Direct SDK Sync</title>
+    <!-- ऑफिशियल Supabase SDK CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         [data-theme="dark"] {
             --bg-main: #000000;
@@ -71,7 +73,7 @@
         .orb-command-chip:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
         .orb-command-chip.search-chip { background: var(--input-bg); border-color: var(--badge-gold); padding: 0; }
         .orb-command-chip.search-chip input { background: transparent; border: none; color: var(--text-main); padding: 0 8px; font-size: 0.56rem; outline: none; width: 110px; height: 100%; }
-        .orb-command-chip.date-chip { background: var(--input-bg); border-color: var(--border-color); padding: 0 4px; }
+        .orb-command-chip.date-chip { background: var(--input-bg); border: 1px solid var(--border-color); padding: 0 4px; }
         .orb-command-chip.date-chip input { background: transparent; border: none; color: var(--text-main); font-size: 0.56rem; outline: none; height: 100%; font-weight: 700; }
         .orb-command-chip.danger { border-color: var(--danger-red); color: var(--danger-red); background: rgba(239, 68, 68, 0.1); }
         .orb-command-chip.gold { border-color: var(--badge-gold); color: #000; background: var(--badge-gold); font-weight: 900; }
@@ -160,14 +162,14 @@
     <div id="toastMsg">System Updated</div>
 
     <div class="container">
-        <!-- TOP COCKPIT BAR WITH INTEGRATED CAPSULE CHIPS -->
         <div class="top-bar">
             <div class="top-row-main">
-                <div class="brand-title">STAR SHOP WAR-ROOM</div>
+                <div class="brand-title">STAR SHOP MASTER EXCEL SHEET</div>
                 <div class="telemetry-strip">
                     <span class="telemetry-pill">Stores: <strong id="statTotalStores">0</strong></span>
                     <span class="telemetry-pill">Pins: <strong id="statActivePins">0/97</strong></span>
                 </div>
+                <!-- गोल थीम चेंजर बटन अपनी जगह पर सुरक्षित -->
                 <button class="theme-orb-btn" onclick="toggleTheme()" title="Toggle Theme"></button>
             </div>
             
@@ -219,7 +221,6 @@
             </div>
         </div>
 
-        <!-- MASTER GRID TABLE CONTAINER -->
         <div class="grid-wrapper">
             <table>
                 <thead>
@@ -235,44 +236,43 @@
                         <th style="min-width: 105px;">REG. DATE</th>
                         <th>STATUS</th>
                         <th>ACTION</th>
-                        <th>AUTO-ID</th>
+                        <th>ID (Database Column)</th>
                     </tr>
                 </thead>
                 <tbody id="masterGridBody"></tbody>
             </table>
         </div>
 
-        <!-- REVENUE FOOTER STRIP -->
         <div class="revenue-footer-strip">
             <span>Quantum War-Room Active</span>
             <span>Total Collection: <strong id="totalRevenueSpan" style="color:var(--badge-gold);">₹0</strong></span>
         </div>
     </div>
 
-    <!-- DATA ENTRY MODAL WITH CATEGORY -->
+    <!-- Modals -->
     <div class="modal-overlay" id="dataEntryModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeDataEntryModal()">X</button>
             <h3>Merchant Data Studio</h3>
             <div class="modal-form-group"><label>Store Name:</label><input type="text" id="modalStoreName" placeholder="Glamour Salon"></div>
             <div class="modal-form-group"><label>Address / Area:</label><input type="text" id="modalStoreAdd" placeholder="Pocket A Begumpur Delhi"></div>
-            <div class="modal-form-group"><label>Mobile Number:</label><input type="text" id="modalStoreNo" placeholder="9870242077"></div>
+            <div class="modal-form-group"><label>Mobile Number:</label><input type="text" id="modalStoreNo" placeholder="0000000000"></div>
             <div class="modal-form-group"><label>Collection (₹):</label><input type="text" id="modalCollection" value="500"></div>
             <div class="modal-form-group">
                 <label>Category:</label>
                 <select id="modalStoreCat">
-                    <option value="सैलून">सैलून (Salon)</option>
-                    <option value="पार्लर">पार्लर (Parlor)</option>
-                    <option value="नेल स्टूडियो">नेल स्टूडियो (Nail Studio)</option>
-                    <option value="स्पा">स्पा (Spa)</option>
-                    <option value="जनरल स्टोर">जनरल स्टोर (General Store)</option>
+                    <option value="Salon">Salon</option>
+                    <option value="Parlor">Parlor</option>
+                    <option value="Boutique">Boutique</option>
+                    <option value="Nail Studio">Nail Studio</option>
+                    <option value="Spa">Spa</option>
+                    <option value="General Store">General Store</option>
                 </select>
             </div>
             <button class="modal-submit-btn" onclick="injectModalData()">Lock & Insert to Sheet</button>
         </div>
     </div>
 
-    <!-- SMART SPLITTER MODAL -->
     <div class="modal-overlay" id="smartSplitterModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeSmartSplitterModal()">X</button>
@@ -291,7 +291,6 @@
         </div>
     </div>
 
-    <!-- PREVIEW MODAL -->
     <div class="modal-overlay" id="previewModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeModal()">X</button>
@@ -300,7 +299,6 @@
         </div>
     </div>
 
-    <!-- PINCODE RADAR MODAL -->
     <div class="modal-overlay" id="pinRadarModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closePinRadar()">X</button>
@@ -310,9 +308,19 @@
     </div>
 
     <script>
-        // ======= REAL-TIME SUPABASE CONFIGURATION =======
-        const SUPABASE_URL = "https://gejrzpflcuvlbpedliwq.supabase.co/rest/v1/merchants";
-        const SUPABASE_ANON_KEY = "sb_publishable_dw9J2AX0nd3SxPrRy9JGCg_YqS8ZfUF";
+        const SUPABASE_URL = 'https://gejrzpflcuvlbpedliwq.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_dw9J2AX0nd3SxPrRy9JGCg_YqS8ZfUF';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const categoryFallbacks = {
+            "Salon": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&auto=format&fit=crop&q=80",
+            "Parlor": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&auto=format&fit=crop&q=80",
+            "Boutique": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop&q=80",
+            "Nail Studio": "https://images.unsplash.com/photo-1604654894610-df63bc536371?w=600&auto=format&fit=crop&q=80",
+            "Spa": "https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=600&auto=format&fit=crop&q=80",
+            "General Store": "https://images.unsplash.com/photo-1578916171728-46686eac8d58?w=600&auto=format&fit=crop&q=80",
+            "Default": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop&q=80"
+        };
 
         const COMPLETE_DELHI_PINCODES = {
             "110001": { area: "Connaught Place / Parliament St", target: 550, geo: "28.6315, 77.2167" },
@@ -331,13 +339,12 @@
         };
 
         const delhiKeywordToPin = {
-            "begumpur": "110086", "बेगमपुर": "110086", "sultanpuri": "110086", "rohini": "110085", "रोहिणी": "110085",
-            "pitampura": "110034", "पीतमपुरा": "110034", "narela": "110040", "नरेला": "110040",
-            "uttam nagar": "110059", "उत्तम नगर": "110059", "janakpuri": "110058", "जनकपुरी": "110058",
-            "dwarka": "110075", "द्वारका": "110075", "karol bagh": "110005", "laxmi nagar": "110092"
+            "begumpur": "110086", "sultanpuri": "110086", "rohini": "110085",
+            "pitampura": "110034", "narela": "110040", "uttam nagar": "110059",
+            "janakpuri": "110058", "dwarka": "110075", "karol bagh": "110005", "laxmi nagar": "110092"
         };
 
-        const STORAGE_KEY = "STAR_SHOP_QUANTUM_V28";
+        const STORAGE_KEY = "STAR_SHOP_SDK_SYNC_V7";
 
         function showToast(msg) {
             const t = document.getElementById('toastMsg');
@@ -346,7 +353,7 @@
             setTimeout(() => { t.style.display = 'none'; }, 2000);
         }
 
-        // ================= REAL-TIME SUPABASE CLOUD SYNC (WITH CATEGORY MAPPING) =================
+        // 🔗 Supabase SDK Sync (सफल सिंक के बाद ग्रिड को पूरी तरह खाली करने वाला लॉजिक)
         async function syncToSupabaseRealtime() {
             const rawData = localStorage.getItem(STORAGE_KEY);
             if (!rawData) {
@@ -354,43 +361,40 @@
                 return;
             }
 
-            showToast("Syncing mapped data to Supabase...");
+            showToast("Syncing via Supabase SDK...");
             try {
                 const parsedList = JSON.parse(rawData);
                 
-                const mappedPayload = parsedList.map(item => ({
-                    store_name: item.name || "Verified Store",
-                    address: item.add || "Delhi",
-                    phone: item.no || "",
-                    category: item.cat || "सैलून",
-                    latitude: item.geo ? item.geo.split(',')[0].trim() : "28.7241",
-                    longitude: item.geo ? item.geo.split(',')[1]?.trim() : "77.0638",
-                    pincode: item.pin || "110086",
-                    auto_id: item.id || generateIdFromName(item.name, item.no),
-                    status: "approved"
-                }));
+                const mappedPayload = parsedList.map(item => {
+                    const assignedImg = categoryFallbacks[item.cat] || categoryFallbacks["Default"];
 
-                const response = await fetch(SUPABASE_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'apikey': SUPABASE_ANON_KEY,
-                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
-                        'Prefer': 'resolution=merge-duplicates'
-                    },
-                    body: JSON.stringify(mappedPayload)
+                    return {
+                        id: item.id || generateIdFromName(item.name, item.no),
+                        store_name: item.name || "Verified Store",
+                        address: item.add || "Delhi",
+                        phone: item.no || "",
+                        category: item.cat || "Salon",
+                        location: item.geo || "28.7241, 77.0638",
+                        image_url: assignedImg,
+                        status: "approved"
+                    };
                 });
 
-                if (response.ok || response.status === 201) {
-                    showToast("Real-time Supabase sync successful!");
+                const { error } = await _supabase
+                    .from('merchants')
+                    .upsert(mappedPayload);
+
+                if (error) {
+                    console.error("Supabase SDK Error:", error);
+                    showToast("Sync failed: " + error.message);
                 } else {
-                    const errText = await response.text();
-                    console.error("Supabase Error:", errText);
-                    showToast("Sync failed! Check console.");
+                    showToast("Supabase SDK sync successful! Grid cleared.");
+                    localStorage.removeItem(STORAGE_KEY);
+                    loadFromLocalStorage();
                 }
             } catch (err) {
-                console.error("Network Error:", err);
-                showToast("Supabase network connection error!");
+                console.error("Network/Script Error:", err);
+                showToast("Sync network error!");
             }
         }
 
@@ -448,11 +452,11 @@
             return `${clean}_${suffix}`;
         }
 
-        function updateAutoId(textarea) {
+        function updateIdField(textarea) {
             const tr = textarea.closest('tr');
             const nameVal = tr.querySelector('.store-name').value;
             const phoneVal = tr.querySelector('.store-no').value;
-            tr.querySelector('.auto-id-field').value = generateIdFromName(nameVal, phoneVal);
+            tr.querySelector('.id-field').value = generateIdFromName(nameVal, phoneVal);
             saveToLocalStorage();
         }
 
@@ -538,18 +542,19 @@
             const defId = prefill.id || generateIdFromName(defName, defNo);
             const todayStr = prefill.date || getTodayDateString();
             const pinVal = (prefill.pin && COMPLETE_DELHI_PINCODES[prefill.pin]) ? prefill.pin : '110086';
-            const catVal = prefill.cat || 'सैलून';
+            const catVal = prefill.cat || 'Salon';
+            const geoVal = prefill.geo || COMPLETE_DELHI_PINCODES[pinVal].geo;
             
             const row = document.createElement('tr');
             row.setAttribute('data-date', todayStr);
             row.setAttribute('onclick', 'selectThisRow(this)');
             row.innerHTML = `
                 <td style="text-align:center;"><div style="font-weight:800; color:var(--badge-gold); font-size:0.6rem;" class="row-selector-cell">${rowIndex}</div></td>
-                <td><textarea class="grid-input store-name" oninput="autoGrow(this); updateAutoId(this)">${defName}</textarea></td>
+                <td><textarea class="grid-input store-name" oninput="autoGrow(this); updateIdField(this)">${defName}</textarea></td>
                 <td><textarea class="grid-input store-add" oninput="autoGrow(this); autoDetectGeoFromAddress(this)">${prefill.add || ''}</textarea></td>
-                <td><textarea class="grid-input store-no" oninput="autoGrow(this); updateAutoId(this)">${defNo}</textarea></td>
+                <td><textarea class="grid-input store-no" oninput="autoGrow(this); updateIdField(this)">${defNo}</textarea></td>
                 <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue(); saveToLocalStorage()">${prefill.collection || '500'}</textarea></td>
-                <td><textarea class="grid-input store-geo" oninput="autoGrow(this); saveToLocalStorage()">${prefill.geo || COMPLETE_DELHI_PINCODES[pinVal].geo}</textarea></td>
+                <td><textarea class="grid-input store-geo" oninput="autoGrow(this); saveToLocalStorage()">${geoVal}</textarea></td>
                 <td><textarea class="grid-input store-cat" oninput="autoGrow(this); saveToLocalStorage()">${catVal}</textarea></td>
                 <td>
                     <select class="pincode-select" onchange="onPinChange(this)"></select>
@@ -564,7 +569,7 @@
                         <button class="op-btn" onclick="openCardPreview(this)">VIEW</button>
                     </div>
                 </td>
-                <td><textarea class="grid-input auto-id-field" readonly style="color:var(--badge-gold); font-weight:bold;">${defId}</textarea></td>
+                <td><textarea class="grid-input id-field" readonly style="color:var(--badge-gold); font-weight:bold;">${defId}</textarea></td>
             `;
             populatePinSelect(row.querySelector('.pincode-select'), pinVal);
             return row;
@@ -577,7 +582,7 @@
 
         function addNewRow() {
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi", no: "9870242077", collection: "500", geo: "28.7241, 77.0638", cat: "सैलून", pin: "110086" }, tbody.rows.length + 1);
+            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi", no: "9870242077", collection: "500", geo: "28.7241, 77.0638", cat: "Salon", pin: "110086" }, tbody.rows.length + 1);
             tbody.appendChild(row);
             reindexRows();
             selectThisRow(row);
@@ -587,9 +592,9 @@
             showToast("Row added successfully.");
         }
 
-        // ================= SMART AUTO-PARSER WITH CATEGORY DETECTION =================
+        // 🧠 स्मार्ट डायनेमिक कैटेगरी डिटेक्टर (Smart Category Matrix for English standard)
         function parseRawStoreData(raw) {
-            let name = "Verified Store", add = "Delhi NCR", phone = "9870242077", collection = "500", geo = "28.7241, 77.0638", cat = "सैलून";
+            let name = "Verified Store", add = "Delhi NCR", phone = "9870242077", collection = "500", geo = "28.7241, 77.0638", cat = "Salon";
             
             let phoneMatch = raw.match(/(?:\+91[\-\s]?)?[0]?[6-9](?:[\-\s]?\d){9}\b/);
             if (phoneMatch) phone = phoneMatch[0].replace(/\D/g, '').slice(-10);
@@ -617,13 +622,15 @@
                 add = addressParts.join(', ') || "Delhi NCR";
             }
 
-            // ऑटोमेटिक कैटेगरी डिटेक्ट करने का स्मार्ट लॉजिक
             let lowerFull = raw.toLowerCase();
-            if (lowerFull.includes('parlor') || lowerFull.includes('पार्लर')) cat = "पार्लर";
-            else if (lowerFull.includes('nail') || lowerFull.includes('नेल')) cat = "नेल स्टूडियो";
-            else if (lowerFull.includes('spa') || lowerFull.includes('स्पा')) cat = "स्पा";
-            else if (lowerFull.includes('general') || lowerFull.includes('store') || lowerFull.includes('किराना')) cat = "जनरल स्टोर";
-            else cat = "सैलून";
+            if (lowerFull.includes('boutique') || lowerFull.includes('बुटीक')) cat = "Boutique";
+            else if (lowerFull.includes('parlor') || lowerFull.includes('पार्लर') || lowerFull.includes('makeover')) cat = "Parlor";
+            else if (lowerFull.includes('nail') || lowerFull.includes('नेल')) cat = "Nail Studio";
+            else if (lowerFull.includes('spa') || lowerFull.includes('स्पा')) cat = "Spa";
+            else if (lowerFull.includes('general') || lowerFull.includes('store') || lowerFull.includes('kirana') || lowerFull.includes('किराना')) cat = "General Store";
+            else if (lowerFull.includes('cafe') || lowerFull.includes('food') || lowerFull.includes('restaurant')) cat = "Cafe & Food";
+            else if (lowerFull.includes('medical') || lowerFull.includes('pharmacy')) cat = "Medical & Pharmacy";
+            else cat = "Salon";
 
             return { name, add, phone, collection, geo, cat };
         }
@@ -640,8 +647,8 @@
             viewer.innerHTML = `
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Store:</span> <strong style="color:var(--text-main);">${parsed.name}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Phone:</span> <strong style="color:var(--badge-gold);">${parsed.phone}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Category:</span> <strong style="color:var(--cyber-blue);">${parsed.cat}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Collection:</span> <strong style="color:var(--success-green);">₹${parsed.collection}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Coordinates:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Category:</span> <strong style="color:var(--success-green);">${parsed.cat}</strong></div>
                 <div style="display:flex; justify-content:space-between;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
             `;
         }
@@ -752,8 +759,8 @@
             const tr = btn.closest('tr');
             const name = tr.querySelector('.store-name').value.trim();
             const phone = tr.querySelector('.store-no').value.replace(/\D/g, '').slice(-10);
-            const id = tr.querySelector('.auto-id-field').value.trim();
-            const msg = encodeURIComponent(`Hello *${name}*,\nYour store is verified on *Star Shop Network*.\nYour Merchant ID: *${id}*`);
+            const id = tr.querySelector('.id-field').value.trim();
+            const msg = encodeURIComponent(`Hello *${name}*,\nYour store is verified on *Star Shop Network*.\nYour ID: *${id}*`);
             window.open(`https://wa.me/91${phone}?text=${msg}`, '_blank');
         }
 
@@ -803,7 +810,7 @@
                     cat: row.querySelector('.store-cat').value,
                     pin: row.querySelector('.pincode-board').getAttribute('data-pin'),
                     date: row.querySelector('.reg-date-field').value,
-                    id: row.querySelector('.auto-id-field').value
+                    id: row.querySelector('.id-field').value
                 });
             });
             localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -820,8 +827,8 @@
                 tbody.appendChild(frag);
             } else {
                 tbody.appendChild(createRowElement({
-                    name: "Glamour Salon", add: "Pocket A, Begumpur", no: "9870242077",
-                    collection: "500", geo: "28.7241, 77.0638", cat: "सैलून", pin: "110086"
+                    name: "Destiny Beauty Parlour and boutique", add: "112 Pocket 13 Sector 21 Rohini Delhi", no: "8802783167",
+                    collection: "500", geo: "28.6901, 77.1450", cat: "Parlor", pin: "110086"
                 }, 1));
             }
             calculateTotalRevenue();
@@ -929,11 +936,11 @@
             const geo = tr.querySelector('.store-geo').value;
             const cat = tr.querySelector('.store-cat').value;
             const pin = tr.querySelector('.pincode-board').getAttribute('data-pin');
-            const autoId = tr.querySelector('.auto-id-field').value;
+            const idVal = tr.querySelector('.id-field').value;
 
             document.getElementById('modalTitle').innerText = name;
             document.getElementById('modalBody').innerHTML = `
-                <div class="detail-row"><span>Auto-ID:</span> <strong>${autoId}</strong></div>
+                <div class="detail-row"><span>ID (Database Column):</span> <strong>${idVal}</strong></div>
                 <div class="detail-row"><span>Store Name:</span> <strong>${name}</strong></div>
                 <div class="detail-row"><span>Mobile:</span> <strong>${phone}</strong></div>
                 <div class="detail-row"><span>Collection:</span> <strong style="color:var(--success-green);">₹${collection}</strong></div>
@@ -957,7 +964,7 @@
         }
 
         function exportCSV() {
-            let csv = "S.No,Store Name,Address,Phone,Collection,Coordinates,Category,Pincode,Date,Auto_ID\n";
+            let csv = "S.No,Store Name,Address,Phone,Collection,Coordinates,Category,Pincode,Date,ID\n";
             document.querySelectorAll('#masterGridBody tr').forEach((row, i) => {
                 const q = s => `"${(s || '').replace(/"/g, '""')}"`;
                 csv += [
@@ -970,7 +977,7 @@
                     q(row.querySelector('.store-cat').value),
                     q(row.querySelector('.pincode-board').getAttribute('data-pin')),
                     q(row.querySelector('.reg-date-field').value),
-                    q(row.querySelector('.auto-id-field').value)
+                    q(row.querySelector('.id-field').value)
                 ].join(",") + "\n";
             });
             const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' });
