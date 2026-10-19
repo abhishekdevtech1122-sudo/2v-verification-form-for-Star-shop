@@ -144,8 +144,8 @@
         
         .modal-form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; font-size: 0.62rem; }
         .modal-form-group label { color: var(--badge-gold); font-weight: 800; }
-        .modal-form-group input, .modal-form-group textarea { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 4px 6px; border-radius: 3px; font-size: 0.62rem; outline: none; }
-        .modal-form-group input:focus, .modal-form-group textarea:focus { border-color: var(--badge-gold); }
+        .modal-form-group input, .modal-form-group textarea, .modal-form-group select { width: 100%; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 4px 6px; border-radius: 3px; font-size: 0.62rem; outline: none; }
+        .modal-form-group input:focus, .modal-form-group textarea:focus, .modal-form-group select:focus { border-color: var(--badge-gold); }
         
         .modal-submit-btn { width: 100%; height: 32px; background: var(--badge-gold); color: #000; border: none; font-weight: 900; font-size: 0.7rem; border-radius: 3px; cursor: pointer; margin-top: 6px; }
         .modal-submit-btn:hover { opacity: 0.9; }
@@ -172,13 +172,11 @@
             </div>
             
             <div class="scrollable-orbs-container">
-                <!-- INTEGRATED ACTION CHIPS FROM BOTTOM BAR -->
                 <button class="orb-command-chip" onclick="downloadMasterSheet()">Save HTML</button>
                 <button class="orb-command-chip" onclick="exportCSV()">Export CSV</button>
                 <button class="orb-command-chip gold" onclick="syncToSupabaseRealtime()">Supabase Sync</button>
                 <button class="orb-command-chip cyan" onclick="openDataEntryModal()">Quick Submit</button>
 
-                <!-- ORIGINAL COMMAND CHIPS AND TOOLS -->
                 <div class="orb-command-chip search-chip" title="Instant Search">
                     <input type="text" id="instantSearchInput" placeholder="Search..." oninput="instantFilterGrid(this.value)">
                 </div>
@@ -251,7 +249,7 @@
         </div>
     </div>
 
-    <!-- DATA ENTRY MODAL -->
+    <!-- DATA ENTRY MODAL WITH CATEGORY -->
     <div class="modal-overlay" id="dataEntryModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeDataEntryModal()">X</button>
@@ -260,6 +258,16 @@
             <div class="modal-form-group"><label>Address / Area:</label><input type="text" id="modalStoreAdd" placeholder="Pocket A Begumpur Delhi"></div>
             <div class="modal-form-group"><label>Mobile Number:</label><input type="text" id="modalStoreNo" placeholder="9870242077"></div>
             <div class="modal-form-group"><label>Collection (₹):</label><input type="text" id="modalCollection" value="500"></div>
+            <div class="modal-form-group">
+                <label>Category:</label>
+                <select id="modalStoreCat">
+                    <option value="सैलून">सैलून (Salon)</option>
+                    <option value="पार्लर">पार्लर (Parlor)</option>
+                    <option value="नेल स्टूडियो">नेल स्टूडियो (Nail Studio)</option>
+                    <option value="स्पा">स्पा (Spa)</option>
+                    <option value="जनरल स्टोर">जनरल स्टोर (General Store)</option>
+                </select>
+            </div>
             <button class="modal-submit-btn" onclick="injectModalData()">Lock & Insert to Sheet</button>
         </div>
     </div>
@@ -303,7 +311,7 @@
 
     <script>
         // ======= REAL-TIME SUPABASE CONFIGURATION =======
-        const SUPABASE_URL = "https://gejrzpflcuvlbpedliwq.supabase.co/rest/v1/star_shops";
+        const SUPABASE_URL = "https://gejrzpflcuvlbpedliwq.supabase.co/rest/v1/merchants";
         const SUPABASE_ANON_KEY = "sb_publishable_dw9J2AX0nd3SxPrRy9JGCg_YqS8ZfUF";
 
         const COMPLETE_DELHI_PINCODES = {
@@ -329,7 +337,7 @@
             "dwarka": "110075", "द्वारका": "110075", "karol bagh": "110005", "laxmi nagar": "110092"
         };
 
-        const STORAGE_KEY = "STAR_SHOP_QUANTUM_V27";
+        const STORAGE_KEY = "STAR_SHOP_QUANTUM_V28";
 
         function showToast(msg) {
             const t = document.getElementById('toastMsg');
@@ -338,7 +346,7 @@
             setTimeout(() => { t.style.display = 'none'; }, 2000);
         }
 
-        // ================= REAL-TIME SUPABASE CLOUD SYNC =================
+        // ================= REAL-TIME SUPABASE CLOUD SYNC (WITH CATEGORY MAPPING) =================
         async function syncToSupabaseRealtime() {
             const rawData = localStorage.getItem(STORAGE_KEY);
             if (!rawData) {
@@ -346,9 +354,22 @@
                 return;
             }
 
-            showToast("Syncing real-time data to Supabase...");
+            showToast("Syncing mapped data to Supabase...");
             try {
-                const parsedData = JSON.parse(rawData);
+                const parsedList = JSON.parse(rawData);
+                
+                const mappedPayload = parsedList.map(item => ({
+                    store_name: item.name || "Verified Store",
+                    address: item.add || "Delhi",
+                    phone: item.no || "",
+                    category: item.cat || "सैलून",
+                    latitude: item.geo ? item.geo.split(',')[0].trim() : "28.7241",
+                    longitude: item.geo ? item.geo.split(',')[1]?.trim() : "77.0638",
+                    pincode: item.pin || "110086",
+                    auto_id: item.id || generateIdFromName(item.name, item.no),
+                    status: "approved"
+                }));
+
                 const response = await fetch(SUPABASE_URL, {
                     method: 'POST',
                     headers: {
@@ -357,7 +378,7 @@
                         'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
                         'Prefer': 'resolution=merge-duplicates'
                     },
-                    body: JSON.stringify(parsedData)
+                    body: JSON.stringify(mappedPayload)
                 });
 
                 if (response.ok || response.status === 201) {
@@ -517,6 +538,7 @@
             const defId = prefill.id || generateIdFromName(defName, defNo);
             const todayStr = prefill.date || getTodayDateString();
             const pinVal = (prefill.pin && COMPLETE_DELHI_PINCODES[prefill.pin]) ? prefill.pin : '110086';
+            const catVal = prefill.cat || 'सैलून';
             
             const row = document.createElement('tr');
             row.setAttribute('data-date', todayStr);
@@ -528,7 +550,7 @@
                 <td><textarea class="grid-input store-no" oninput="autoGrow(this); updateAutoId(this)">${defNo}</textarea></td>
                 <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue(); saveToLocalStorage()">${prefill.collection || '500'}</textarea></td>
                 <td><textarea class="grid-input store-geo" oninput="autoGrow(this); saveToLocalStorage()">${prefill.geo || COMPLETE_DELHI_PINCODES[pinVal].geo}</textarea></td>
-                <td><textarea class="grid-input store-cat" oninput="autoGrow(this); saveToLocalStorage()">${prefill.cat || 'Salon'}</textarea></td>
+                <td><textarea class="grid-input store-cat" oninput="autoGrow(this); saveToLocalStorage()">${catVal}</textarea></td>
                 <td>
                     <select class="pincode-select" onchange="onPinChange(this)"></select>
                     <div class="pincode-board zone-green" data-pin="${pinVal}" onclick="openPinRadarByBoard(this)">${pinVal}</div>
@@ -555,7 +577,7 @@
 
         function addNewRow() {
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi", no: "9870242077", collection: "500", geo: "28.7241, 77.0638", cat: "Salon", pin: "110086" }, tbody.rows.length + 1);
+            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi", no: "9870242077", collection: "500", geo: "28.7241, 77.0638", cat: "सैलून", pin: "110086" }, tbody.rows.length + 1);
             tbody.appendChild(row);
             reindexRows();
             selectThisRow(row);
@@ -565,8 +587,9 @@
             showToast("Row added successfully.");
         }
 
+        // ================= SMART AUTO-PARSER WITH CATEGORY DETECTION =================
         function parseRawStoreData(raw) {
-            let name = "Verified Store", add = "Delhi NCR", phone = "9870242077", collection = "500", geo = "28.7241, 77.0638";
+            let name = "Verified Store", add = "Delhi NCR", phone = "9870242077", collection = "500", geo = "28.7241, 77.0638", cat = "सैलून";
             
             let phoneMatch = raw.match(/(?:\+91[\-\s]?)?[0]?[6-9](?:[\-\s]?\d){9}\b/);
             if (phoneMatch) phone = phoneMatch[0].replace(/\D/g, '').slice(-10);
@@ -594,7 +617,15 @@
                 add = addressParts.join(', ') || "Delhi NCR";
             }
 
-            return { name, add, phone, collection, geo };
+            // ऑटोमेटिक कैटेगरी डिटेक्ट करने का स्मार्ट लॉजिक
+            let lowerFull = raw.toLowerCase();
+            if (lowerFull.includes('parlor') || lowerFull.includes('पार्लर')) cat = "पार्लर";
+            else if (lowerFull.includes('nail') || lowerFull.includes('नेल')) cat = "नेल स्टूडियो";
+            else if (lowerFull.includes('spa') || lowerFull.includes('स्पा')) cat = "स्पा";
+            else if (lowerFull.includes('general') || lowerFull.includes('store') || lowerFull.includes('किराना')) cat = "जनरल स्टोर";
+            else cat = "सैलून";
+
+            return { name, add, phone, collection, geo, cat };
         }
 
         function updateLiveSplitterViewer(raw) {
@@ -609,8 +640,8 @@
             viewer.innerHTML = `
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Store:</span> <strong style="color:var(--text-main);">${parsed.name}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Phone:</span> <strong style="color:var(--badge-gold);">${parsed.phone}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Category:</span> <strong style="color:var(--cyber-blue);">${parsed.cat}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Collection:</span> <strong style="color:var(--success-green);">₹${parsed.collection}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Coordinates:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
                 <div style="display:flex; justify-content:space-between;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
             `;
         }
@@ -637,19 +668,13 @@
                     }
                 }
 
-                let cat = "Salon";
-                let lowerName = parsed.name.toLowerCase();
-                if (lowerName.includes('spa')) cat = "Spa";
-                else if (lowerName.includes('nail')) cat = "Nail Studio";
-                else if (lowerName.includes('general') || lowerName.includes('store')) cat = "General Store";
-
                 const row = createRowElement({ 
                     name: parsed.name, 
                     add: parsed.add, 
                     no: parsed.phone, 
                     collection: parsed.collection, 
                     geo: geo, 
-                    cat: cat, 
+                    cat: parsed.cat, 
                     pin: pin 
                 }, tbody.rows.length + 1);
                 
@@ -674,6 +699,7 @@
             let no = document.getElementById('modalStoreNo').value.trim() || "9870242077";
             no = no.replace(/\D/g, '').slice(-10);
             const collection = document.getElementById('modalCollection').value.trim() || "500";
+            const cat = document.getElementById('modalStoreCat').value;
 
             let pin = "110086";
             let geo = COMPLETE_DELHI_PINCODES["110086"].geo;
@@ -688,7 +714,7 @@
             }
 
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name, add, no, collection, geo, cat: "Salon", pin }, tbody.rows.length + 1);
+            const row = createRowElement({ name, add, no, collection, geo, cat, pin }, tbody.rows.length + 1);
             tbody.appendChild(row);
 
             document.getElementById('modalStoreName').value = "";
@@ -795,7 +821,7 @@
             } else {
                 tbody.appendChild(createRowElement({
                     name: "Glamour Salon", add: "Pocket A, Begumpur", no: "9870242077",
-                    collection: "500", geo: "28.7241, 77.0638", cat: "Salon & Beauty", pin: "110086"
+                    collection: "500", geo: "28.7241, 77.0638", cat: "सैलून", pin: "110086"
                 }, 1));
             }
             calculateTotalRevenue();
