@@ -68,7 +68,6 @@
             background: var(--input-bg); border: 1.5px solid var(--border-color); border-radius: 14px;
             color: var(--text-main); font-size: 0.56rem; font-weight: 800; cursor: pointer; flex-shrink: 0; transition: 0.15s;
         }
-        .orb-command-chip svg { width: 12px; height: 12px; fill: currentColor; }
         .orb-command-chip:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
         .orb-command-chip.search-chip { background: var(--input-bg); border-color: var(--badge-gold); padding: 0; }
         .orb-command-chip.search-chip input { background: transparent; border: none; color: var(--text-main); padding: 0 8px; font-size: 0.56rem; outline: none; width: 110px; height: 100%; }
@@ -76,7 +75,6 @@
         .orb-command-chip.date-chip input { background: transparent; border: none; color: var(--text-main); font-size: 0.56rem; outline: none; height: 100%; font-weight: 700; }
         .orb-command-chip.danger { border-color: var(--danger-red); color: var(--danger-red); background: rgba(239, 68, 68, 0.1); }
         .orb-command-chip.gold { border-color: var(--badge-gold); color: #000; background: var(--badge-gold); font-weight: 900; }
-        .orb-command-chip.gold svg { fill: #000; }
         .orb-command-chip.cyan { border-color: #06b6d4; color: #22d3ee; background: rgba(6, 182, 212, 0.1); }
         .orb-command-chip.green { border-color: var(--success-green); color: #34d399; background: rgba(16, 185, 129, 0.15); }
         .orb-command-chip.calc { border-color: var(--badge-gold); color: var(--badge-gold); background: rgba(212, 175, 55, 0.1); }
@@ -130,33 +128,14 @@
         .aging-due { background: rgba(239, 68, 68, 0.15); color: var(--danger-red); border: 1px solid var(--danger-red); }
 
         .quick-ops { display: flex; gap: 3px; align-items: center; justify-content: center; }
-.op-btn { padding: 2px 5px; font-size: 0.54rem; border-radius: 2px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); cursor: pointer; }
-.op-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
+        .op-btn { padding: 2px 5px; font-size: 0.54rem; border-radius: 2px; border: 1px solid var(--border-color); background: var(--input-bg); color: var(--text-main); cursor: pointer; }
+        .op-btn:hover { border-color: var(--badge-gold); color: var(--badge-gold); }
 
-.action-bar { 
-    position: sticky; 
-    top: 0; 
-    z-index: 99999; 
-    display: grid; 
-    grid-template-columns: repeat(4, 1fr);
-    gap: 5px; 
-    background: var(--card-bg); 
-    padding: 6px 8px; 
-    border: 1px solid var(--badge-gold); 
-    border-radius: 4px; 
-    align-items: center; 
-    flex-shrink: 0; 
-    box-shadow: 0 4px 16px rgba(0,0,0,0.9);
-    margin-bottom: 4px;
-}
-        .revenue-line-container { 
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            height: 30px; background: var(--input-bg); border: 1px solid var(--border-color);
-            border-left: 3px solid var(--badge-gold); border-right: 3px solid var(--badge-gold); 
-            border-radius: 3px; padding: 0 4px; 
+        .revenue-footer-strip {
+            display: flex; justify-content: space-between; align-items: center; background: var(--card-bg);
+            border: 1px solid var(--border-color); border-top: 1.5px solid var(--badge-gold); padding: 4px 8px;
+            border-radius: 4px; flex-shrink: 0; font-size: 0.6rem; font-weight: 800;
         }
-        .revenue-label { font-size: 0.46rem; color: #9ca3af; font-weight: 800; text-transform: uppercase; line-height: 1; }
-        .revenue-value { font-size: 0.68rem; color: var(--badge-gold); font-weight: 900; line-height: 1.1; margin-top: 1px; }
 
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.88); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 9999; }
         .modal-box { background: var(--card-bg); border: 1px solid var(--badge-gold); width: 94%; max-width: 480px; border-radius: 4px; padding: 14px; position: relative; max-height: 88vh; overflow-y: auto; color: var(--text-main); }
@@ -178,51 +157,39 @@
 </head>
 <body>
 
-    <div id="toastMsg">सिस्टम अपडेटेड</div>
+    <div id="toastMsg">System Updated</div>
 
     <div class="container">
+        <!-- TOP COCKPIT BAR WITH INTEGRATED CAPSULE CHIPS -->
         <div class="top-bar">
             <div class="top-row-main">
                 <div class="brand-title">STAR SHOP WAR-ROOM</div>
                 <div class="telemetry-strip">
-                    <span class="telemetry-pill">दुकानें: <strong id="statTotalStores">0</strong></span>
-                    <span class="telemetry-pill">पिन: <strong id="statActivePins">0/97</strong></span>
-                    <span class="telemetry-pill"><strong id="statParseSpeed">0.0ms</strong></span>
+                    <span class="telemetry-pill">Stores: <strong id="statTotalStores">0</strong></span>
+                    <span class="telemetry-pill">Pins: <strong id="statActivePins">0/97</strong></span>
                 </div>
-                <button class="theme-orb-btn" onclick="toggleTheme()" title="थीम बदलें"></button>
+                <button class="theme-orb-btn" onclick="toggleTheme()" title="Toggle Theme"></button>
             </div>
             
             <div class="scrollable-orbs-container">
-                <div class="orb-command-chip search-chip" title="तुरंत खोजें">
-                    <input type="text" id="instantSearchInput" placeholder="🔍 खोजें..." oninput="instantFilterGrid(this.value)">
+                <!-- INTEGRATED ACTION CHIPS FROM BOTTOM BAR -->
+                <button class="orb-command-chip" onclick="downloadMasterSheet()">Save HTML</button>
+                <button class="orb-command-chip" onclick="exportCSV()">Export CSV</button>
+                <button class="orb-command-chip gold" onclick="syncToSupabaseRealtime()">Supabase Sync</button>
+                <button class="orb-command-chip cyan" onclick="openDataEntryModal()">Quick Submit</button>
+
+                <!-- ORIGINAL COMMAND CHIPS AND TOOLS -->
+                <div class="orb-command-chip search-chip" title="Instant Search">
+                    <input type="text" id="instantSearchInput" placeholder="Search..." oninput="instantFilterGrid(this.value)">
                 </div>
-                <button class="orb-command-chip calc" onclick="toggleCalculator()">
-                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
-                    <span>🧮 कैलकुलेटर</span>
-                </button>
-                <div class="orb-command-chip date-chip" title="तारीख फिल्टर">
-                    📅 <input type="date" id="filterDateCalendar" onchange="filterRowsByDate(this.value)" style="color-scheme: dark;">
+                <button class="orb-command-chip calc" onclick="toggleCalculator()">Calculator</button>
+                <div class="orb-command-chip date-chip" title="Date Filter">
+                    <input type="date" id="filterDateCalendar" onchange="filterRowsByDate(this.value)" style="color-scheme: dark;">
                 </div>
-                <button class="orb-command-chip cyan" onclick="openSmartSplitterModal()">
-                    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                    <span>कच्चा डेटा ऑटो-स्प्लिटर</span>
-                </button>
-                <button class="orb-command-chip green" onclick="addNewRow()">
-                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                    <span>+ नई रो जोड़ें</span>
-                </button>
-                <button class="orb-command-chip danger" onclick="deleteSelectedRow()">
-                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                    <span>डिलीट रो</span>
-                </button>
-                <button class="orb-command-chip" onclick="resetAllFilters()">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-                    <span>रीसेट फ़िल्टर</span>
-                </button>
-                <button class="orb-command-chip gold" onclick="openDataEntryModal()">
-                    <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-                    <span>+ नई दुकान</span>
-                </button>
+                <button class="orb-command-chip cyan" onclick="openSmartSplitterModal()">Auto-Splitter</button>
+                <button class="orb-command-chip green" onclick="addNewRow()">+ Add Row</button>
+                <button class="orb-command-chip danger" onclick="deleteSelectedRow()">Delete Row</button>
+                <button class="orb-command-chip" onclick="resetAllFilters()">Reset</button>
             </div>
 
             <div class="calc-wrapper" id="calcWrapper">
@@ -231,11 +198,11 @@
                     <button class="calc-btn" onclick="calcAppend('7')">7</button>
                     <button class="calc-btn" onclick="calcAppend('8')">8</button>
                     <button class="calc-btn" onclick="calcAppend('9')">9</button>
-                    <button class="calc-btn operator" onclick="calcAppend('/')">÷</button>
+                    <button class="calc-btn operator" onclick="calcAppend('/')">/</button>
                     <button class="calc-btn" onclick="calcAppend('4')">4</button>
                     <button class="calc-btn" onclick="calcAppend('5')">5</button>
                     <button class="calc-btn" onclick="calcAppend('6')">6</button>
-                    <button class="calc-btn operator" onclick="calcAppend('*')">×</button>
+                    <button class="calc-btn operator" onclick="calcAppend('*')">*</button>
                     <button class="calc-btn" onclick="calcAppend('1')">1</button>
                     <button class="calc-btn" onclick="calcAppend('2')">2</button>
                     <button class="calc-btn" onclick="calcAppend('3')">3</button>
@@ -244,31 +211,32 @@
                     <button class="calc-btn" onclick="calcAppend('.')">.</button>
                     <button class="calc-btn operator" onclick="calcAppend('+')">+</button>
                     <button class="calc-btn operator" onclick="calcClear()">C</button>
-                    <button class="calc-btn equal" onclick="calcCompute()">= बराबर</button>
+                    <button class="calc-btn equal" onclick="calcCompute()">= Compute</button>
                 </div>
             </div>
 
             <div class="delhi-conquest-bar" onclick="openFullDelhiRadarModal()">
-                <span id="delhiFlagSummary" style="color: #34d399;">दिल्ली रडार लोड हो रहा है...</span>
-                <span style="color: var(--badge-gold); text-decoration: underline;">97 पिन टारगेट</span>
+                <span id="delhiFlagSummary" style="color: #34d399;">Radar loading...</span>
+                <span style="color: var(--badge-gold); text-decoration: underline;">97 Pin Target</span>
             </div>
         </div>
 
+        <!-- MASTER GRID TABLE CONTAINER -->
         <div class="grid-wrapper">
             <table>
                 <thead>
                     <tr>
                         <th style="width: 42px;">POS ↕</th>
                         <th onclick="sortGridBy(1)">NAME</th>
-                        <th onclick="sortGridBy(2)">ADD (दिल्ली लोकल)</th>
+                        <th onclick="sortGridBy(2)">ADD (Local)</th>
                         <th onclick="sortGridBy(3)">NO (10-Digit)</th>
                         <th onclick="sortGridBy(4)">COLLECTION (₹)</th>
-                        <th>कोऑर्डिनेट्स (GPS)</th>
-                        <th onclick="sortGridBy(6)">कैटेगरी / ब्रांड</th>
-                        <th style="min-width: 170px;">PINCODE (झंडा & बाकी दुकानें)</th>
+                        <th>COORDINATES (GPS)</th>
+                        <th onclick="sortGridBy(6)">CATEGORY</th>
+                        <th style="min-width: 170px;">PINCODE (Status)</th>
                         <th style="min-width: 105px;">REG. DATE</th>
                         <th>STATUS</th>
-                        <th>ACTION (कमांड)</th>
+                        <th>ACTION</th>
                         <th>AUTO-ID</th>
                     </tr>
                 </thead>
@@ -276,68 +244,68 @@
             </table>
         </div>
 
-        <div class="action-bar">
-            <button class="action-btn-bottom" onclick="downloadMasterSheet()">HTML सेव</button>
-            <button class="action-btn-bottom" onclick="exportCSV()">CSV एक्सपोर्ट</button>
-            <div class="revenue-line-container">
-                <span class="revenue-label">टोटल कलेक्शन</span>
-                <span class="revenue-value" id="totalRevenueSpan">₹0</span>
-            </div>
-            <button class="action-btn-bottom gold" onclick="copySupabaseJSON()">सुपरबेस JSON</button>
+        <!-- REVENUE FOOTER STRIP -->
+        <div class="revenue-footer-strip">
+            <span>Quantum War-Room Active</span>
+            <span>Total Collection: <strong id="totalRevenueSpan" style="color:var(--badge-gold);">₹0</strong></span>
         </div>
     </div>
 
-    <!-- नई डेटा एंट्री मोडल -->
+    <!-- DATA ENTRY MODAL -->
     <div class="modal-overlay" id="dataEntryModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeDataEntryModal()">X</button>
-            <h3>मर्चेंट डेटा एंट्री स्टूडियो</h3>
-            <div class="modal-form-group"><label>दुकान का नाम:</label><input type="text" id="modalStoreName" placeholder="जैसे: Glamour Salon"></div>
-            <div class="modal-form-group"><label>पता / एरिया:</label><input type="text" id="modalStoreAdd" placeholder="जैसे: Pocket A Begumpur Delhi"></div>
-            <div class="modal-form-group"><label>मोबाइल नंबर:</label><input type="text" id="modalStoreNo" placeholder="जैसे: 9870242077"></div>
-            <div class="modal-form-group"><label>कलेक्शन (₹):</label><input type="text" id="modalCollection" value="500"></div>
-            <button class="modal-submit-btn" onclick="injectModalData()">लॉक करके शीट में डालें</button>
+            <h3>Merchant Data Studio</h3>
+            <div class="modal-form-group"><label>Store Name:</label><input type="text" id="modalStoreName" placeholder="Glamour Salon"></div>
+            <div class="modal-form-group"><label>Address / Area:</label><input type="text" id="modalStoreAdd" placeholder="Pocket A Begumpur Delhi"></div>
+            <div class="modal-form-group"><label>Mobile Number:</label><input type="text" id="modalStoreNo" placeholder="9870242077"></div>
+            <div class="modal-form-group"><label>Collection (₹):</label><input type="text" id="modalCollection" value="500"></div>
+            <button class="modal-submit-btn" onclick="injectModalData()">Lock & Insert to Sheet</button>
         </div>
     </div>
 
-    <!-- स्मार्ट ऑटो-स्प्लिटर मोडल (सर्जिकल पार्सर और लाइव व्यूअर के साथ) -->
+    <!-- SMART SPLITTER MODAL -->
     <div class="modal-overlay" id="smartSplitterModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeSmartSplitterModal()">X</button>
-            <h3>कच्चा डेटा ऑटो-स्प्लिटर & लाइव व्यूअर</h3>
+            <h3>Raw Data Auto-Splitter & Live Viewer</h3>
             <div class="modal-form-group">
-                <label>यहाँ कच्चा डेटा (Raw Dump) पेस्ट करें:</label>
-                <textarea id="splitterRawText" rows="4" placeholder="दुकान का नाम, पता, फोन, कलेक्शन..." oninput="updateLiveSplitterViewer(this.value)"></textarea>
+                <label>Paste Raw Dump Here:</label>
+                <textarea id="splitterRawText" rows="4" placeholder="Store name, address, phone, collection..." oninput="updateLiveSplitterViewer(this.value)"></textarea>
             </div>
             
-            <div style="font-size:0.58rem; color:var(--badge-gold); font-weight:800; margin-bottom:3px;">लाइव प्रीव्यू व्यूअर (Live Viewer):</div>
+            <div style="font-size:0.58rem; color:var(--badge-gold); font-weight:800; margin-bottom:3px;">Live Viewer:</div>
             <div id="liveSplitterViewer" style="background:var(--input-bg); border:1px solid var(--border-color); border-left:3px solid var(--badge-gold); border-radius:3px; padding:6px; margin-bottom:8px; font-size:0.6rem;">
-                <div style="color:#a1a1aa; font-style:italic;">डाटा डालने पर यहाँ लाइव प्रीव्यू दिखेगा...</div>
+                <div style="color:#a1a1aa; font-style:italic;">Live preview will appear here...</div>
             </div>
 
-            <button class="modal-submit-btn" onclick="injectBulkSplitterData()">डेटा प्रोसेस करके शीट में लॉक करें</button>
+            <button class="modal-submit-btn" onclick="injectBulkSplitterData()">Process & Lock into Sheet</button>
         </div>
     </div>
 
-    <!-- प्रिव्यू मोडल -->
+    <!-- PREVIEW MODAL -->
     <div class="modal-overlay" id="previewModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeModal()">X</button>
-            <h3 id="modalTitle">मर्चेंट कमांड प्रिव्यू</h3>
+            <h3 id="modalTitle">Merchant Command Preview</h3>
             <div id="modalBody"></div>
         </div>
     </div>
 
-    <!-- पिनकोड थर्मल रडार मोडल -->
+    <!-- PINCODE RADAR MODAL -->
     <div class="modal-overlay" id="pinRadarModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closePinRadar()">X</button>
-            <h3 id="radarTitle"><span>पिनकोड कमांड रडार</span></h3>
+            <h3 id="radarTitle"><span>Pincode Command Radar</span></h3>
             <div id="radarBody"></div>
         </div>
     </div>
 
     <script>
+        // ======= REAL-TIME SUPABASE CONFIGURATION =======
+        const SUPABASE_URL = "https://gejrzpflcuvlbpedliwq.supabase.co/rest/v1/star_shops";
+        const SUPABASE_ANON_KEY = "sb_publishable_dw9J2AX0nd3SxPrRy9JGCg_YqS8ZfUF";
+
         const COMPLETE_DELHI_PINCODES = {
             "110001": { area: "Connaught Place / Parliament St", target: 550, geo: "28.6315, 77.2167" },
             "110002": { area: "Darya Ganj / Indraprastha", target: 320, geo: "28.6427, 77.2407" },
@@ -370,12 +338,47 @@
             setTimeout(() => { t.style.display = 'none'; }, 2000);
         }
 
+        // ================= REAL-TIME SUPABASE CLOUD SYNC =================
+        async function syncToSupabaseRealtime() {
+            const rawData = localStorage.getItem(STORAGE_KEY);
+            if (!rawData) {
+                showToast("Data is empty!");
+                return;
+            }
+
+            showToast("Syncing real-time data to Supabase...");
+            try {
+                const parsedData = JSON.parse(rawData);
+                const response = await fetch(SUPABASE_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY,
+                        'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+                        'Prefer': 'resolution=merge-duplicates'
+                    },
+                    body: JSON.stringify(parsedData)
+                });
+
+                if (response.ok || response.status === 201) {
+                    showToast("Real-time Supabase sync successful!");
+                } else {
+                    const errText = await response.text();
+                    console.error("Supabase Error:", errText);
+                    showToast("Sync failed! Check console.");
+                }
+            } catch (err) {
+                console.error("Network Error:", err);
+                showToast("Supabase network connection error!");
+            }
+        }
+
         function populatePinSelect(selectEl, selectedPin = "110086") {
             let html = "";
             for (let pin in COMPLETE_DELHI_PINCODES) {
                 let info = COMPLETE_DELHI_PINCODES[pin];
                 let sel = (pin === selectedPin) ? "selected" : "";
-                html += `<option value="${pin}" ${sel}>${pin} - ${info.area.slice(0, 18)} (कोटा: ${info.target})</option>`;
+                html += `<option value="${pin}" ${sel}>${pin} - ${info.area.slice(0, 18)}</option>`;
             }
             selectEl.innerHTML = html;
         }
@@ -442,8 +445,8 @@
             const statusCell = tr.cells[9];
             const diffDays = Math.floor((new Date() - new Date(dateInput.value)) / (1000 * 60 * 60 * 24));
             statusCell.innerHTML = diffDays > 60 
-                ? `<span class="aging-badge aging-due">${Math.floor(diffDays/30)} महीने!</span>` 
-                : `<span class="aging-badge aging-fresh">नया</span>`;
+                ? `<span class="aging-badge aging-due">${Math.floor(diffDays/30)}M</span>` 
+                : `<span class="aging-badge aging-fresh">New</span>`;
             saveToLocalStorage();
         }
 
@@ -490,10 +493,10 @@
 
                     if (added > 0) {
                         board.className = "pincode-board zone-green";
-                        board.innerHTML = `${pin} | झंडा गड़ गया (${added})<br>बाकी: ${remaining}/${totalTarget}`;
+                        board.innerHTML = `${pin} - Active (${added})<br>Rem: ${remaining}`;
                     } else {
                         board.className = "pincode-board zone-red";
-                        board.innerHTML = `${pin} | कब्जा बाकी!<br>टारगेट: ${totalTarget}/${totalTarget}`;
+                        board.innerHTML = `${pin} - Pending<br>Target: ${totalTarget}`;
                     }
                 }
             });
@@ -502,14 +505,10 @@
             const conqueredPins = Object.keys(pinCounts).length;
             const unconqueredPins = totalPins - conqueredPins;
 
-            let totalDelhiTarget = 0;
-            for (let k in COMPLETE_DELHI_PINCODES) totalDelhiTarget += COMPLETE_DELHI_PINCODES[k].target;
-            let totalRemainingDelhi = Math.max(0, totalDelhiTarget - rows.length);
-
             document.getElementById('statTotalStores').innerText = rows.length;
             document.getElementById('statActivePins').innerText = `${conqueredPins}/${totalPins}`;
             document.getElementById('delhiFlagSummary').innerHTML = 
-                `झंडा गड़ा: <strong>${conqueredPins}</strong> | बाकी: <strong style="color:#f87171;">${unconqueredPins} पिन</strong> | बाकी दुकानें: <strong>${totalRemainingDelhi.toLocaleString('en-IN')}</strong>`;
+                `Active Pins: <strong>${conqueredPins}</strong> | Remaining: <strong style="color:#f87171;">${unconqueredPins} pins</strong>`;
         }
 
         function createRowElement(prefill = {}, rowIndex = 1) {
@@ -529,13 +528,13 @@
                 <td><textarea class="grid-input store-no" oninput="autoGrow(this); updateAutoId(this)">${defNo}</textarea></td>
                 <td><textarea class="grid-input collection-input" oninput="autoGrow(this); calculateTotalRevenue(); saveToLocalStorage()">${prefill.collection || '500'}</textarea></td>
                 <td><textarea class="grid-input store-geo" oninput="autoGrow(this); saveToLocalStorage()">${prefill.geo || COMPLETE_DELHI_PINCODES[pinVal].geo}</textarea></td>
-                <td><textarea class="grid-input store-cat" oninput="autoGrow(this); saveToLocalStorage()">${prefill.cat || 'सैलून'}</textarea></td>
+                <td><textarea class="grid-input store-cat" oninput="autoGrow(this); saveToLocalStorage()">${prefill.cat || 'Salon'}</textarea></td>
                 <td>
                     <select class="pincode-select" onchange="onPinChange(this)"></select>
                     <div class="pincode-board zone-green" data-pin="${pinVal}" onclick="openPinRadarByBoard(this)">${pinVal}</div>
                 </td>
                 <td><input type="date" class="reg-date-field" value="${todayStr}" onchange="checkAging(this)"></td>
-                <td><span class="aging-badge aging-fresh">नया</span></td>
+                <td><span class="aging-badge aging-fresh">New</span></td>
                 <td>
                     <div class="quick-ops">
                         <button class="op-btn" onclick="strikeWhatsApp(this)">WA</button>
@@ -556,17 +555,16 @@
 
         function addNewRow() {
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi", no: "9870242077", collection: "500", geo: "28.7241, 77.0638", cat: "सैलून", pin: "110086" }, tbody.rows.length + 1);
+            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi", no: "9870242077", collection: "500", geo: "28.7241, 77.0638", cat: "Salon", pin: "110086" }, tbody.rows.length + 1);
             tbody.appendChild(row);
             reindexRows();
             selectThisRow(row);
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            showToast("✨ नई रो जोड़ दी गई!");
+            showToast("Row added successfully.");
         }
 
-        // 🚀 सर्जिकल पार्सर इंजन जो एड्रेस, कलेक्शन और कोऑर्डिनेट्स को पूरी तरह शुद्ध अलग करता है
         function parseRawStoreData(raw) {
             let name = "Verified Store", add = "Delhi NCR", phone = "9870242077", collection = "500", geo = "28.7241, 77.0638";
             
@@ -602,18 +600,18 @@
         function updateLiveSplitterViewer(raw) {
             const viewer = document.getElementById('liveSplitterViewer');
             if (!raw.trim()) {
-                viewer.innerHTML = `<div style="color:#a1a1aa; font-style:italic;">डाटा डालने पर यहाँ लाइव प्रीव्यू दिखेगा...</div>`;
+                viewer.innerHTML = `<div style="color:#a1a1aa; font-style:italic;">Live preview will appear here...</div>`;
                 return;
             }
 
             const parsed = parseRawStoreData(raw);
 
             viewer.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">दुकान:</span> <strong style="color:var(--text-main);">${parsed.name}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">फोन:</span> <strong style="color:var(--badge-gold);">${parsed.phone}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">कलेक्शन:</span> <strong style="color:var(--success-green);">₹${parsed.collection}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">कोऑर्डिनेट्स:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
-                <div style="display:flex; justify-content:space-between;"><span style="color:#a1a1aa;">शुद्ध पता:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Store:</span> <strong style="color:var(--text-main);">${parsed.name}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Phone:</span> <strong style="color:var(--badge-gold);">${parsed.phone}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Collection:</span> <strong style="color:var(--success-green);">₹${parsed.collection}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Coordinates:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
             `;
         }
 
@@ -639,12 +637,11 @@
                     }
                 }
 
-                let cat = "सैलून";
+                let cat = "Salon";
                 let lowerName = parsed.name.toLowerCase();
-                if (lowerName.includes('spa') || lowerName.includes('स्पा')) cat = "स्पा";
-                else if (lowerName.includes('nail') || lowerName.includes('नेल')) cat = "नेल स्टूडियो";
-                else if (lowerName.includes('general') || lowerName.includes('store') || lowerName.includes('किराना')) cat = "जनरल स्टोर";
-                else if (lowerName.includes('luxury') || lowerName.includes('grand')) cat = "लक्जरी सैलून";
+                if (lowerName.includes('spa')) cat = "Spa";
+                else if (lowerName.includes('nail')) cat = "Nail Studio";
+                else if (lowerName.includes('general') || lowerName.includes('store')) cat = "General Store";
 
                 const row = createRowElement({ 
                     name: parsed.name, 
@@ -660,16 +657,15 @@
                 addedCount++;
             });
 
-            // बॉक्स और लाइव व्यूअर तुरंत रीसेट
             document.getElementById('splitterRawText').value = "";
-            document.getElementById('liveSplitterViewer').innerHTML = `<div style="color:#a1a1aa; font-style:italic;">डाटा डालने पर यहाँ लाइव प्रीव्यू दिखेगा...</div>`;
+            document.getElementById('liveSplitterViewer').innerHTML = `<div style="color:#a1a1aa; font-style:italic;">Live preview will appear here...</div>`;
             closeSmartSplitterModal();
 
             reindexRows();
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            showToast(`🚀 ${addedCount} दुकानें शुद्ध डेटा के साथ लॉक!`);
+            showToast(`${addedCount} stores processed and locked.`);
         }
 
         function injectModalData() {
@@ -692,7 +688,7 @@
             }
 
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name, add, no, collection, geo, cat: "सैलून", pin }, tbody.rows.length + 1);
+            const row = createRowElement({ name, add, no, collection, geo, cat: "Salon", pin }, tbody.rows.length + 1);
             tbody.appendChild(row);
 
             document.getElementById('modalStoreName').value = "";
@@ -704,7 +700,7 @@
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            showToast("🚀 नई दुकान लॉक!");
+            showToast("New store locked.");
         }
 
         function autoDetectGeoFromAddress(addTextarea) {
@@ -731,7 +727,7 @@
             const name = tr.querySelector('.store-name').value.trim();
             const phone = tr.querySelector('.store-no').value.replace(/\D/g, '').slice(-10);
             const id = tr.querySelector('.auto-id-field').value.trim();
-            const msg = encodeURIComponent(`नमस्ते *${name}* जी!\nआपकी दुकान को *Star Shop Network* पर वेरीफाई कर दिया गया है।\nआपकी मर्चेंट ID: *${id}* है।`);
+            const msg = encodeURIComponent(`Hello *${name}*,\nYour store is verified on *Star Shop Network*.\nYour Merchant ID: *${id}*`);
             window.open(`https://wa.me/91${phone}?text=${msg}`, '_blank');
         }
 
@@ -814,10 +810,10 @@
                 const b = row.querySelector('.pincode-board');
                 if (b && b.getAttribute('data-pin') === pinVal) {
                     matchedStores.push({
-                        name: row.querySelector('.store-name').value.trim() || 'अज्ञात',
-                        phone: row.querySelector('.store-no').value.trim() || 'एन/ए',
-                        cat: row.querySelector('.store-cat').value.trim() || 'एन/ए',
-                        add: row.querySelector('.store-add').value.trim() || 'एन/ए'
+                        name: row.querySelector('.store-name').value.trim() || 'Unknown',
+                        phone: row.querySelector('.store-no').value.trim() || 'N/A',
+                        cat: row.querySelector('.store-cat').value.trim() || 'N/A',
+                        add: row.querySelector('.store-add').value.trim() || 'N/A'
                     });
                 }
             });
@@ -827,23 +823,23 @@
             const radarModal = document.getElementById('pinRadarModal');
             const bodyEl = document.getElementById('radarBody');
 
-            document.getElementById('radarTitle').innerHTML = `<span>पिनकोड ${pinVal} (${info.area})</span>`;
+            document.getElementById('radarTitle').innerHTML = `<span>Pincode ${pinVal} (${info.area})</span>`;
             
             let statusBanner = added > 0 
                 ? `<div style="background:rgba(16,185,129,0.18); border:1px solid #10b981; padding:6px; border-radius:3px; margin-bottom:6px; font-size:0.62rem;">
-                    <strong style="color:#34d399;">झंडा गड़ चुका है!</strong><br>
-                    टारगेट दुकानें: <strong>${info.target}</strong> | आपने चढ़ा दीं: <strong>${added}</strong><br>
-                    <span style="color:var(--badge-gold);">बाकी: <strong>${remaining} दुकानें</strong></span>
+                    <strong style="color:#34d399;">Active!</strong><br>
+                    Target Stores: <strong>${info.target}</strong> | Added: <strong>${added}</strong><br>
+                    <span style="color:var(--badge-gold);">Remaining: <strong>${remaining} stores</strong></span>
                    </div>`
                 : `<div style="background:rgba(239,68,68,0.2); border:1px solid #ef4444; padding:6px; border-radius:3px; margin-bottom:6px; font-size:0.62rem;">
-                    <strong style="color:#f87171;">कब्जा बाकी!</strong><br>
-                    इस एरिया में कुल <strong>${info.target} दुकानें</strong> हैं और अभी पूरी बाकी हैं।
+                    <strong style="color:#f87171;">Pending!</strong><br>
+                    Total target: <strong>${info.target} stores</strong>.
                    </div>`;
 
             bodyEl.innerHTML = statusBanner + (matchedStores.map((s, idx) => `
                 <div class="radar-store-item">
                     <div><strong>${idx+1}. ${s.name}</strong> (${s.cat})</div>
-                    <div style="color:#a1a1aa; margin-top:2px;">फोन: ${s.phone} | पता: ${s.add}</div>
+                    <div style="color:#a1a1aa; margin-top:2px;">Phone: ${s.phone} | Add: ${s.add}</div>
                 </div>
             `).join(''));
             radarModal.style.display = 'flex';
@@ -858,7 +854,7 @@
 
             const radarModal = document.getElementById('pinRadarModal');
             const bodyEl = document.getElementById('radarBody');
-            document.getElementById('radarTitle').innerHTML = `<span>दिल्ली के पूरे 97 पिनकोड का रणक्षेत्र</span>`;
+            document.getElementById('radarTitle').innerHTML = `<span>Delhi 97 Pincode Command Center</span>`;
 
             let html = "";
             for (let pin in COMPLETE_DELHI_PINCODES) {
@@ -867,13 +863,13 @@
                 let rem = Math.max(0, info.target - added);
                 if (added > 0) {
                     html += `<div class="radar-store-item" style="border-left-color:#10b981;">
-                        <strong style="color:#34d399;">${pin} - ${info.area} [झंडा गड़ गया]</strong><br>
-                        चढ़ा दीं: ${added} | बाकी: <strong style="color:var(--badge-gold);">${rem}</strong>
+                        <strong style="color:#34d399;">${pin} - ${info.area} [Active]</strong><br>
+                        Added: ${added} | Rem: <strong style="color:var(--badge-gold);">${rem}</strong>
                     </div>`;
                 } else {
                     html += `<div class="radar-store-item" style="border-left-color:#ef4444;">
-                        <strong style="color:#f87171;">${pin} - ${info.area} [कब्जा बाकी]</strong><br>
-                        टारगेट: ${info.target} दुकानें
+                        <strong style="color:#f87171;">${pin} - ${info.area} [Pending]</strong><br>
+                        Target: ${info.target} stores
                     </div>`;
                 }
             }
@@ -911,14 +907,14 @@
 
             document.getElementById('modalTitle').innerText = name;
             document.getElementById('modalBody').innerHTML = `
-                <div class="detail-row"><span>यूनिक आईडी:</span> <strong>${autoId}</strong></div>
-                <div class="detail-row"><span>दुकान का नाम:</span> <strong>${name}</strong></div>
-                <div class="detail-row"><span>मोबाइल नंबर:</span> <strong>${phone}</strong></div>
-                <div class="detail-row"><span>कलेक्शन:</span> <strong style="color:var(--success-green);">₹${collection}</strong></div>
-                <div class="detail-row"><span>कैटेगरी:</span> <strong>${cat}</strong></div>
-                <div class="detail-row"><span>पिनकोड:</span> <strong>${pin}</strong></div>
-                <div class="detail-row"><span>कोऑर्डिनेट्स:</span> <strong>${geo}</strong></div>
-                <div class="detail-row"><span>पता:</span> <strong>${add}</strong></div>
+                <div class="detail-row"><span>Auto-ID:</span> <strong>${autoId}</strong></div>
+                <div class="detail-row"><span>Store Name:</span> <strong>${name}</strong></div>
+                <div class="detail-row"><span>Mobile:</span> <strong>${phone}</strong></div>
+                <div class="detail-row"><span>Collection:</span> <strong style="color:var(--success-green);">₹${collection}</strong></div>
+                <div class="detail-row"><span>Category:</span> <strong>${cat}</strong></div>
+                <div class="detail-row"><span>Pincode:</span> <strong>${pin}</strong></div>
+                <div class="detail-row"><span>Coordinates:</span> <strong>${geo}</strong></div>
+                <div class="detail-row"><span>Address:</span> <strong>${add}</strong></div>
             `;
             document.getElementById('previewModal').style.display = 'flex';
         }
@@ -956,26 +952,10 @@
             a.href = URL.createObjectURL(blob);
             a.download = `Star_Shop_Merchants_${getTodayDateString()}.csv`;
             a.click();
-            showToast("CSV फाइल डाउनलोड हो गई!");
+            showToast("CSV exported successfully.");
         }
 
-        function copySupabaseJSON() {
-            const data = localStorage.getItem(STORAGE_KEY) || "[]";
-            navigator.clipboard.writeText(data).then(() => {
-                showToast("Supabase JSON क्लिपबोर्ड पर कॉपी हो गया!");
-            });
-        }
-
-            document.addEventListener("DOMContentLoaded", loadFromLocalStorage);
-</script>
-
-<div class="action-bar">
-    <button class="action-btn" onclick="downloadMasterSheet()">HTML सेव</button>
-    <button class="action-btn" onclick="exportCSV()">CSV एक्सपोर्ट</button>
-    <button class="action-btn gold" onclick="copySupabaseJSON()">सुपरबेस JSON</button>
-    <button class="action-btn" onclick="triggerTopSubmit()">त्वरित सबमिट</button>
-</div>
-
+        document.addEventListener("DOMContentLoaded", loadFromLocalStorage);
+    </script>
 </body>
 </html>
-
