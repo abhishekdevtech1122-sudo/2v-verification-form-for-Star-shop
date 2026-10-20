@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Star Shop Master Excel Sheet | Direct SDK Sync</title>
+    <title>Star Shop Master Excel Sheet | Founder Boundary Rule Edition</title>
     <!-- ऑफिशियल Supabase SDK CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -14,7 +14,7 @@
             --text-main: #f4f4f5;
             --input-bg: #121215;
             --hover-bg: #1c1c21;
-            --row-selected: rgba(212, 175, 55, 0.16);
+            --row-selected: rgba(212, 175, 55, 0.18);
             color-scheme: dark;
         }
         [data-theme="light"] {
@@ -164,7 +164,7 @@
     <div class="container">
         <div class="top-bar">
             <div class="top-row-main">
-                <div class="brand-title">STAR SHOP MASTER EXCEL SHEET</div>
+                <div class="brand-title">STAR SHOP MASTER EXCEL SHEET (FOUNDER BOUNDARY RULE)</div>
                 <div class="telemetry-strip">
                     <span class="telemetry-pill">Stores: <strong id="statTotalStores">0</strong></span>
                     <span class="telemetry-pill">Pins: <strong id="statActivePins">0/97</strong></span>
@@ -244,7 +244,7 @@
         </div>
 
         <div class="revenue-footer-strip">
-            <span>Quantum War-Room Active</span>
+            <span>Founder Boundary War-Room Active</span>
             <span>Total Collection: <strong id="totalRevenueSpan" style="color:var(--badge-gold);">₹0</strong></span>
         </div>
     </div>
@@ -276,15 +276,19 @@
     <div class="modal-overlay" id="smartSplitterModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeSmartSplitterModal()">X</button>
-            <h3>Raw Data Auto-Splitter & Live Viewer</h3>
+            <h3>Founder Boundary Splitter (डायरी नियम आधारित)</h3>
+            <div class="modal-form-group" style="background: var(--input-bg); padding: 5px; border-left: 2px solid var(--badge-gold); border-radius: 2px; margin-bottom: 6px;">
+                <span style="color: var(--badge-gold); font-size: 0.58rem; font-weight: 800;">नियम: अगर कोई डेटा || ... || के अंदर है तो उसका पूरा उठा ले।</span><br>
+                <span style="color: var(--text-main); font-size: 0.55rem;">Format: नाम || ADD || Phone || Category || Coordinates</span>
+            </div>
             <div class="modal-form-group">
-                <label>Paste Raw Dump Here (Store: ... | Category: ...):</label>
-                <textarea id="splitterRawText" rows="4" placeholder="Store: Royal Touch | Category: Spa | Address: ..." oninput="updateLiveSplitterViewer(this.value)"></textarea>
+                <label>Paste Raw Dump Here:</label>
+                <textarea id="splitterRawText" rows="4" placeholder="यहाँ डेटा || बाउंड्री के साथ पेस्ट करें..." oninput="updateLiveSplitterViewer(this.value)"></textarea>
             </div>
             
-            <div style="font-size:0.58rem; color:var(--badge-gold); font-weight:800; margin-bottom:3px;">Live Viewer:</div>
+            <div style="font-size:0.58rem; color:var(--badge-gold); font-weight:800; margin-bottom:3px;">Live AI Status & Diagnostics:</div>
             <div id="liveSplitterViewer" style="background:var(--input-bg); border:1px solid var(--border-color); border-left:3px solid var(--badge-gold); border-radius:3px; padding:6px; margin-bottom:8px; font-size:0.6rem;">
-                <div style="color:#a1a1aa; font-style:italic;">Live preview will appear here...</div>
+                <div style="color:#a1a1aa; font-style:italic;">Live AI status will appear here...</div>
             </div>
 
             <button class="modal-submit-btn" onclick="injectBulkSplitterData()">Process & Lock into Sheet</button>
@@ -346,6 +350,57 @@
 
         const STORAGE_KEY = "STAR_SHOP_SDK_SYNC_V7";
 
+        // 🧠 डायरी के नियम पर आधारित बाउंड्री स्प्लिटर (नाम || ADD || Phone || Category || Coordinates)
+        class FounderBoundarySplitter {
+            constructor() {
+                this.memory = JSON.parse(localStorage.getItem('founder_splitter_memory') || '{}');
+            }
+
+            parse(rawText) {
+                const cleanText = rawText.trim();
+                if (!cleanText) return { status: 'error', message: '⚠️ मुझे यह दिक्कत हो रही है: इनपुट बॉक्स पूरी तरह खाली है।' };
+
+                if (this.memory[cleanText]) {
+                    return { status: 'success', data: this.memory[cleanText], message: 'मेमोरी से डायरेक्ट मैच मिल गया!' };
+                }
+
+                // डायरी का अचूक नियम: '||' बाउंड्री से डेटा काटें
+                const parts = cleanText.split('||').map(item => item.trim());
+
+                if (parts.length < 5) {
+                    return {
+                        status: 'error',
+                        message: `⚠️ मुझे यह दिक्कत हो रही है: डेटा में सही '||' बाउंड्री नहीं है। तय फॉर्मेट (नाम || ADD || Phone || Category || Coordinates) में दें!`
+                    };
+                }
+
+                let name = parts[0] || 'Verified Store';
+                let add = parts[1] || 'Rohini Delhi NCR';
+                let rawPhone = parts[2] || '';
+                let phone = rawPhone.replace(/\D/g, '').slice(-10);
+                let cat = parts[3] || 'Salon';
+                let geo = parts[4] || '28.7241, 77.0638';
+                let collection = '500';
+
+                if (!phone || phone.length < 10) {
+                    return {
+                        status: 'error',
+                        message: `⚠️ मुझे यह दिक्कत हो रही है: तीसरे हिस्से (Phone) में 10 अंकों का वैध फोन नंबर नहीं मिला।`
+                    };
+                }
+
+                const parsedData = { name, add, phone, collection, geo, cat };
+                return { status: 'success', data: parsedData, message: 'सफलतापूर्वक पार्स हो गया।' };
+            }
+
+            teachNewPattern(rawText, correctedData) {
+                this.memory[rawText.trim()] = correctedData;
+                localStorage.setItem('founder_splitter_memory', JSON.stringify(this.memory));
+            }
+        }
+
+        const aiSplitter = new FounderBoundarySplitter();
+
         function showToast(msg) {
             const t = document.getElementById('toastMsg');
             t.innerText = msg;
@@ -353,7 +408,6 @@
             setTimeout(() => { t.style.display = 'none'; }, 2000);
         }
 
-        // 🛡️ अचूक एंटी-डुप्लीकेशन शील्ड (लोकल ग्रिड चेक)
         function checkIsDuplicate(phone, name) {
             let cleanPhone = (phone || '').replace(/\D/g, '').slice(-10);
             let cleanName = (name || '').trim().toLowerCase();
@@ -380,10 +434,8 @@
             showToast("Syncing via Supabase SDK...");
             try {
                 const parsedList = JSON.parse(rawData);
-                
                 const mappedPayload = parsedList.map(item => {
                     const assignedImg = categoryFallbacks[item.cat] || categoryFallbacks["Default"];
-
                     return {
                         id: item.id || generateIdFromName(item.name, item.no),
                         store_name: item.name || "Verified Store",
@@ -396,12 +448,8 @@
                     };
                 });
 
-                const { error } = await _supabase
-                    .from('merchants')
-                    .upsert(mappedPayload, { onConflict: 'id' });
-
+                const { error } = await _supabase.from('merchants').upsert(mappedPayload, { onConflict: 'id' });
                 if (error) {
-                    console.error("Supabase SDK Error:", error);
                     showToast("Sync failed: " + error.message);
                 } else {
                     showToast("Supabase SDK sync successful! Grid cleared.");
@@ -409,7 +457,6 @@
                     loadFromLocalStorage();
                 }
             } catch (err) {
-                console.error("Network/Script Error:", err);
                 showToast("Sync network error!");
             }
         }
@@ -608,78 +655,16 @@
             showToast("Row added successfully.");
         }
 
-        // 🧠 अल्टीमेट की-वैल्यू और स्टैंडर्ड मास्टर पार्सर इंजन
-        function parseRawStoreData(raw) {
-            let name = "Verified Store", add = "Delhi NCR", phone = "9870242077", collection = "500", geo = "28.7241, 77.0638", cat = "Salon";
-
-            if (raw.includes(':')) {
-                let extract = (key) => {
-                    let regex = new RegExp(`${key}\\s*[:=]\\s*([^|\\n]+)`, 'i');
-                    let match = raw.match(regex);
-                    return match ? match[1].trim() : null;
-                };
-
-                let sName = extract('Store');
-                if (sName) name = sName;
-
-                let sCat = extract('Category');
-                if (sCat) cat = sCat;
-
-                let sAdd = extract('Address');
-                if (sAdd) add = sAdd;
-
-                let sPhone = extract('Phone');
-                if (sPhone) phone = sPhone.replace(/\D/g, '').slice(-10);
-
-                let sGeo = extract('Coordinates') || extract('Geo');
-                if (sGeo) geo = sGeo;
-
-                let sColl = extract('Collection');
-                if (sColl) collection = sColl.replace(/\D/g, '');
-
-                if (!add || add.length < 3) add = "Delhi NCR";
-                return { name, add, phone, collection, geo, cat };
-            }
-
-            let cleanRaw = raw.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
-            let phoneMatch = cleanRaw.match(/(?:\+91[\-\s]?)?[0]?[6-9](?:[\-\s]?\d){9}\b/);
-            if (phoneMatch) {
-                phone = phoneMatch[0].replace(/\D/g, '').slice(-10);
-                cleanRaw = cleanRaw.replace(phoneMatch[0], ' ');
-            }
-
-            let geoMatch = cleanRaw.match(/\b\d{2}\.\d+,\s*\d{2}\.\d+\b/);
-            if (geoMatch) {
-                geo = geoMatch[0];
-                cleanRaw = cleanRaw.replace(geoMatch[0], ' ');
-            }
-
-            let collMatch = cleanRaw.match(/(?:₹\s*|Rs\.?\s*)(\d+)/i) || cleanRaw.match(/\b([1-9]\d{2,4})\b/);
-            if (collMatch) {
-                let foundNum = collMatch[1] || collMatch[0].replace(/\D/g, '');
-                if (foundNum.length >= 2 && foundNum.length <= 5 && foundNum !== phone) {
-                    collection = foundNum;
-                    cleanRaw = cleanRaw.replace(collMatch[0], ' ');
-                }
-            }
-
-            let lowerFull = cleanRaw.toLowerCase();
-            if (lowerFull.includes('boutique')) cat = "Boutique";
-            else if (lowerFull.includes('parlor') || lowerFull.includes('makeover')) cat = "Parlor";
-            else if (lowerFull.includes('spa')) cat = "Spa";
-            else if (lowerFull.includes('salon')) cat = "Salon";
-
-            return { name, add: cleanRaw, phone, collection, geo, cat };
-        }
-
         function updateLiveSplitterViewer(raw) {
             const viewer = document.getElementById('liveSplitterViewer');
-            if (!raw.trim()) {
-                viewer.innerHTML = `<div style="color:#a1a1aa; font-style:italic;">Live preview will appear here...</div>`;
+            const res = aiSplitter.parse(raw);
+
+            if (res.status === 'error') {
+                viewer.innerHTML = `<div style="color:#ef4444; font-weight:800; line-height:1.3;">${res.message}</div>`;
                 return;
             }
 
-            const parsed = parseRawStoreData(raw);
+            const parsed = res.data;
             const isDup = checkIsDuplicate(parsed.phone, parsed.name);
 
             viewer.innerHTML = `
@@ -688,7 +673,7 @@
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Coordinates:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Category:</span> <strong style="color:var(--success-green);">${parsed.cat}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
-                ${isDup ? `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:3px; text-align:center; border-radius:2px;">⚠️ WARNING: यह मर्चेंट पहले से शीट में मौजूद है (Duplicate)!</div>` : `<div style="color:#10b981; font-weight:900; background:rgba(16,185,129,0.15); padding:3px; text-align:center; border-radius:2px;">✅ Fresh Record - Ready to Lock</div>`}
+                ${isDup ? `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:3px; text-align:center; border-radius:2px;">⚠️ WARNING: यह मर्चेंट पहले से शीट में मौजूद है (Duplicate)!</div>` : `<div style="color:#10b981; font-weight:900; background:rgba(16,185,129,0.15); padding:3px; text-align:center; border-radius:2px;">✅ Boundary AI Parsed - Ready to Lock</div>`}
             `;
         }
 
@@ -696,54 +681,52 @@
             const rawText = document.getElementById('splitterRawText').value.trim();
             if (!rawText) return;
 
-            const lines = rawText.split('\n').map(l => l.trim()).filter(Boolean);
+            const res = aiSplitter.parse(rawText);
+            if (res.status === 'error') {
+                showToast("Error: " + res.message);
+                return;
+            }
+
+            const parsed = res.data;
+            if (checkIsDuplicate(parsed.phone, parsed.name)) {
+                showToast("Duplicate record skipped.");
+                return;
+            }
+
+            let pin = "110086";
+            let geo = parsed.geo;
+            let lowerAdd = parsed.add.toLowerCase();
+
+            for (let kw in delhiKeywordToPin) {
+                if (lowerAdd.includes(kw)) {
+                    pin = delhiKeywordToPin[kw];
+                    break;
+                }
+            }
+
             const tbody = document.getElementById('masterGridBody');
-            let addedCount = 0;
-            let skippedCount = 0;
-
-            lines.forEach(line => {
-                const parsed = parseRawStoreData(line);
-
-                if (checkIsDuplicate(parsed.phone, parsed.name)) {
-                    skippedCount++;
-                    return;
-                }
-
-                let pin = "110086";
-                let geo = parsed.geo;
-                let lowerAdd = parsed.add.toLowerCase();
-
-                for (let kw in delhiKeywordToPin) {
-                    if (lowerAdd.includes(kw)) {
-                        pin = delhiKeywordToPin[kw];
-                        break;
-                    }
-                }
-
-                const row = createRowElement({ 
-                    name: parsed.name, 
-                    add: parsed.add, 
-                    no: parsed.phone, 
-                    collection: parsed.collection, 
-                    geo: geo, 
-                    cat: parsed.cat, 
-                    pin: pin 
-                }, tbody.rows.length + 1);
-                
-                tbody.appendChild(row);
-                addedCount++;
-            });
+            const row = createRowElement({ 
+                name: parsed.name, 
+                add: parsed.add, 
+                no: parsed.phone, 
+                collection: parsed.collection, 
+                geo: geo, 
+                cat: parsed.cat, 
+                pin: pin 
+            }, tbody.rows.length + 1);
+            
+            tbody.appendChild(row);
+            aiSplitter.teachNewPattern(rawText, parsed);
 
             document.getElementById('splitterRawText').value = "";
-            document.getElementById('liveSplitterViewer').innerHTML = `<div style="color:#a1a1aa; font-style:italic;">Live preview will appear here...</div>`;
+            document.getElementById('liveSplitterViewer').innerHTML = `<div style="color:#a1a1aa; font-style:italic;">Live AI status will appear here...</div>`;
             closeSmartSplitterModal();
 
             reindexRows();
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            
-            showToast(`${addedCount} added, ${skippedCount} duplicates skipped.`);
+            showToast("Boundary Record locked & learned successfully.");
         }
 
         function injectModalData() {
@@ -1010,7 +993,7 @@
             const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
-            a.download = `Star_Shop_Quantum_${getTodayDateString()}.html`;
+            a.download = `Star_Shop_Boundary_${getTodayDateString()}.html`;
             a.click();
         }
 
