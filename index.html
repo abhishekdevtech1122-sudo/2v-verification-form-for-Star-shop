@@ -169,7 +169,6 @@
                     <span class="telemetry-pill">Stores: <strong id="statTotalStores">0</strong></span>
                     <span class="telemetry-pill">Pins: <strong id="statActivePins">0/97</strong></span>
                 </div>
-                <!-- गोल थीम चेंजर बटन अपनी जगह पर सुरक्षित -->
                 <button class="theme-orb-btn" onclick="toggleTheme()" title="Toggle Theme"></button>
             </div>
             
@@ -255,7 +254,7 @@
             <button class="modal-close-btn" onclick="closeDataEntryModal()">X</button>
             <h3>Merchant Data Studio</h3>
             <div class="modal-form-group"><label>Store Name:</label><input type="text" id="modalStoreName" placeholder="Glamour Salon"></div>
-            <div class="modal-form-group"><label>Address / Area:</label><input type="text" id="modalStoreAdd" placeholder="Pocket A Begumpur Delhi"></div>
+            <div class="modal-form-group"><label>Address / Area (with Pincode):</label><input type="text" id="modalStoreAdd" placeholder="Pocket A Begumpur Delhi 110086"></div>
             <div class="modal-form-group"><label>Mobile Number:</label><input type="text" id="modalStoreNo" placeholder="0000000000"></div>
             <div class="modal-form-group"><label>Collection (₹):</label><input type="text" id="modalCollection" value="500"></div>
             <div class="modal-form-group">
@@ -276,17 +275,17 @@
     <div class="modal-overlay" id="smartSplitterModal">
         <div class="modal-box">
             <button class="modal-close-btn" onclick="closeSmartSplitterModal()">X</button>
-            <h3>Founder Boundary Splitter (डायरी नियम आधारित)</h3>
+            <h3>Founder Boundary Splitter (पिनकोड ऑटो-एक्सट्रैक्टर)</h3>
             <div class="modal-form-group" style="background: var(--input-bg); padding: 5px; border-left: 2px solid var(--badge-gold); border-radius: 2px; margin-bottom: 6px;">
-                <span style="color: var(--badge-gold); font-size: 0.58rem; font-weight: 800;">नियम: अगर कोई डेटा || ... || के अंदर है तो उसका पूरा उठा ले।</span><br>
-                <span style="color: var(--text-main); font-size: 0.55rem;">Format: नाम || ADD || Phone || Category || Coordinates</span>
+                <span style="color: var(--badge-gold); font-size: 0.58rem; font-weight: 800;">नियम: पिनकोड एड्रेस के अंदर हो या अलग से || के बाद, सिस्टम खुद छांट लेगा।</span><br>
+                <span style="color: var(--text-main); font-size: 0.55rem;">Format: नाम || ADD || Phone || Category || Coordinates || Pincode (Optional)</span>
             </div>
             <div class="modal-form-group">
                 <label>Paste Raw Dump Here:</label>
                 <textarea id="splitterRawText" rows="4" placeholder="यहाँ डेटा || बाउंड्री के साथ पेस्ट करें..." oninput="updateLiveSplitterViewer(this.value)"></textarea>
             </div>
             
-            <div style="font-size:0.58rem; color:var(--badge-gold); font-weight:800; margin-bottom:3px;">Live AI Status & Diagnostics:</div>
+            <div style="font-size:0.58rem; color:var(--badge-gold); font-weight:800; margin-bottom:3px;">Live AI Status & Pincode Diagnostics:</div>
             <div id="liveSplitterViewer" style="background:var(--input-bg); border:1px solid var(--border-color); border-left:3px solid var(--badge-gold); border-radius:3px; padding:6px; margin-bottom:8px; font-size:0.6rem;">
                 <div style="color:#a1a1aa; font-style:italic;">Live AI status will appear here...</div>
             </div>
@@ -350,7 +349,32 @@
 
         const STORAGE_KEY = "STAR_SHOP_SDK_SYNC_V7";
 
-        // 🧠 डायरी के नियम पर आधारित बाउंड्री स्प्लिटर (नाम || ADD || Phone || Category || Coordinates)
+        // 🎯 मास्टर पिनकोड एक्सट्रैक्टर फंक्शन (Regex + Keyword Fallback)
+        function extractSmartPincode(addressStr, fullRawStr = "", explicitPin = "") {
+            // 1. अगर 6वें कॉलम में सीधा पिनकोड दिया गया है
+            if (explicitPin && /^\d{6}$/.test(explicitPin.trim())) {
+                return explicitPin.trim();
+            }
+            // 2. एड्रेस या पूरे रॉ टेक्स्ट में से 6 अंकों का पिनकोड (110xxx) ढूंढो
+            const pinRegex = /\b(110\d{3})\b/;
+            const matchAdd = (addressStr || "").match(pinRegex);
+            if (matchAdd) return matchAdd[1];
+
+            const matchRaw = (fullRawStr || "").match(pinRegex);
+            if (matchRaw) return matchRaw[1];
+
+            // 3. अगर नंबर नहीं मिला, तो एरिया के नाम (Keyword) से पिनकोड पकड़ो
+            const lowerAdd = (addressStr || "").toLowerCase();
+            for (let kw in delhiKeywordToPin) {
+                if (lowerAdd.includes(kw)) {
+                    return delhiKeywordToPin[kw];
+                }
+            }
+            // 4. अंतिम डिफ़ॉल्ट (बेगमपुर बेस)
+            return "110086";
+        }
+
+        // 🧠 डायरी के नियम पर आधारित बाउंड्री स्प्लिटर (नाम || ADD || Phone || Category || Coordinates || Pincode)
         class FounderBoundarySplitter {
             constructor() {
                 this.memory = JSON.parse(localStorage.getItem('founder_splitter_memory') || '{}');
@@ -364,7 +388,6 @@
                     return { status: 'success', data: this.memory[cleanText], message: 'मेमोरी से डायरेक्ट मैच मिल गया!' };
                 }
 
-                // डायरी का अचूक नियम: '||' बाउंड्री से डेटा काटें
                 const parts = cleanText.split('||').map(item => item.trim());
 
                 if (parts.length < 5) {
@@ -379,7 +402,8 @@
                 let rawPhone = parts[2] || '';
                 let phone = rawPhone.replace(/\D/g, '').slice(-10);
                 let cat = parts[3] || 'Salon';
-                let geo = parts[4] || '28.7241, 77.0638';
+                let geo = parts[4] || '';
+                let explicitPin = parts[5] || ''; // अगर 6वां कॉलम दिया गया हो
                 let collection = '500';
 
                 if (!phone || phone.length < 10) {
@@ -389,8 +413,20 @@
                     };
                 }
 
-                const parsedData = { name, add, phone, collection, geo, cat };
-                return { status: 'success', data: parsedData, message: 'सफलतापूर्वक पार्स हो गया।' };
+                // पिनकोड को ऑटोमैटिकली छांटना
+                let pin = extractSmartPincode(add, cleanText, explicitPin);
+
+                // अगर पिनकोड हमारे 97 टारगेट लिस्ट से बाहर का है, तो उसे भी डायनामिकली रजिस्टर कर लो ताकि ड्रापडाउन फेल न हो
+                if (!COMPLETE_DELHI_PINCODES[pin]) {
+                    COMPLETE_DELHI_PINCODES[pin] = { area: "Delhi NCR Zone", target: 300, geo: geo || "28.7241, 77.0638" };
+                }
+
+                if (!geo) {
+                    geo = COMPLETE_DELHI_PINCODES[pin].geo;
+                }
+
+                const parsedData = { name, add, phone, collection, geo, cat, pin };
+                return { status: 'success', data: parsedData, message: 'पिनकोड के साथ सफलतापूर्वक पार्स हो गया।' };
             }
 
             teachNewPattern(rawText, correctedData) {
@@ -436,10 +472,12 @@
                 const parsedList = JSON.parse(rawData);
                 const mappedPayload = parsedList.map(item => {
                     const assignedImg = categoryFallbacks[item.cat] || categoryFallbacks["Default"];
+                    const finalPin = item.pin || extractSmartPincode(item.add);
                     return {
                         id: item.id || generateIdFromName(item.name, item.no),
                         store_name: item.name || "Verified Store",
-                        address: item.add || "Delhi",
+                        address: item.add ? (item.add.includes(finalPin) ? item.add : `${item.add} - ${finalPin}`) : `Delhi - ${finalPin}`,
+                        pincode: finalPin, // सीधे पिनकोड कॉलम के लिए
                         phone: item.no || "",
                         category: item.cat || "Salon",
                         location: item.geo || "28.7241, 77.0638",
@@ -462,6 +500,9 @@
         }
 
         function populatePinSelect(selectEl, selectedPin = "110086") {
+            if (!COMPLETE_DELHI_PINCODES[selectedPin]) {
+                COMPLETE_DELHI_PINCODES[selectedPin] = { area: "Custom Delhi Zone", target: 300, geo: "28.7241, 77.0638" };
+            }
             let html = "";
             for (let pin in COMPLETE_DELHI_PINCODES) {
                 let info = COMPLETE_DELHI_PINCODES[pin];
@@ -591,7 +632,7 @@
 
             const totalPins = Object.keys(COMPLETE_DELHI_PINCODES).length;
             const conqueredPins = Object.keys(pinCounts).length;
-            const unconqueredPins = totalPins - conqueredPins;
+            const unconqueredPins = Math.max(0, totalPins - conqueredPins);
 
             document.getElementById('statTotalStores').innerText = rows.length;
             document.getElementById('statActivePins').innerText = `${conqueredPins}/${totalPins}`;
@@ -604,7 +645,12 @@
             const defNo = prefill.no || "";
             const defId = prefill.id || generateIdFromName(defName, defNo);
             const todayStr = prefill.date || getTodayDateString();
-            const pinVal = (prefill.pin && COMPLETE_DELHI_PINCODES[prefill.pin]) ? prefill.pin : '110086';
+            const pinVal = prefill.pin || extractSmartPincode(prefill.add);
+            
+            if (!COMPLETE_DELHI_PINCODES[pinVal]) {
+                COMPLETE_DELHI_PINCODES[pinVal] = { area: "Delhi Zone", target: 300, geo: prefill.geo || "28.7241, 77.0638" };
+            }
+
             const catVal = prefill.cat || 'Salon';
             const geoVal = prefill.geo || COMPLETE_DELHI_PINCODES[pinVal].geo;
             
@@ -645,7 +691,7 @@
 
         function addNewRow() {
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi", no: "9870242077", collection: "500", geo: "28.7241, 77.0638", cat: "Salon", pin: "110086" }, tbody.rows.length + 1);
+            const row = createRowElement({ name: "New Store", add: "Begumpur Delhi 110086", no: "0000000000", collection: "500", geo: "28.7241, 77.0638", cat: "Salon", pin: "110086" }, tbody.rows.length + 1);
             tbody.appendChild(row);
             reindexRows();
             selectThisRow(row);
@@ -670,10 +716,11 @@
             viewer.innerHTML = `
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Store:</span> <strong style="color:var(--text-main);">${parsed.name}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Phone:</span> <strong style="color:var(--badge-gold);">${parsed.phone}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Extracted Pincode:</span> <strong style="color:#f43f5e; background:rgba(244,63,94,0.15); padding:0 4px; border-radius:2px;">📍 ${parsed.pin}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Coordinates:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Category:</span> <strong style="color:var(--success-green);">${parsed.cat}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
-                ${isDup ? `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:3px; text-align:center; border-radius:2px;">⚠️ WARNING: यह मर्चेंट पहले से शीट में मौजूद है (Duplicate)!</div>` : `<div style="color:#10b981; font-weight:900; background:rgba(16,185,129,0.15); padding:3px; text-align:center; border-radius:2px;">✅ Boundary AI Parsed - Ready to Lock</div>`}
+                ${isDup ? `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:3px; text-align:center; border-radius:2px;">⚠️ WARNING: यह मर्चेंट पहले से शीट में मौजूद है (Duplicate)!</div>` : `<div style="color:#10b981; font-weight:900; background:rgba(16,185,129,0.15); padding:3px; text-align:center; border-radius:2px;">✅ Pincode & Boundary AI Parsed - Ready to Lock</div>`}
             `;
         }
 
@@ -693,26 +740,15 @@
                 return;
             }
 
-            let pin = "110086";
-            let geo = parsed.geo;
-            let lowerAdd = parsed.add.toLowerCase();
-
-            for (let kw in delhiKeywordToPin) {
-                if (lowerAdd.includes(kw)) {
-                    pin = delhiKeywordToPin[kw];
-                    break;
-                }
-            }
-
             const tbody = document.getElementById('masterGridBody');
             const row = createRowElement({ 
                 name: parsed.name, 
                 add: parsed.add, 
                 no: parsed.phone, 
                 collection: parsed.collection, 
-                geo: geo, 
+                geo: parsed.geo, 
                 cat: parsed.cat, 
-                pin: pin 
+                pin: parsed.pin 
             }, tbody.rows.length + 1);
             
             tbody.appendChild(row);
@@ -726,13 +762,13 @@
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            showToast("Boundary Record locked & learned successfully.");
+            showToast(`Locked under Pincode ${parsed.pin}!`);
         }
 
         function injectModalData() {
             const name = document.getElementById('modalStoreName').value.trim() || "Verified Store";
             const add = document.getElementById('modalStoreAdd').value.trim() || "Delhi NCR";
-            let no = document.getElementById('modalStoreNo').value.trim() || "9870242077";
+            let no = document.getElementById('modalStoreNo').value.trim() || "0000000000u";
             no = no.replace(/\D/g, '').slice(-10);
             const collection = document.getElementById('modalCollection').value.trim() || "500";
             const cat = document.getElementById('modalStoreCat').value;
@@ -742,17 +778,11 @@
                 return;
             }
 
-            let pin = "110086";
-            let geo = COMPLETE_DELHI_PINCODES["110086"].geo;
-            let lowerAdd = add.toLowerCase();
-
-            for (let kw in delhiKeywordToPin) {
-                if (lowerAdd.includes(kw)) {
-                    pin = delhiKeywordToPin[kw];
-                    if (COMPLETE_DELHI_PINCODES[pin]) geo = COMPLETE_DELHI_PINCODES[pin].geo;
-                    break;
-                }
+            let pin = extractSmartPincode(add);
+            if (!COMPLETE_DELHI_PINCODES[pin]) {
+                COMPLETE_DELHI_PINCODES[pin] = { area: "Delhi Zone", target: 300, geo: "28.7241, 77.0638" };
             }
+            let geo = COMPLETE_DELHI_PINCODES[pin].geo;
 
             const tbody = document.getElementById('masterGridBody');
             const row = createRowElement({ name, add, no, collection, geo, cat, pin }, tbody.rows.length + 1);
@@ -767,24 +797,24 @@
             calculateTotalRevenue();
             updateAllPinBoards();
             saveToLocalStorage();
-            showToast("New store locked.");
+            showToast(`Store locked in Pincode ${pin}.`);
         }
 
         function autoDetectGeoFromAddress(addTextarea) {
             const tr = addTextarea.closest('tr');
-            const val = addTextarea.value.toLowerCase();
-            for (let key in delhiKeywordToPin) {
-                if (val.includes(key)) {
-                    const matchedPin = delhiKeywordToPin[key];
-                    const info = COMPLETE_DELHI_PINCODES[matchedPin];
-                    if (info) {
-                        tr.querySelector('.store-geo').value = info.geo;
-                        tr.querySelector('.pincode-select').value = matchedPin;
-                        tr.querySelector('.pincode-board').setAttribute('data-pin', matchedPin);
-                        updateAllPinBoards();
-                    }
-                    break;
+            const val = addTextarea.value;
+            const matchedPin = extractSmartPincode(val);
+            
+            if (matchedPin) {
+                if (!COMPLETE_DELHI_PINCODES[matchedPin]) {
+                    COMPLETE_DELHI_PINCODES[matchedPin] = { area: "Delhi Zone", target: 300, geo: "28.7241, 77.0638" };
                 }
+                const info = COMPLETE_DELHI_PINCODES[matchedPin];
+                tr.querySelector('.store-geo').value = info.geo;
+                const selectEl = tr.querySelector('.pincode-select');
+                populatePinSelect(selectEl, matchedPin);
+                tr.querySelector('.pincode-board').setAttribute('data-pin', matchedPin);
+                updateAllPinBoards();
             }
             saveToLocalStorage();
         }
@@ -861,7 +891,7 @@
                 tbody.appendChild(frag);
             } else {
                 tbody.appendChild(createRowElement({
-                    name: "Destiny Beauty Parlour and boutique", add: "112 Pocket 13 Sector 21 Rohini Delhi", no: "8802783167",
+                    name: "Destiny Beauty Parlour and boutique", add: "112 Pocket 13 Sector 21 Rohini Delhi 110086", no: "8802783167",
                     collection: "500", geo: "28.6901, 77.1450", cat: "Parlor", pin: "110086"
                 }, 1));
             }
