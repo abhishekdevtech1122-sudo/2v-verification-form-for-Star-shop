@@ -374,7 +374,41 @@
             return "110086";
         }
 
-        // 🧠 डायरी के नियम पर आधारित बाउंड्री स्प्लिटर (नाम || ADD || Phone || Category || Coordinates || Pincode)
+        // 📱 सख्त भारतीय मोबाइल नंबर वैलिडेटर
+        function validatePhoneNumberStrict(rawPhone) {
+            const cleanPhone = (rawPhone || '').replace(/\D/g, '').slice(-10);
+
+            if (cleanPhone.length !== 10) {
+                return { valid: false, reason: `अमान्य फोन नंबर: '${rawPhone}' में 10 अंक पूरे नहीं हैं!` };
+            }
+
+            if (!/^[6-9]\d{9}$/.test(cleanPhone)) {
+                return { valid: false, reason: `फर्जी नंबर ब्लॉक: '${cleanPhone}' भारतीय मोबाइल स्टैंडर्ड (6-9) के खिलाफ है!` };
+            }
+
+            const isRepeating = /^(\d)\1{9}$/.test(cleanPhone);
+            const isSequential = ['1234567890', '0987654321', '9876543210'].includes(cleanPhone);
+            if (isRepeating || isSequential || cleanPhone === '0000000000') {
+                return { valid: false, reason: `डिफेक्टिव नंबर ब्लॉक: '${cleanPhone}' एक डमी या फिक्स्ड पैटर्न नंबर है!` };
+            }
+
+            return { valid: true, phone: cleanPhone };
+        }
+
+        // 🌍 दो GPS पॉइंट्स के बीच की दूरी किलोमीटर में मापें (Haversine formula)
+        function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * (Math.PI / 180);
+            const dLon = (lon2 - lon1) * (Math.PI / 180);
+            const a =
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
+
+        // 🧠 बाउंड्री स्प्लिटर: पिनकोड और GPS निर्देशांकों का जियो-फेंस सत्यापन
         class FounderBoundarySplitter {
             constructor() {
                 this.memory = JSON.parse(localStorage.getItem('founder_splitter_memory') || '{}');
@@ -382,51 +416,62 @@
 
             parse(rawText) {
                 const cleanText = rawText.trim();
-                if (!cleanText) return { status: 'error', message: '⚠️ मुझे यह दिक्कत हो रही है: इनपुट बॉक्स पूरी तरह खाली है।' };
-
-                if (this.memory[cleanText]) {
-                    return { status: 'success', data: this.memory[cleanText], message: 'मेमोरी से डायरेक्ट मैच मिल गया!' };
-                }
+                if (!cleanText) return { status: 'error', message: '⚠️ इनपुट बॉक्स पूरी तरह खाली है।' };
 
                 const parts = cleanText.split('||').map(item => item.trim());
 
                 if (parts.length < 5) {
                     return {
                         status: 'error',
-                        message: `⚠️ मुझे यह दिक्कत हो रही है: डेटा में सही '||' बाउंड्री नहीं है। तय फॉर्मेट (नाम || ADD || Phone || Category || Coordinates) में दें!`
+                        message: `⚠️ बाउंड्री एरर: सही फॉर्मेट (नाम || ADD || Phone || Category || Coordinates) का उपयोग करें!`
                     };
                 }
 
                 let name = parts[0] || 'Verified Store';
                 let add = parts[1] || 'Rohini Delhi NCR';
                 let rawPhone = parts[2] || '';
-                let phone = rawPhone.replace(/\D/g, '').slice(-10);
+                const phoneCheck = validatePhoneNumberStrict(rawPhone);
+                let phone = phoneCheck.phone || '';
                 let cat = parts[3] || 'Salon';
                 let geo = parts[4] || '';
-                let explicitPin = parts[5] || ''; // अगर 6वां कॉलम दिया गया हो
+                let explicitPin = parts[5] || '';
                 let collection = '500';
 
-                if (!phone || phone.length < 10) {
+                if (!phoneCheck.valid) {
                     return {
                         status: 'error',
-                        message: `⚠️ मुझे यह दिक्कत हो रही है: तीसरे हिस्से (Phone) में 10 अंकों का वैध फोन नंबर नहीं मिला।`
+                        message: `⚠️ रिजेक्टेड: ${phoneCheck.reason}`
                     };
                 }
 
-                // पिनकोड को ऑटोमैटिकली छांटना
                 let pin = extractSmartPincode(add, cleanText, explicitPin);
-
-                // अगर पिनकोड हमारे 97 टारगेट लिस्ट से बाहर का है, तो उसे भी डायनामिकली रजिस्टर कर लो ताकि ड्रापडाउन फेल न हो
                 if (!COMPLETE_DELHI_PINCODES[pin]) {
-                    COMPLETE_DELHI_PINCODES[pin] = { area: "Delhi NCR Zone", target: 300, geo: geo || "28.7241, 77.0638" };
+                    COMPLETE_DELHI_PINCODES[pin] = { area: "Delhi Zone", target: 300, geo: "28.7241, 77.0638" };
                 }
 
-                if (!geo) {
+                const targetBaseGeo = COMPLETE_DELHI_PINCODES[pin].geo.split(',').map(s => parseFloat(s.trim()));
+                let inputGeo = geo ? geo.split(',').map(s => parseFloat(s.trim())) : targetBaseGeo;
+
+                if (inputGeo.length !== 2 || !Number.isFinite(inputGeo[0]) || !Number.isFinite(inputGeo[1]) ||
+                    inputGeo[0] < -90 || inputGeo[0] > 90 || inputGeo[1] < -180 || inputGeo[1] > 180) {
+                    inputGeo = targetBaseGeo;
                     geo = COMPLETE_DELHI_PINCODES[pin].geo;
+                } else {
+                    geo = `${inputGeo[0]}, ${inputGeo[1]}`;
+                }
+
+                const distanceKm = getDistanceFromLatLonInKm(
+                    inputGeo[0], inputGeo[1], targetBaseGeo[0], targetBaseGeo[1]
+                );
+                if (distanceKm > 6.0) {
+                    return {
+                        status: 'error',
+                        message: `🚨 जियो-मिसमैच ब्लॉक: पिनकोड ${pin} और दिए गए GPS निर्देशांक (${geo}) मेल नहीं खाते! दूरी ${distanceKm.toFixed(1)} किमी है (सीमा: 6 किमी)।`
+                    };
                 }
 
                 const parsedData = { name, add, phone, collection, geo, cat, pin };
-                return { status: 'success', data: parsedData, message: 'पिनकोड के साथ सफलतापूर्वक पार्स हो गया।' };
+                return { status: 'success', data: parsedData, message: 'सफलतापूर्वक जियो-स्पेशियल बाउंड्री पास हो गई।' };
             }
 
             teachNewPattern(rawText, correctedData) {
@@ -458,6 +503,82 @@
                 }
             }
             return false;
+        }
+
+        function checkFourLayerDuplication(phone, name, address, geo, pin) {
+            const cleanPhone = (phone || '').replace(/\D/g, '').slice(-10);
+            const cleanName = (name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            const cleanAddress = (address || '').trim().toLowerCase().replace(/\s+/g, ' ');
+            const cleanGeo = (geo || '').split(',').map(v => Number(v.trim()).toFixed(5)).join(',');
+            const cleanPin = (pin || '').trim();
+
+            for (const row of document.querySelectorAll('#masterGridBody tr')) {
+                const exPhone = row.querySelector('.store-no').value.replace(/\D/g, '').slice(-10);
+                const exName = row.querySelector('.store-name').value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const exAddress = row.querySelector('.store-add').value.trim().toLowerCase().replace(/\s+/g, ' ');
+                const exGeo = row.querySelector('.store-geo').value.split(',').map(v => Number(v.trim()).toFixed(5)).join(',');
+                const exPin = row.querySelector('.pincode-board').getAttribute('data-pin') || '';
+
+                if ((cleanPhone && exPhone && cleanPhone === exPhone) ||
+                    (cleanName && exName && cleanName === exName) ||
+                    (cleanAddress && exAddress && cleanAddress === exAddress && cleanPin === exPin) ||
+                    (cleanGeo && exGeo && cleanGeo === exGeo && cleanPin === exPin)) {
+                    return { isDup: true, reason: 'फोन नंबर, स्टोर नाम, पता+पिनकोड या GPS+पिनकोड पहले से मौजूद है।' };
+                }
+            }
+            return { isDup: false, reason: '' };
+        }
+
+        // 🛡️ लोकल-फर्स्ट शेडो वॉल्ट डुप्लीकेशन गार्ड
+        function processAndGuardLocalVault(parsedData, commit = true) {
+            let shadowVault;
+            try {
+                shadowVault = JSON.parse(localStorage.getItem('STAR_SHOP_SHADOW_VAULT') || '[]');
+                if (!Array.isArray(shadowVault)) shadowVault = [];
+            } catch (error) {
+                return { status: 'blocked', message: '❌ लोकल शेडो-वॉल्ट पढ़ा नहीं जा सका; सुरक्षा के लिए रिकॉर्ड रोका गया।' };
+            }
+
+            const cleanPhone = (parsedData.phone || '').replace(/\D/g, '').slice(-10);
+            const candidateId = parsedData.id || generateIdFromName(parsedData.name, cleanPhone);
+            const cleanName = (parsedData.name || '').trim().toLowerCase();
+            const cleanPin = (parsedData.pin || '').trim();
+
+            const duplicateMatch = shadowVault.find(item => {
+                const itemPhone = (item.phone || item.no || '').replace(/\D/g, '').slice(-10);
+                const itemName = (item.name || '').trim().toLowerCase();
+                const itemPin = (item.pin || '').trim();
+                const itemId = item.id || '';
+
+                return (cleanPhone && cleanPhone !== '0000000000' && itemPhone === cleanPhone) ||
+                    (candidateId && itemId === candidateId) ||
+                    (cleanName && itemName === cleanName && cleanPin === itemPin);
+            });
+
+            if (duplicateMatch) {
+                return {
+                    status: 'blocked',
+                    message: `❌ लोकल शेडो-वॉल्ट ब्लॉक: यह मर्चेंट (${parsedData.name} - ${cleanPhone}) पहले से लोकल डिवाइस में सुरक्षित है!`
+                };
+            }
+
+            const guardedData = { ...parsedData, id: candidateId };
+            if (!commit) {
+                return { status: 'passed', data: guardedData, message: '✅ लोकल शेडो-वॉल्ट जाँच पास।' };
+            }
+            try {
+                localStorage.setItem('STAR_SHOP_SHADOW_VAULT', JSON.stringify([...shadowVault, guardedData]));
+            } catch (error) {
+                return { status: 'blocked', message: '❌ लोकल शेडो-वॉल्ट में डेटा सुरक्षित नहीं हो सका; रिकॉर्ड नहीं जोड़ा गया।' };
+            }
+
+            return { status: 'passed', data: guardedData, message: '✅ लोकल बाउंड्री गार्ड पास - डेटा शेडो-वॉल्ट में लॉक हो गया।' };
+        }
+
+        function escapeHTML(value) {
+            return String(value ?? '').replace(/[&<>"']/g, char => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[char]);
         }
 
         async function syncToSupabaseRealtime() {
@@ -703,24 +824,66 @@
 
         function updateLiveSplitterViewer(raw) {
             const viewer = document.getElementById('liveSplitterViewer');
-            const res = aiSplitter.parse(raw);
+            const textarea = document.getElementById('splitterRawText');
+            const cleanRaw = raw.trim();
+
+            if (!cleanRaw) {
+                viewer.innerHTML = `<div style="color:#a1a1aa; font-style:italic;">Live AI status will appear here...</div>`;
+                return;
+            }
+
+            const clearRejectedInput = () => {
+                const rejectedValue = cleanRaw;
+                setTimeout(() => {
+                    if (textarea.value.trim() === rejectedValue) {
+                        textarea.value = '';
+                        viewer.innerHTML = `<div style="color:#a1a1aa; font-style:italic;">Live AI status will appear here...</div>`;
+                    }
+                }, 1200);
+            };
+
+            const parts = cleanRaw.split('||').map(item => item.trim());
+            if (parts.length >= 3) {
+                const phoneCheck = validatePhoneNumberStrict(parts[2] || '');
+                if (!phoneCheck.valid) {
+                    viewer.innerHTML = `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:6px; border-radius:2px; line-height:1.4;">❌ डेटा रिजेक्ट हुआ!<br>कारण: ${escapeHTML(phoneCheck.reason)}</div>`;
+                    showToast('अमान्य फोन नंबर - इनपुट साफ़ किया जाएगा');
+                    clearRejectedInput();
+                    return;
+                }
+            }
+
+            const res = aiSplitter.parse(cleanRaw);
 
             if (res.status === 'error') {
-                viewer.innerHTML = `<div style="color:#ef4444; font-weight:800; line-height:1.3;">${res.message}</div>`;
+                viewer.innerHTML = `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:6px; border-radius:2px; line-height:1.4;">❌ डेटा रिजेक्ट हुआ!<br>कारण: ${escapeHTML(res.message)}</div>`;
+                showToast('बाउंड्री या जियो-फेंस जाँच विफल');
+                clearRejectedInput();
                 return;
             }
 
             const parsed = res.data;
-            const isDup = checkIsDuplicate(parsed.phone, parsed.name);
+            const dupCheck = checkFourLayerDuplication(parsed.phone, parsed.name, parsed.add, parsed.geo, parsed.pin);
+            if (dupCheck.isDup) {
+                viewer.innerHTML = `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:6px; border-radius:2px; line-height:1.4;">❌ डुप्लिकेट डेटा रिजेक्ट हुआ!<br>कारण: ${escapeHTML(dupCheck.reason)}</div>`;
+                clearRejectedInput();
+                return;
+            }
+            const vaultCheck = processAndGuardLocalVault(parsed, false);
+            if (vaultCheck.status !== 'passed') {
+                viewer.innerHTML = `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:6px; border-radius:2px; line-height:1.4;">${escapeHTML(vaultCheck.message)}</div>`;
+                clearRejectedInput();
+                return;
+            }
 
             viewer.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Store:</span> <strong style="color:var(--text-main);">${parsed.name}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Phone:</span> <strong style="color:var(--badge-gold);">${parsed.phone}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Extracted Pincode:</span> <strong style="color:#f43f5e; background:rgba(244,63,94,0.15); padding:0 4px; border-radius:2px;">📍 ${parsed.pin}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Coordinates:</span> <strong style="color:var(--cyber-blue);">${parsed.geo}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Category:</span> <strong style="color:var(--success-green);">${parsed.cat}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${parsed.add}</strong></div>
-                ${isDup ? `<div style="color:#ef4444; font-weight:900; background:rgba(239,68,68,0.15); padding:3px; text-align:center; border-radius:2px;">⚠️ WARNING: यह मर्चेंट पहले से शीट में मौजूद है (Duplicate)!</div>` : `<div style="color:#10b981; font-weight:900; background:rgba(16,185,129,0.15); padding:3px; text-align:center; border-radius:2px;">✅ Pincode & Boundary AI Parsed - Ready to Lock</div>`}
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Store:</span> <strong style="color:var(--text-main);">${escapeHTML(parsed.name)}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Phone:</span> <strong style="color:var(--badge-gold);">${escapeHTML(parsed.phone)}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Verified Pincode:</span> <strong style="color:#f43f5e; background:rgba(244,63,94,0.15); padding:0 4px; border-radius:2px;">📍 ${escapeHTML(parsed.pin)}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">GPS Matched:</span> <strong style="color:var(--cyber-blue);">${escapeHTML(parsed.geo)}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:2px;"><span style="color:#a1a1aa;">Category:</span> <strong style="color:var(--success-green);">${escapeHTML(parsed.cat)}</strong></div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span style="color:#a1a1aa;">Address:</span> <strong style="color:var(--text-main);">${escapeHTML(parsed.add)}</strong></div>
+                <div style="margin-top:4px; color:#10b981; font-weight:900; background:rgba(16,185,129,0.15); padding:4px; text-align:center; border-radius:2px;">✅ फोन, डुप्लिकेट और जियो-फेंस जाँच पास - लॉक करने के लिए तैयार</div>
             `;
         }
 
@@ -734,11 +897,21 @@
                 return;
             }
 
-            const parsed = res.data;
-            if (checkIsDuplicate(parsed.phone, parsed.name)) {
-                showToast("Duplicate record skipped.");
+            let parsed = res.data;
+            const dupCheck = checkFourLayerDuplication(parsed.phone, parsed.name, parsed.add, parsed.geo, parsed.pin);
+            if (dupCheck.isDup) {
+                showToast('डुप्लिकेट रिकॉर्ड रोका गया: ' + dupCheck.reason);
                 return;
             }
+
+            const vaultCheck = processAndGuardLocalVault(parsed);
+            if (vaultCheck.status !== 'passed') {
+                showToast(vaultCheck.message);
+                document.getElementById('splitterRawText').value = '';
+                document.getElementById('liveSplitterViewer').innerHTML = `<div style="color:#a1a1aa; font-style:italic;">Live AI status will appear here...</div>`;
+                return;
+            }
+            parsed = vaultCheck.data;
 
             const tbody = document.getElementById('masterGridBody');
             const row = createRowElement({ 
@@ -748,7 +921,8 @@
                 collection: parsed.collection, 
                 geo: parsed.geo, 
                 cat: parsed.cat, 
-                pin: parsed.pin 
+                pin: parsed.pin,
+                id: parsed.id
             }, tbody.rows.length + 1);
             
             tbody.appendChild(row);
@@ -768,8 +942,13 @@
         function injectModalData() {
             const name = document.getElementById('modalStoreName').value.trim() || "Verified Store";
             const add = document.getElementById('modalStoreAdd').value.trim() || "Delhi NCR";
-            let no = document.getElementById('modalStoreNo').value.trim() || "0000000000u";
-            no = no.replace(/\D/g, '').slice(-10);
+            const rawNo = document.getElementById('modalStoreNo').value.trim();
+            const phoneCheck = validatePhoneNumberStrict(rawNo);
+            if (!phoneCheck.valid) {
+                showToast(`Error: ${phoneCheck.reason}`);
+                return;
+            }
+            const no = phoneCheck.phone;
             const collection = document.getElementById('modalCollection').value.trim() || "500";
             const cat = document.getElementById('modalStoreCat').value;
 
@@ -784,8 +963,14 @@
             }
             let geo = COMPLETE_DELHI_PINCODES[pin].geo;
 
+            const vaultCheck = processAndGuardLocalVault({ name, add, phone: no, collection, geo, cat, pin });
+            if (vaultCheck.status !== 'passed') {
+                showToast(vaultCheck.message);
+                return;
+            }
+
             const tbody = document.getElementById('masterGridBody');
-            const row = createRowElement({ name, add, no, collection, geo, cat, pin }, tbody.rows.length + 1);
+            const row = createRowElement({ name, add, no, collection, geo, cat, pin, id: vaultCheck.data.id }, tbody.rows.length + 1);
             tbody.appendChild(row);
 
             document.getElementById('modalStoreName').value = "";
